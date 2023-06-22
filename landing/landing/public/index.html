@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Sitio web insitucional del Jardín Botánico de Ushuaia"
+    />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+
+    <!-- Normalize -->
+    <link rel="stylesheet" href="assets/css/normalize.css" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <!-- Google Fonts -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    />
+    <!-- MDB -->
+    <link rel="stylesheet" href="assets/css/mdb.min.css" />
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="assets/css/leaflet.css" />
+    <!-- Own Styles -->
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <!-- AOS (Animate On Scroll Library) Styles -->
+    <link rel="stylesheet" href="assets/css/aos.css" />
+
+    <title>Jardín Botánico de Ushuaia</title>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav id="navbar" class="navbar fixed-top navbar-expand-md">
+      <!-- Navbar brand -->
+      <a class="navbar-brand text-white" href="/">Jardín Botánico de Ushuaia</a>
+
+      <!-- Toggle button -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-mdb-toggle="collapse"
+        data-mdb-target="#navbarLinks"
+        aria-controls="navbarLinks"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="text-white text-shadow">
+          <i class="fa-solid fa-bars"></i>
+        </span>
+      </button>
+
+      <!-- Collapsible wrapper -->
+      <div class="collapse navbar-collapse" id="navbarLinks">
+        <ul class="navbar-nav ms-auto mb-0 mb-lg-0">
+          <li class="nav-item text-center">
+            <a class="nav-link text-white text-shadow custom-link" href="#home-section">Inicio</a>
+          </li>
+          <li class="nav-item text-center">
+            <a class="nav-link text-white text-shadow custom-link " href="#about-section">Institucional</a>
+          </li>
+          <li class="nav-item text-center">
+            <a class="nav-link text-white text-shadow custom-link " href="#team-section">Equipo</a>
+          </li>
+          <li class="nav-item text-center">
+            <a class="nav-link text-white text-shadow custom-link" href="#map-section">Mapa</a>
+          </li>
+          <li class="nav-item text-center">
+            <a class="nav-link text-white" href="/app" style="padding: 0;">
+              <button 
+                type="button" 
+                class="btn btn-bg-primary custom-link w-100 w-md-auto" 
+                style="text-transform: none; padding: 8px; margin-top: auto;"
+              >
+                Biblioteca
+              </button>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="content">
+      <section class="vh-100 text-center forest-summer-background" id="home-section">
+        <div class="navbar-spacer"></div>
+        <div class="navbar-spacer"></div>
+        <div class="navbar-spacer"></div>
+        <!-- <div class="navbar-spacer"></div> -->
+        <div data-aos="zoom-in" class="col-sm-12 d-flex justify-content-center mb-3">
+          <img
+            src="assets/images/logo-circulo.png"
+            alt="Logo JBU"
+            title="Logo JBU"
+            class="img-fluid img-thumbnail"
+            style="background-color: transparent; border: 0; filter: drop-shadow(5px 5px 5px #222222);"
+            width="350"
+          />
+        </div>
+        <h1 class="text-white" style="text-shadow: 5px 5px 5px black; font-size: 3rem;" data-aos="zoom-in-up">Jardín Botánico de Ushuaia</h1>       
+      </section>
+
+      <section class="min-vh-100 text-center d-flex flex-column justify-content-center" id="about-section">
+        <div class="navbar-spacer"></div>
+        <h2 class="d-block d-lg-none" style="text-shadow: 2px 2px 5px grey; font-size: 2rem;" data-aos="zoom-in-up">Historia</h2>
+        <div class="row">
+          <div data-aos="zoom-in" class="col-sm-12 col-lg-4 d-flex justify-content-center justify-content-lg-end ps-lg-5 mb-3">
+            <img
+              src="assets/images/cartel.jpg"
+              alt="Cartel JBU"
+              class="img-fluid img-thumbnail"
+            />
+          </div>
+          <div class="col-sm-12 col-md-8 d-flex align-items-center">
+            <div class="d-flex flex-column align-items-center my-auto">
+              <h2 class="d-none d-lg-block" style="text-shadow: 2px 2px 5px grey; font-size: 2rem;" data-aos="zoom-in-up">Historia</h2>
+              <div data-aos="zoom-in" class="d-flex flex-column align-items-center m-auto">
+                <div class="col-sm-12 col-md-8">
+                  <p style="text-shadow: 2px 2px 5px grey; font-size: 1rem;">
+                    En 2018, se firmó el convenio N°12.546/18 entre la Municipalidad de Ushuaia la Asociación Nuria TDF, que fue ratificado por el Concejo Deliberante de Ushuaia. Este convenio otorgó a la Asociación el uso y custodia de un predio de 10 hectáreas de bosque nativo en el área de Dos Banderas, con el propósito de crear el Jardín Botánico de Ushuaia.
+                  </p>
+                </div>
+                <div class="col-sm-12 col-md-8">
+                  <p style="text-shadow: 2px 2px 5px grey; font-size: 1rem;">
+                    La Asociación fue creada en 1997 (personería jurídica N° 415).
+                  </p>
+                </div>
+                <div class="col-sm-12 col-md-8">
+                  <p style="text-shadow: 2px 2px 5px grey; font-size: 1rem;">
+                    Su objeto social es:
+                  </p>       
+                </div>
+                <div class="col-sm-12 col-md-8">
+                  <p style="text-shadow: 2px 2px 5px grey; font-size: 1rem;">
+                    <strong>Propiciar la interacción armónica del hombre con su medio natural y cultural.</strong>
+                  </p>
+                </div>
+                <hr class="w-50" style="border: solid grey 1px;" />
+                <div class="col-sm-12 col-md-8">
+                  <p style="text-shadow: 2px 2px 5px grey; font-size: 1rem;">
+                    ¿Querés saber más?
+                  </p>
+                  <button type="button" 
+                  class="btn btn-bg-primary custom-link w-auto w-md-50" 
+                  style="text-transform: none; padding: 8px; margin-top: auto;">¡Visitá Nuestro Blog!</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="min-vh-100 text-center" id="team-section">
+        <div class="navbar-spacer"></div>
+        <h2 style="text-shadow: 2px 2px 5px grey; font-size: 2rem;" data-aos="zoom-in-up">Equipo de trabajo</h2>
+        <div class="d-none d-lg-block navbar-spacer"></div>
+        <div class="d-none d-lg-block navbar-spacer"></div>
+        <div class="row">
+          <div class="col-sm-12 col-md-8 d-flex align-items-center">
+            <div class="d-flex flex-column align-items-center my-auto">
+              <h2 style="text-shadow: 2px 2px 5px grey; font-size: 2rem;" data-aos="zoom-in-up">Nuestra visión</h2>
+              <div data-aos="zoom-in" class="d-flex flex-column align-items-center m-auto">
+                <div class="col-sm-12 col-md-8">
+                  <p style="text-shadow: 2px 2px 5px grey; font-size: 1rem;">
+                    Inspirar a la comunidad local y a los visitantes de todo el mundo para la preservación, apreciación y disfrute del patrimonio natural de nuestra región, manteniendo la biodiversidad y compartiendo valores culturales.
+                  </p>
+                </div>
+              </div>
+              <hr class="w-50" style="border: solid grey 1px;" />
+              <h2 style="text-shadow: 2px 2px 5px grey; font-size: 2rem;" data-aos="zoom-in-up">Nuestra misión</h2>
+              <div data-aos="zoom-in" class="d-flex flex-column align-items-center m-auto">
+                <div class="col-sm-12 col-md-8">
+                  <p style="text-shadow: 2px 2px 5px grey; font-size: 1rem;">
+                    Proteger, cultivar y exponer la diversidad vegetal de nuestra región, a través de la conservación de especies endémicas y amenazadas.
+                  </p>
+                  <p style="text-shadow: 2px 2px 5px grey; font-size: 1rem;">
+                    Crear lazos con la comunidad local y los visitantes de todo el mundo.
+                  </p>
+                  <p style="text-shadow: 2px 2px 5px grey; font-size: 1rem;">
+                    Generar intercambio con la comunidad científica local, nacional e internacional.
+                  </p>
+                  <p style="text-shadow: 2px 2px 5px grey; font-size: 1rem;">
+                    Desarrollar actividades de interpretación, de investigación, educativas, recreativas, turísticas y de interés social, en un marco de sustentabilidad ambiental.                  </p>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div data-aos="zoom-in" class="col-sm-12 col-lg-4 d-flex justify-content-center justify-content-lg-end pe-lg-5 mb-3">
+            <img
+              src="assets/images/team.jpg"
+              alt="Cartel JBU"
+              class="img-fluid img-thumbnail"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section class="min-vh-100 text-center d-flex flex-column justify-content-center" id="team-section2">
+        <h2 style="text-shadow: 2px 2px 5px grey; font-size: 2rem;" data-aos="zoom-in-up">Equipo</h2>
+        <div class="team-container">
+          <div class="d-flex flex-row justify-content-between p-5 pb-0">
+            <div data-aos="fade-right" class="d-flex flex-column use-detail">
+              <img
+                src="assets/images/female_avatar.svg"
+                class="img-fluid rounded-circle"
+                alt="Townhouses and Skyscrapers"
+                height="300px"
+                width="300px"
+              />
+              <p class="pt-2">NOMBRE APELLIDO</p>
+            </div>
+            <div data-aos="fade-down" class="d-flex flex-column use-detail">
+              <img
+                src="assets/images/male_avatar.svg"
+                class="img-fluid rounded-circle"
+                alt="Townhouses and Skyscrapers"
+                height="300px"
+                width="300px"
+              />
+              <p class="pt-2">NOMBRE APELLIDO</p>
+            </div>
+            <div data-aos="fade-left" class="d-flex flex-column use-detail">
+              <img
+                src="assets/images/female_avatar.svg"
+                class="img-fluid rounded-circle"
+                alt="Townhouses and Skyscrapers"
+                height="300px"
+                width="300px"
+              />
+              <p class="pt-2">NOMBRE APELLIDO</p>
+            </div>
+          </div>
+          <div data-aos="fade-right" class="d-flex flex-row justify-content-between p-5 pb-0">
+            <div class="d-flex flex-column use-detail">
+              <img
+                src="assets/images/male_avatar.svg"
+                class="img-fluid rounded-circle"
+                alt="Townhouses and Skyscrapers"
+                height="300px"
+                width="300px"
+              />
+              <p class="pt-2">NOMBRE APELLIDO</p>
+            </div>
+            <div data-aos="fade-up" class="d-flex flex-column use-detail">
+              <img
+                src="assets/images/female_avatar.svg"
+                class="img-fluid rounded-circle"
+                alt="Townhouses and Skyscrapers"
+                height="300px"
+                width="300px"
+              />
+              <p class="pt-2">NOMBRE APELLIDO</p>
+            </div>
+            <div data-aos="fade-left" class="d-flex flex-column use-detail">
+              <img
+                src="assets/images/male_avatar.svg"
+                class="img-fluid rounded-circle"
+                alt="Townhouses and Skyscrapers"
+                height="300px"
+                width="300px"
+              />
+              <p class="pt-2">NOMBRE APELLIDO</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section class="text-center mb-5" id="map-section">
+        <div class="navbar-spacer"></div>
+        <h2 data-aos="fade-up" style="text-shadow: 2px 2px 5px grey; font-size: 2rem;">Mapa</h2>
+        
+        <div class="d-flex flex-column mx-2 mx-lg-5">
+          <div class="col-sm-12">
+            <div id="map"></div>
+          </div>
+          <div class="col-sm-12">
+            <!-- Instrucciones para google maps -->
+            <!-- https://aiocollective.com/blog/how-to-add-a-link-to-google-maps-with-directions/ -->
+            <a href="https://goo.gl/maps/d5uRfStrQBMdBMZM9" target="_blank">
+              <button
+                type="button" 
+                  class="btn btn-bg-primary custom-link w-100 w-md-auto mt-2" 
+                  style="text-transform: none; padding: 8px; margin-top: auto;"
+              >
+                Iniciar navegación
+              </button>
+            </a>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column mt-4 mx-2 mx-lg-5">
+          <div class="col-sm-12">
+            <h2 style="text-shadow: 2px 2px 5px grey; font-size: 2rem;" data-aos="zoom-in-up">¡Para más información contactanos!</h2>
+            <!-- <div class="col-sm-12 d-flex justify-content-center">
+              <p style="text-shadow: 2px 2px 5px grey; font-size: 1rem;">
+                <strong>¡Ante cualquier consulta no dudes en contactarnos!</strong>
+              </p>
+            </div> -->
+            <div class="row mx-2 px-5 py-3 bg-white rounded-4">
+              <div class="col-sm-12 col-md-6 my-1">
+                <div class="form-outline">
+                  <input type="text" id="name" class="form-control" />
+                  <label class="form-label" for="name">Nombre</label>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 my-1">
+                <div class="form-outline">
+                  <input type="text" id="email" class="form-control" />
+                  <label class="form-label" for="email">Email</label>
+                </div>
+              </div>
+              <div class="col-sm-12 my-1">
+                <div class="form-outline">
+                  <input type="text" id="mensaje" class="form-control" />
+                  <label class="form-label" for="mensaje">Mensaje</label>
+                </div>
+              </div>
+              <div class="col-sm-12 my-1">
+                <button type="submit" 
+                  class="btn btn-bg-primary custom-link w-auto w-md-50" 
+                  style="text-transform: none; padding: 8px; margin-top: auto;">Enviar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+
+    <footer class="bg-light text-center">
+      <div class="container pt-4">
+        <!-- Section: Social media -->
+        <section class="mb-4">
+          <!-- Facebook -->
+          <a class="btn btn-primary btn-floating m-1" style="background-color: #3b5998" href="https://www.facebook.com/jbushuaia/" target="_blank" role="button"><i class="fab fa-facebook-f"></i></a>
+          <!-- Instagram -->
+          <a class="btn btn-primary btn-floating m-1" style="background-color: #ac2bac" href="https://www.instagram.com/jbushuaia/" target="_blank" role="button"><i class="fab fa-instagram"></i></a>
+          <!-- Twitter -->
+          <!-- <a class="btn btn-primary btn-floating m-1" style="background-color: #55acee" href="#!" target="_blank" role="button"><i class="fab fa-twitter"></i></a> -->
+        </section>
+        <!-- Section: Social media -->
+
+        <!-- Section: Text -->
+        <section class="mb-4">
+          <p>
+            <strong>Frase motivadora o misión? 😄</strong>
+          </p>
+        </section>
+        <!-- Section: Text -->
+        
+      </div>
+
+      <!-- Copyright -->
+      <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+        © 2023 -
+        <a class="text-dark" href="https://demo-jardinbotanico.ddns.net/">jardinbotanico.com.ar</a>
+      </div>
+      <!-- Copyright -->
+    </footer>
+
+
+    <!-- Scripts -->
+    <!-- MDB -->
+    <script src="assets/js/mdb.min.js"></script>
+    <!-- jQuery -->
+    <script src="assets/js/jquery-3.6.1.min.js"></script>
+    <!-- Leaflet -->
+    <script src="assets/js/leaflet.js"></script>
+    <!-- AOS (Animate On Scroll Library) Scripts -->
+    <script src="assets/js/aos.js"></script>
+    <!-- Own Scripts -->
+    <script src="assets/js/index.js"></script>
+  </body>
+</html>

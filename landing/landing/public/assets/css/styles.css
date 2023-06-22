@@ -1,0 +1,135 @@
+:root {
+  /* Colores */
+  --primary: #016871;
+  --secondary: #9fa6b2;
+  --dark: #24232a;
+  --light: #c5e4e7;
+  --success: #36bdad;
+  --warning: #e4a11b;
+  --danger: #dc4c64;
+}
+
+body {
+  background-color: var(--light);
+}
+
+.navbar {
+  min-height: 64px;
+  padding-left: 24px;
+  padding-right: 24px;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 1.25rem;
+  /* Duracion del efecto al aplicar el estilo navbar-scrolled */
+  transition-duration: 0.5s;
+}
+
+@media screen and (max-width: 768px){
+  .navbar {
+    background-color: var(--dark);
+    box-shadow: rgb(0 0 0 / 20%) 0px 2px 4px -1px,
+      rgb(0 0 0 / 14%) 0px 4px 5px 0px, rgb(0 0 0 / 12%) 0px 1px 10px 0px;
+  }
+}
+
+.navbar-scrolled {
+  background-color: var(--dark);
+  box-shadow: rgb(0 0 0 / 20%) 0px 2px 4px -1px,
+    rgb(0 0 0 / 14%) 0px 4px 5px 0px, rgb(0 0 0 / 12%) 0px 1px 10px 0px;
+}
+
+.navbar-toggler {
+  min-height: 48px;
+}
+
+#navbarLinks {
+  min-height: 48px;
+}
+
+.brand {
+  min-height: 54px;
+}
+
+/* #home-section {
+	background-image: url(/assets/images/forest.jpg);
+  background-size: cover;
+} */
+
+.forest-summer-background {
+  transition: 1.5s;
+  background-image: url(/assets/images/forest-summer.jpg);
+  background-size: cover;
+}
+
+.forest-winter-background {
+  transition: 1.5s;
+  background-image: url(/assets/images/forest-winter.jpg);
+  background-size: cover;
+}
+
+/* #about-section {
+  background-color: #0000ff50;
+} */
+
+/* #map-section {
+  background-color: #ff000050;
+} */
+
+.navbar-spacer {
+  min-height: 100px;
+}
+
+h1 {
+	font-size: 1.5em;
+	font-family: 'Merriweather Sans', sans-serif;
+	color: black;
+	font-weight: bold;
+}
+
+h2 {
+	font-size: 1.3em;
+	font-family: 'Merriweather Sans', sans-serif;
+	color: black;
+	font-weight: bold;
+}
+
+.btn-bg-primary {
+  color: white;
+	background-color: var(--primary);
+}
+
+.btn-bg-success {
+  color: white;
+	background-color: var(--success);
+}
+
+.btn-bg-warning {
+  color: white;
+	background-color: var(--warning);
+}
+
+.btn-bg-danger {
+  color: white;
+	background-color: var(--danger);
+}
+
+.text-dark {
+	color: var(--dark);
+}
+
+.text-shadow {
+  text-shadow: 2px 2px 5px black;
+}
+
+.custom-link {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-size: 1.25rem;
+}
+
+/* Leaflet */
+#map { 
+  min-height: 500px; 
+  max-height: 700px; 
+  height: auto;
+  border: solid 2px var(--primary)
+}
