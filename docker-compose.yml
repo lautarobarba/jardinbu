@@ -1,0 +1,104 @@
+version: "3.8"
+name: jardinbu
+services:
+  jbu_db:
+    container_name: jbu_db
+    image: jbu_db:1.0.0
+    build:
+      context: .
+      target: base
+      dockerfile: ./database/Dockerfile
+    env_file: .env
+    environment:
+      - TZ=America/Argentina/Buenos_Aires
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    restart: always
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - ./database/database/data:/var/lib/postgresql/data
+      - ./database/backups:/backups
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  # redis:
+  #   container_name: que_hacemo_redis
+  #   image: "redis:alpine"
+  #   restart: always
+
+  # backend:
+  #   container_name: que_hacemo_back
+  #   image: que_hacemo_back:1.0.0
+  #   build:
+  #     context: .
+  #     target: development
+  #     dockerfile: ./backend/Dockerfile
+  #   command: bash -c "npm install && npm run start"
+  #   depends_on:
+  #     - database
+  #     - redis
+  #   restart: always
+  #   env_file: ./.env
+  #   environment:
+  #     # Configuracion DB
+  #     - DB_HOST=host.docker.internal
+  #     - DB_USER=${POSTGRES_USER}
+  #     - DB_PASSWORD=${POSTGRES_PASSWORD}
+  #     - DB_NAME=${POSTGRES_DB}
+  #     - DB_PORT=${DB_PORT}
+  #     - DB_LOGGING=${DEBUG}
+  #   ports:
+  #     - ${BACK_PORT}:3000
+  #   volumes:
+  #     - ./backend/backend:/backend
+  #   links:
+  #     - redis
+  #   extra_hosts:
+  #     - host.docker.internal:host-gateway
+
+  # frontend:
+  #   container_name: que_hacemo_front
+  #   image: que_hacemo_front:1.0.0
+  #   build:
+  #     context: .
+  #     target: development
+  #     dockerfile: ./frontend/Dockerfile
+  #   command: bash -c "npm install && npm run dev"
+  #   depends_on:
+  #     - backend
+  #   restart: always
+  #   env_file: ./.env
+  #   environment:
+  #     - PORT=${FRONT_PORT}
+  #   ports:
+  #     - ${FRONT_PORT}:${FRONT_PORT}
+  #   volumes:
+  #     - ./frontend/frontend:/app
+  #   extra_hosts:
+  #     - host.docker.internal:host-gateway
+
+  jbu_rproxy:
+    container_name: jbu_rproxy
+    image: jbu_rproxy:1.0.0
+    build:
+      context: .
+      target: base
+      dockerfile: ./rproxy/Dockerfile
+    command: bash -c "(nginx -g 'daemon off;' &) && touch /var/log/nginx/nginx.log && tail -f /var/log/nginx/nginx.log"
+    depends_on:
+      - jbu_db
+      # - django
+    env_file: .env
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./rproxy/nginx.conf:/etc/nginx/sites-available/default
+      - ./rproxy/nginx/letsencrypt:/etc/letsencrypt
+      # Descomentar para guardar el log en el host
+      # - ./rproxy/nginx/log:/var/log/nginx
+    extra_hosts:
+      - host.docker.internal:host-gateway
