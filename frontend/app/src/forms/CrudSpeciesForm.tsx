@@ -1,5 +1,5 @@
-import * as Yup from 'yup';
-import { FormikHelpers, useFormik } from 'formik';
+import * as Yup from "yup";
+import { FormikHelpers, useFormik } from "formik";
 import {
   Select,
   TextField,
@@ -10,25 +10,25 @@ import {
   Autocomplete,
   Button,
   Dialog,
-} from '@mui/material';
-import { MDBBtn } from 'mdb-react-ui-kit';
-import Axios from 'axios';
-import { useCreateSpecies, useGetFamilies, useGetGenera } from '../api/hooks';
-import { useJwtToken } from '../features/auth/authHooks';
-import { useQueryClient } from '@tanstack/react-query';
-import { Family } from '../interfaces/FamilyInterface';
-import { Genus } from '../interfaces/GenusInterface';
+} from "@mui/material";
+import { MDBBtn } from "mdb-react-ui-kit";
+import Axios from "axios";
+import { useCreateSpecies, useGetFamilies, useGetGenera } from "../api/hooks";
+import { useJwtToken } from "../features/auth/authHooks";
+import { useQueryClient } from "@tanstack/react-query";
+import { Family } from "../interfaces/FamilyInterface";
+import { Genus } from "../interfaces/GenusInterface";
 import {
   CreateSpeciesDto,
   FoliageType,
   Origin,
   Species,
   Status,
-} from '../interfaces/SpeciesInterface';
-import { useSnackbar } from 'notistack';
-import { PageSubTitle } from '../components/PageSubTitle';
-import { useEffect, useState } from 'react';
-import { CreateGenusForm } from './CrudGenusForm';
+} from "../interfaces/SpeciesInterface";
+import { useSnackbar } from "notistack";
+import { PageSubTitle } from "../components/PageSubTitle";
+import { useEffect, useState } from "react";
+import { CreateGenusForm } from "./CrudGenusForm";
 
 interface Props {
   toggleVisibility: Function;
@@ -40,7 +40,7 @@ export const CreateSpeciesForm = (props: Props) => {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [familia, setFamilia] = useState<string>('');
+  const [familia, setFamilia] = useState<string>("");
 
   const [openCreateGenusModal, setOpenCreateGenusModal] =
     useState<boolean>(false);
@@ -60,27 +60,27 @@ export const CreateSpeciesForm = (props: Props) => {
 
   const ValidationSchema = Yup.object().shape({
     scientificName: Yup.string()
-      .min(2, 'Demasiado corto')
-      .max(100, 'Demasiado largo')
-      .required('La especie necesita un nombre'),
+      .min(2, "Demasiado corto")
+      .max(100, "Demasiado largo")
+      .required("La especie necesita un nombre"),
     commonName: Yup.string()
-      .min(2, 'Demasiado corto')
-      .max(100, 'Demasiado largo'),
+      .min(2, "Demasiado corto")
+      .max(100, "Demasiado largo"),
     description: Yup.string()
-      .min(2, 'Demasiado corto')
-      .max(100, 'Demasiado largo'),
-    genusId: Yup.number().required('Por favor seleccione un género'),
+      .min(2, "Demasiado corto")
+      .max(100, "Demasiado largo"),
+    genusId: Yup.number().required("Por favor seleccione un género"),
     status: Yup.string()
-      .min(2, 'Demasiado corto')
-      .max(100, 'Demasiado largo')
-      .required('La especie necesita un estado'),
+      .min(2, "Demasiado corto")
+      .max(100, "Demasiado largo")
+      .required("La especie necesita un estado"),
     origin: Yup.string()
-      .min(2, 'Demasiado corto')
-      .max(100, 'Demasiado largo')
-      .required('La especie necesita un origen'),
+      .min(2, "Demasiado corto")
+      .max(100, "Demasiado largo")
+      .required("La especie necesita un origen"),
     foliageType: Yup.string()
-      .min(2, 'Demasiado corto')
-      .max(100, 'Demasiado largo'),
+      .min(2, "Demasiado corto")
+      .max(100, "Demasiado largo"),
   });
 
   interface Values {
@@ -104,9 +104,9 @@ export const CreateSpeciesForm = (props: Props) => {
 
   const formik = useFormik({
     initialValues: {
-      scientificName: '',
-      commonName: '',
-      description: '',
+      scientificName: "",
+      commonName: "",
+      description: "",
       genusId: 0,
       status: Status.PRESENT,
       origin: Origin.NATIVE,
@@ -125,24 +125,24 @@ export const CreateSpeciesForm = (props: Props) => {
       };
 
       createSpeciesMutate(
-        { token: token ?? '', createSpeciesDto },
+        { token: token ?? "", createSpeciesDto },
         {
           onError: (error: any) => {
-            console.log('ERROR: Error al crear una especie');
+            console.log("ERROR: Error al crear una especie");
             console.log(error);
-            enqueueSnackbar('ERROR: Error al crear una especie', {
-              anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-              variant: 'error',
+            enqueueSnackbar("ERROR: Error al crear una especie", {
+              anchorOrigin: { horizontal: "right", vertical: "bottom" },
+              variant: "error",
             });
           },
           onSuccess: (species: Species) => {
-            console.log('Especie creada correctamente');
+            console.log("Especie creada correctamente");
             console.log(species);
-            queryClient.invalidateQueries(['species']);
+            queryClient.invalidateQueries(["species"]);
             toggleVisibility(false);
-            enqueueSnackbar('Especie creada correctamente', {
-              anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-              variant: 'success',
+            enqueueSnackbar("Especie creada correctamente", {
+              anchorOrigin: { horizontal: "right", vertical: "bottom" },
+              variant: "success",
             });
           },
         }
@@ -156,7 +156,9 @@ export const CreateSpeciesForm = (props: Props) => {
       return getGeneraData?.rows.map((genus: Genus) => {
         return {
           value: genus.id,
-          label: `${genus.name}`,
+          label: `${genus.name.charAt(0).toUpperCase()}${genus.name
+            .slice(1)
+            .toLowerCase()}`,
         };
       });
     } else {
@@ -170,22 +172,74 @@ export const CreateSpeciesForm = (props: Props) => {
       const generoSelected: Genus | undefined = getGeneraData?.rows.filter(
         (genus) => genus.id === formik.values.genusId
       )[0];
-      setFamilia(generoSelected?.family.name ?? '');
+      setFamilia(
+        `${generoSelected?.family.name
+          .charAt(0)
+          .toUpperCase()}${generoSelected?.family.name
+          .slice(1)
+          .toLowerCase()}` ?? ""
+      );
     }
   }, [formik.values.genusId]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Grid container spacing={2} justifyContent={'center'}>
-        <Grid container item xs={12} justifyContent={'center'}>
-          <PageSubTitle title='Registrar nueva especie' />
+      <Grid container spacing={2} justifyContent={"center"}>
+        <Grid container item xs={12} justifyContent={"center"}>
+          <PageSubTitle title="Registrar nueva especie" />
+        </Grid>
+
+        <Grid item xs={11} md={5}>
+          <Autocomplete
+            id="genusId"
+            selectOnFocus={true}
+            clearOnBlur={true}
+            options={getGeneraForSelect()}
+            fullWidth
+            renderInput={(params) => (
+              <TextField
+                name="genusId"
+                label="Género"
+                value={formik.values.genusId}
+                error={formik.touched.genusId && Boolean(formik.errors.genusId)}
+                helperText={formik.touched.genusId && formik.errors.genusId}
+                {...params}
+                required={true}
+              />
+            )}
+            isOptionEqualToValue={(option: any, selection: any) =>
+              option.value === selection.value
+            }
+            onChange={(e, selection) => {
+              formik.setFieldValue("genusId", selection?.value);
+              formik.setFieldValue("scientificName", `${selection?.label} `);
+            }}
+            disableClearable={true}
+          />
+        </Grid>
+        <Grid item xs={1}>
+          <Button
+            style={{ height: "100%" }}
+            onClick={() => setOpenCreateGenusModal(true)}
+          >
+            <i className="fas fa-plus fa-2x"></i>
+          </Button>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField
+            name="Familia"
+            label="Familia"
+            fullWidth
+            value={familia}
+            disabled
+          />
         </Grid>
 
         <Grid item xs={12} md={6}>
           <TextField
-            id='scientificName'
-            name='scientificName'
-            label='Nombre científico'
+            id="scientificName"
+            name="scientificName"
+            label="Nombre científico"
             value={formik.values.scientificName}
             onChange={formik.handleChange}
             error={
@@ -197,15 +251,15 @@ export const CreateSpeciesForm = (props: Props) => {
             }
             fullWidth
             required
-            autoComplete='scientificName'
+            autoComplete="scientificName"
             autoFocus
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            id='commonName'
-            name='commonName'
-            label='Nombre común'
+            id="commonName"
+            name="commonName"
+            label="Nombre común"
             value={formik.values.commonName}
             onChange={formik.handleChange}
             error={
@@ -213,15 +267,15 @@ export const CreateSpeciesForm = (props: Props) => {
             }
             helperText={formik.touched.commonName && formik.errors.commonName}
             fullWidth
-            autoComplete='commonName'
+            autoComplete="commonName"
             autoFocus
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
-            id='description'
-            name='description'
-            label='Descripción'
+            id="description"
+            name="description"
+            label="Descripción"
             value={formik.values.description}
             onChange={formik.handleChange}
             error={
@@ -229,76 +283,31 @@ export const CreateSpeciesForm = (props: Props) => {
             }
             helperText={formik.touched.description && formik.errors.description}
             fullWidth
-            autoComplete='description'
+            autoComplete="description"
             autoFocus
-          />
-        </Grid>
-
-        <Grid item xs={11} md={5}>
-          <Autocomplete
-            id='genusId'
-            selectOnFocus={true}
-            clearOnBlur={true}
-            options={getGeneraForSelect()}
-            fullWidth
-            renderInput={(params) => (
-              <TextField
-                name='genusId'
-                label='Género'
-                value={formik.values.genusId}
-                error={formik.touched.genusId && Boolean(formik.errors.genusId)}
-                helperText={formik.touched.genusId && formik.errors.genusId}
-                {...params}
-                required={true}
-              />
-            )}
-            isOptionEqualToValue={(option: any, selection: any) =>
-              option.value === selection.value
-            }
-            onChange={(e, selection) =>
-              formik.setFieldValue('genusId', selection?.value)
-            }
-            disableClearable={true}
-          />
-        </Grid>
-        <Grid item xs={1}>
-          <Button
-            style={{ height: '100%' }}
-            onClick={() => setOpenCreateGenusModal(true)}
-          >
-            <i className='fas fa-plus fa-2x'></i>
-          </Button>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField
-            name='Familia'
-            label='Familia'
-            fullWidth
-            value={familia}
-            disabled
           />
         </Grid>
         <Grid item xs={12} md={4}>
           <FormControl fullWidth>
-            <InputLabel>Estado</InputLabel>
+            <InputLabel>Estatus</InputLabel>
             <Select
-              id='status'
-              name='status'
-              label='Estado'
+              id="status"
+              name="status"
+              label="Estatus"
               value={formik.values.status}
               onChange={formik.handleChange}
               error={formik.touched.status && Boolean(formik.errors.status)}
               fullWidth
-              autoComplete='status'
+              autoComplete="status"
               autoFocus
             >
-              <MenuItem key={0} value={'PRESENT'}>
+              <MenuItem key={0} value={"PRESENT"}>
                 Presente
               </MenuItem>
-              <MenuItem key={1} value={'ABSENT'}>
+              <MenuItem key={1} value={"ABSENT"}>
                 Ausente
               </MenuItem>
-              <MenuItem key={2} value={'EXTINCT'}>
+              <MenuItem key={2} value={"EXTINCT"}>
                 Extinta
               </MenuItem>
             </Select>
@@ -308,20 +317,20 @@ export const CreateSpeciesForm = (props: Props) => {
           <FormControl fullWidth>
             <InputLabel>Origen</InputLabel>
             <Select
-              id='origin'
-              name='origin'
-              label='Origen'
+              id="origin"
+              name="origin"
+              label="Origen"
               value={formik.values.origin}
               onChange={formik.handleChange}
               error={formik.touched.origin && Boolean(formik.errors.origin)}
               fullWidth
-              autoComplete='origin'
+              autoComplete="origin"
               autoFocus
             >
-              <MenuItem key={0} value={'NATIVE'}>
+              <MenuItem key={0} value={"NATIVE"}>
                 Nativa
               </MenuItem>
-              <MenuItem key={1} value={'INTRODUCED'}>
+              <MenuItem key={1} value={"INTRODUCED"}>
                 Introducida
               </MenuItem>
             </Select>
@@ -331,23 +340,23 @@ export const CreateSpeciesForm = (props: Props) => {
           <FormControl fullWidth>
             <InputLabel>Tipo de follaje</InputLabel>
             <Select
-              id='foliageType'
-              name='foliageType'
-              label='Tipo de follaje'
+              id="foliageType"
+              name="foliageType"
+              label="Tipo de follaje"
               value={formik.values.foliageType}
               onChange={formik.handleChange}
               error={
                 formik.touched.foliageType && Boolean(formik.errors.foliageType)
               }
               fullWidth
-              autoComplete='foliageType'
+              autoComplete="foliageType"
               autoFocus
             >
-              <MenuItem key={0} value={'PERENNE'}>
+              <MenuItem key={0} value={"PERENNE"}>
                 Perenne
               </MenuItem>
-              <MenuItem key={1} value={'CADUCA'}>
-                Caduca
+              <MenuItem key={1} value={"CADUCA"}>
+                Caducifolia
               </MenuItem>
             </Select>
           </FormControl>
@@ -355,32 +364,32 @@ export const CreateSpeciesForm = (props: Props) => {
       </Grid>
 
       <br />
-      <Grid container spacing={2} justifyContent={'center'}>
+      <Grid container spacing={2} justifyContent={"center"}>
         <MDBBtn
-          color='danger'
-          style={{ margin: '1rem' }}
+          color="danger"
+          style={{ margin: "1rem" }}
           disabled={createSpeciesIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
         </MDBBtn>
         <MDBBtn
-          color='primary'
-          type='submit'
-          style={{ margin: '1rem' }}
+          color="primary"
+          type="submit"
+          style={{ margin: "1rem" }}
           disabled={createSpeciesIsLoading}
         >
-          {createSpeciesIsLoading ? 'Guardando...' : 'Guardar'}
+          {createSpeciesIsLoading ? "Guardando..." : "Guardar"}
         </MDBBtn>
       </Grid>
 
       <Dialog
         onClose={() => setOpenCreateGenusModal(false)}
         open={openCreateGenusModal}
-        maxWidth={'md'}
+        maxWidth={"md"}
         fullWidth
       >
-        <div className='p-5'>
+        <div className="p-5">
           <CreateGenusForm toggleVisibility={toggleOpenCreateGenusModal} />
         </div>
       </Dialog>

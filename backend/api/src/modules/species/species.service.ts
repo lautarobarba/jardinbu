@@ -14,13 +14,16 @@ import { Species } from "./species.entity";
 import { GenusService } from "../genus/genus.service";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
 import { PaginatedList, PaginationDto } from "modules/utils/pagination.dto";
+import { Picture } from "modules/utils/picture.entity";
+import { UtilsService } from "modules/utils/utils.service";
 
 @Injectable()
 export class SpeciesService {
   constructor(
     @InjectRepository(Species)
     private readonly _speciesRepository: Repository<Species>,
-    private readonly _genusService: GenusService
+    private readonly _genusService: GenusService,
+    private readonly _utilsService: UtilsService
   ) {}
   private readonly _logger = new Logger(SpeciesService.name);
 
@@ -68,6 +71,23 @@ export class SpeciesService {
     species.createdAt = timestamp;
     species.updatedAt = timestamp;
     species.deleted = false;
+
+    // Guardo foto de ejemplo
+    // Primero reviso si existía una foto de perfil previa y la marco como eliminada.
+    if (exampleImg) {
+      // Si recibí una nueva foto de perfil
+      // 1° Elimino la vieja
+      // if (user.profilePicture) {
+      //   await this._utilsService.deletePicture(user.profilePicture.id);
+      // }
+
+      // 1° La guardo en la DB
+      const newExamplePicture: Picture =
+        await await this._utilsService.saveProfilePicture(exampleImg);
+
+      // 3° Asigno la nueva foto al usuario
+      species.exampleImg = newExamplePicture;
+    }
 
     // Controlo que el modelo no tenga errores antes de guardar
     const errors = await validate(species);
@@ -215,6 +235,7 @@ export class SpeciesService {
       order: order,
       skip: skip,
       take: take,
+      relations: ["exampleImg"],
     });
 
     const paginatedList: PaginatedList<Species> = {
@@ -229,6 +250,7 @@ export class SpeciesService {
     this._logger.debug("findOne()");
     return this._speciesRepository.findOne({
       where: { id },
+      relations: ["exampleImg"],
     });
   }
 

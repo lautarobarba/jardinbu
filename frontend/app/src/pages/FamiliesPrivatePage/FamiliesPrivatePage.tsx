@@ -1,20 +1,21 @@
-import { PageSubTitle } from '../../components/PageSubTitle';
-import { PageTitle } from '../../components/PageTitle';
-import { Family } from '../../interfaces/FamilyInterface';
-import { useGetFamilies } from '../../api/hooks';
-import { useEffect, useMemo, useState } from 'react';
-import { CreateFamilyForm } from '../../forms/CrudFamilyForm';
+import { PageSubTitle } from "../../components/PageSubTitle";
+import { PageTitle } from "../../components/PageTitle";
+import { Family } from "../../interfaces/FamilyInterface";
+import { useGetFamilies } from "../../api/hooks";
+import { useEffect, useMemo, useState } from "react";
+import { CreateFamilyForm } from "../../forms/CrudFamilyForm";
 import {
   ColumnFiltersState,
   PaginationState,
   SortingState,
   getCoreRowModel,
   useReactTable,
-} from '@tanstack/react-table';
-import { columns } from './columns';
-import { fuzzyFilter } from '../../utils/ColumnFilter';
-import { CustomTable } from '../../utils/CustomTable';
-import { CircularProgress } from '@mui/material';
+} from "@tanstack/react-table";
+import { columns } from "./columns";
+import { fuzzyFilter } from "../../utils/ColumnFilter";
+import { CustomTable } from "../../utils/CustomTable";
+import { CircularProgress } from "@mui/material";
+import { GlideTable } from "../SpeciesPrivatePage/GlideTable";
 
 export const FamiliesPrivatePage = () => {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
@@ -81,20 +82,20 @@ export const FamiliesPrivatePage = () => {
   }, [getFamiliesIsSuccess, getFamiliesData]);
 
   return (
-    <div className='bg-white p-3'>
-      <PageTitle title='Familias' />
+    <div className="bg-white p-3">
+      <PageTitle title="Familias" />
 
-      <div className='d-flex justify-content-between'>
-        <PageSubTitle title='Listado de familias' />
+      <div className="d-flex justify-content-between">
+        <PageSubTitle title="Listado de familias" />
         <button
           className={
             openCreate
-              ? 'btn bg-danger text-white'
-              : 'btn bg-success text-white'
+              ? "btn bg-danger text-white"
+              : "btn bg-success text-white"
           }
           onClick={toggleCreateForm}
         >
-          {openCreate ? 'Cancelar' : 'Crear'}
+          {openCreate ? "Cancelar" : "Crear"}
         </button>
       </div>
 
@@ -102,12 +103,12 @@ export const FamiliesPrivatePage = () => {
 
       {openCreate && <CreateFamilyForm toggleVisibility={setOpenCreate} />}
 
-      {getFamiliesIsError && <p className='text-danger'>Error...</p>}
+      {getFamiliesIsError && <p className="text-danger">Error...</p>}
 
       {getFamiliesIsLoading && <CircularProgress />}
 
       {getFamiliesIsSuccess && (
-        <section id='families' className='families'>
+        <section id="families" className="families">
           <CustomTable table={table} />
         </section>
       )}

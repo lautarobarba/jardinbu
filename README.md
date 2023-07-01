@@ -151,11 +151,11 @@ $ sudo chown -R ${USER}:${USER} backend/backend/src/modules
 
 ```bash
 $ # Ver migraciones aplicadas:
-$ docker compose exec -it backend bash -c "npm run migration:show"
+$ docker compose exec -it jbu_back bash -c "npm run migration:show"
 $ # Generar migración
-$ docker compose exec -it backend bash -c "npm run migration:generate --name=nombreMigracion"
+$ docker compose exec -it jbu_back bash -c "npm run migration:generate --name=nombreMigracion"
 $ # Aplicar migraciones
-$ docker compose exec -it backend bash -c "npm run migration:run"
+$ docker compose exec -it jbu_back bash -c "npm run migration:run"
 ```
 
 ### Crear administrador

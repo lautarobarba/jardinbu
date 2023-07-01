@@ -10,6 +10,9 @@ export class CreateSpeciesDto {
   commonName?: string;
 
   @ApiPropertyOptional()
+  englishName?: string;
+
+  @ApiPropertyOptional()
   description?: string;
 
   @ApiProperty()
@@ -46,6 +49,9 @@ export class UpdateSpeciesDto {
 
   @ApiPropertyOptional()
   commonName?: string;
+
+  @ApiPropertyOptional()
+  englishName?: string;
 
   @ApiPropertyOptional()
   description?: string;

@@ -14,9 +14,17 @@ import {
   Logger,
   UseGuards,
   Query,
+  BadRequestException,
+  UploadedFile,
 } from "@nestjs/common";
 import { Response, Express } from "express";
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiResponse,
+  ApiTags,
+} from "@nestjs/swagger";
 import { IsEmailConfirmedGuard } from "modules/auth/guards/is-email-confirmed.guard";
 import { RoleGuard } from "modules/auth/guards/role.guard";
 import { Role } from "modules/auth/role.enum";
@@ -27,6 +35,7 @@ import { ERROR_MESSAGE } from "modules/utils/error-message";
 import { RequestWithUser } from "modules/auth/request-with-user.interface";
 import { getUserIdFromRequest } from "modules/utils/user.request";
 import { PaginatedList, PaginationDto } from "modules/utils/pagination.dto";
+import { LocalFilesInterceptor } from "modules/utils/localFiles.interceptor";
 
 @ApiTags("Especies")
 @Controller("species")
@@ -38,11 +47,42 @@ export class SpeciesController {
   @UseGuards(RoleGuard([Role.ADMIN]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
-  @ApiBearerAuth()
+  @UseInterceptors(
+    LocalFilesInterceptor({
+      fieldName: "exampleImg",
+      path: "/temp",
+      fileFilter: (request, file, callback) => {
+        if (!file.mimetype.includes("image")) {
+          return callback(new BadRequestException("Invalid image file"), false);
+        }
+        callback(null, true);
+      },
+      limits: {
+        fileSize: 1024 * 1024 * 10, // 10MB
+      },
+    })
+  )
+  // @UseInterceptors(
+  //   LocalFilesInterceptor({
+  //     fieldName: "foliageImg",
+  //     path: "/temp",
+  //     fileFilter: (request, file, callback) => {
+  //       if (!file.mimetype.includes("image")) {
+  //         return callback(new BadRequestException("Invalid image file"), false);
+  //       }
+  //       callback(null, true);
+  //     },
+  //     limits: {
+  //       fileSize: 1024 * 1024 * 10, // 10MB
+  //     },
+  //   })
+  // )
+  @ApiConsumes("multipart/form-data")
   @ApiBody({
     description: "Atributos de la especie",
     type: CreateSpeciesDto,
   })
+  @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.CREATED,
     type: Species,
@@ -62,10 +102,17 @@ export class SpeciesController {
   async create(
     @Req() request: RequestWithUser,
     @Res({ passthrough: true }) response: Response,
-    @Body() createSpeciesDto: CreateSpeciesDto
+    @Body() createSpeciesDto: CreateSpeciesDto,
+    @UploadedFile() exampleImg?: Express.Multer.File
+    // @UploadedFile() foliageImg?: Express.Multer.File
   ): Promise<Species> {
     this._logger.debug("POST: /api/species");
     const userId: number = getUserIdFromRequest(request);
+
+    // Agrego las fotos al DTO para enviarlo al service
+    createSpeciesDto.exampleImg = exampleImg;
+    // createSpeciesDto.foliageImg = foliageImg;
+
     return this._speciesService.create(createSpeciesDto, userId);
   }
 

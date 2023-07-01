@@ -28,7 +28,7 @@ export enum Origin {
 
 export enum FoliageType {
   PERENNE = "PERENNE",
-  CADUCA = "CADUCA",
+  CADUCIFOLIA = "CADUCIFOLIA",
 }
 
 @Entity("species")
@@ -52,10 +52,20 @@ export class Species extends BaseEntity {
     name: "common_name",
     type: "varchar",
     nullable: false,
-    unique: true,
+    unique: false,
     length: 255,
   })
   commonName: string;
+
+  @ApiProperty()
+  @Column({
+    name: "english_name",
+    type: "varchar",
+    nullable: true,
+    unique: false,
+    length: 255,
+  })
+  englishName: string;
 
   @ApiProperty()
   @Column({
