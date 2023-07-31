@@ -4,7 +4,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { KingdomPrivateList } from './Kingdom/KingdomPrivateList';
 import { PhylumPrivateList } from './Phylum/PhylumPrivateList';
-import { ClassesTaxPrivateList } from './ClasesTax/ClassesTaxPrivateList';
+import { ClassesTaxPrivateList } from './ClassesTax/ClassesTaxPrivateList';
 import { OrdersTaxPrivateList } from './OrderTax/OrdersTaxPrivateList';
 
 interface TabPanelProps {
@@ -46,11 +46,7 @@ export const TaxonomyPage = () => {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label='basic tabs example'
-        >
+        <Tabs value={value} onChange={handleChange} aria-label='tabs'>
           <Tab label='Reinos' {...a11yProps(0)} />
           <Tab label='Filos' {...a11yProps(1)} />
           <Tab label='Clases' {...a11yProps(2)} />
@@ -69,6 +65,9 @@ export const TaxonomyPage = () => {
         <ClassesTaxPrivateList />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
+        <OrdersTaxPrivateList />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={4}>
         <OrdersTaxPrivateList />
       </CustomTabPanel>
     </Box>
