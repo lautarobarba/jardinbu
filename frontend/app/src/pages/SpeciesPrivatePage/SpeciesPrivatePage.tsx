@@ -1,21 +1,20 @@
-import { PageSubTitle } from "../../components/PageSubTitle";
-import { PageTitle } from "../../components/PageTitle";
-import { useGetSpecies } from "../../api/hooks";
-import { useEffect, useMemo, useState } from "react";
+import { PageSubTitle } from '../../components/PageSubTitle';
+import { PageTitle } from '../../components/PageTitle';
+import { useGetSpecies } from '../../api/hooks';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ColumnFiltersState,
   PaginationState,
   SortingState,
   getCoreRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import { fuzzyFilter } from "../../utils/ColumnFilter";
-import { CustomTable } from "../../utils/CustomTable";
-import { CircularProgress } from "@mui/material";
-import { Species } from "../../interfaces/SpeciesInterface";
-import { columns } from "./columns";
-import { CreateSpeciesForm } from "../../forms/CrudSpeciesForm";
-import { GlideTable } from "./GlideTable";
+} from '@tanstack/react-table';
+import { fuzzyFilter } from '../../utils/ColumnFilter';
+import { CustomTable } from '../../utils/CustomTable';
+import { CircularProgress } from '@mui/material';
+import { Species } from '../../interfaces/SpeciesInterface';
+import { columns } from './columns';
+import { CreateSpeciesForm } from '../../forms/CrudSpeciesForm';
 
 export const SpeciesPrivatePage = () => {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
@@ -82,20 +81,20 @@ export const SpeciesPrivatePage = () => {
   }, [getSpeciesIsSuccess, getSpeciesData]);
 
   return (
-    <div className="bg-white p-3">
-      <PageTitle title="Especies" />
+    <div className='bg-white p-3'>
+      <PageTitle title='Especies' />
 
-      <div className="d-flex justify-content-between">
-        <PageSubTitle title="Listado de especies" />
+      <div className='d-flex justify-content-between'>
+        <PageSubTitle title='Listado de especies' />
         <button
           className={
             openCreate
-              ? "btn bg-danger text-white"
-              : "btn bg-success text-white"
+              ? 'btn bg-danger text-white'
+              : 'btn bg-success text-white'
           }
           onClick={toggleCreateForm}
         >
-          {openCreate ? "Cancelar" : "Crear"}
+          {openCreate ? 'Cancelar' : 'Crear'}
         </button>
       </div>
 
@@ -103,22 +102,15 @@ export const SpeciesPrivatePage = () => {
 
       {openCreate && <CreateSpeciesForm toggleVisibility={setOpenCreate} />}
 
-      {getSpeciesIsError && <p className="text-danger">Error...</p>}
+      {getSpeciesIsError && <p className='text-danger'>Error...</p>}
 
       {getSpeciesIsLoading && <CircularProgress />}
 
       {getSpeciesIsSuccess && (
-        <section id="species" className="species">
+        <section id='species' className='species'>
           <CustomTable table={table} />
         </section>
       )}
-
-      <hr />
-      <GlideTable
-      // getData={getSpeciesData?.rows ?? []}
-      // columns={columns}
-      // numRows={getSpeciesData?.rows.length ?? 0}
-      />
     </div>
   );
 };

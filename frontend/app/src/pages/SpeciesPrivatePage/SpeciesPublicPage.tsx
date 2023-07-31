@@ -1,9 +1,7 @@
 import { PageSubTitle } from '../../components/PageSubTitle';
 import { PageTitle } from '../../components/PageTitle';
-import { Family } from '../../interfaces/FamilyInterface';
-import { useGetFamilies } from '../../api/hooks';
+import { useGetSpecies } from '../../api/hooks';
 import { useEffect, useMemo, useState } from 'react';
-import { CreateFamilyForm } from '../../forms/CrudFamilyForm';
 import {
   ColumnFiltersState,
   PaginationState,
@@ -11,12 +9,14 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { columns } from './columns';
 import { fuzzyFilter } from '../../utils/ColumnFilter';
 import { CustomTable } from '../../utils/CustomTable';
 import { CircularProgress } from '@mui/material';
+import { Species } from '../../interfaces/SpeciesInterface';
+import { columns } from './columns';
+import { CreateSpeciesForm } from '../../forms/CrudSpeciesForm';
 
-export const FamiliesPrivatePage = () => {
+export const SpeciesPublicPage = () => {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -34,12 +34,12 @@ export const FamiliesPrivatePage = () => {
 
   // Queries
   const {
-    isLoading: getFamiliesIsLoading,
-    isSuccess: getFamiliesIsSuccess,
-    data: getFamiliesData,
-    isError: getFamiliesIsError,
-    // error: getFamiliesError
-  } = useGetFamilies(
+    isLoading: getSpeciesIsLoading,
+    isSuccess: getSpeciesIsSuccess,
+    data: getSpeciesData,
+    isError: getSpeciesIsError,
+    // error: getSpeciesError
+  } = useGetSpecies(
     {
       pagination: {
         paginationState: pagination,
@@ -56,12 +56,12 @@ export const FamiliesPrivatePage = () => {
     setOpenCreate(!openCreate);
   };
 
-  const table = useReactTable<Family>({
-    data: getFamiliesData?.rows ?? [],
+  const table = useReactTable<Species>({
+    data: getSpeciesData?.rows ?? [],
     columns: columns,
     state: { pagination, sorting, columnFilters },
     manualPagination: true,
-    pageCount: getFamiliesData?.pageCount ?? -1,
+    pageCount: getSpeciesData?.pageCount ?? -1,
     onPaginationChange: setPagination,
     manualSorting: true,
     enableMultiSort: true,
@@ -75,17 +75,17 @@ export const FamiliesPrivatePage = () => {
   });
 
   useEffect(() => {
-    if (getFamiliesIsSuccess) {
-      console.log({ getFamiliesData });
+    if (getSpeciesIsSuccess) {
+      console.log({ getSpeciesData });
     }
-  }, [getFamiliesIsSuccess, getFamiliesData]);
+  }, [getSpeciesIsSuccess, getSpeciesData]);
 
   return (
     <div className='bg-white p-3'>
-      <PageTitle title='Familias' />
+      <PageTitle title='Especies' />
 
       <div className='d-flex justify-content-between'>
-        <PageSubTitle title='Listado de familias' />
+        <PageSubTitle title='Listado de especies' />
         <button
           className={
             openCreate
@@ -100,14 +100,14 @@ export const FamiliesPrivatePage = () => {
 
       <br />
 
-      {openCreate && <CreateFamilyForm toggleVisibility={setOpenCreate} />}
+      {openCreate && <CreateSpeciesForm toggleVisibility={setOpenCreate} />}
 
-      {getFamiliesIsError && <p className='text-danger'>Error...</p>}
+      {getSpeciesIsError && <p className='text-danger'>Error...</p>}
 
-      {getFamiliesIsLoading && <CircularProgress />}
+      {getSpeciesIsLoading && <CircularProgress />}
 
-      {getFamiliesIsSuccess && (
-        <section id='families' className='families'>
+      {getSpeciesIsSuccess && (
+        <section id='species' className='species'>
           <CustomTable table={table} />
         </section>
       )}

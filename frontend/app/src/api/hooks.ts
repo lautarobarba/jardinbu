@@ -27,8 +27,19 @@ import {
   deleteSpecies,
   updateSpecimen,
   deleteSpecimen,
+  createKingdom,
+  getKingdoms,
+  updateKingdom,
+  getKingdom,
+  deleteKingdom,
+  getGlobalSearch,
+  createPhylum,
+  updatePhylum,
+  deletePhylum,
+  getPhylums,
+  getPhylum,
 } from './services';
-import { Pagination } from '../utils/iPagination';
+import { Pagination, PaginationNew } from '../utils/iPagination';
 
 // Mutations hooks ------------------------------------------------------------
 // ## Users
@@ -54,6 +65,32 @@ export const useSendEmailConfirmationEmail = () => {
 
 export const useConfirmEmail = () => {
   return useMutation(confirmEmail);
+};
+
+// ## Kingdoms
+export const useCreateKingdom = () => {
+  return useMutation(createKingdom);
+};
+
+export const useUpdateKingdom = () => {
+  return useMutation(updateKingdom);
+};
+
+export const useDeleteKingdom = () => {
+  return useMutation(deleteKingdom);
+};
+
+// ## Phylums
+export const useCreatePhylum = () => {
+  return useMutation(createPhylum);
+};
+
+export const useUpdatePhylum = () => {
+  return useMutation(updatePhylum);
+};
+
+export const useDeletePhylum = () => {
+  return useMutation(deletePhylum);
 };
 
 // ## Families
@@ -118,6 +155,36 @@ export const useGetAuthUser = (
   >
 ) => {
   return useQuery(['auth-user'], () => getAuthUser(token), config);
+};
+
+// ## Kingdoms
+export const useGetKingdoms = (
+  params: {
+    pagination?: PaginationNew;
+  },
+  config?: any
+) => {
+  const { pagination } = params;
+  return useQuery(['kingdoms', pagination], () => getKingdoms(params), config);
+};
+
+export const useGetKingdom = (params: { id: number }, config?: any) => {
+  return useQuery([`kingdom-${params.id}`], () => getKingdom(params), config);
+};
+
+// ## Phylums
+export const useGetPhylums = (
+  params: {
+    pagination?: PaginationNew;
+  },
+  config?: any
+) => {
+  const { pagination } = params;
+  return useQuery(['phylums', pagination], () => getPhylums(params), config);
+};
+
+export const useGetPhylum = (params: { id: number }, config?: any) => {
+  return useQuery([`phylum-${params.id}`], () => getPhylum(params), config);
 };
 
 // ## Families
@@ -186,4 +253,13 @@ export const useGetSpecimens = (
 
 export const useGetSpecimen = (params: { id: number }, config?: any) => {
   return useQuery([`specimen-${params.id}`], () => getSpecimen(params), config);
+};
+
+// ## Administration
+export const useGetGlobalSearch = (params: { value: string }, config?: any) => {
+  return useQuery(
+    ['global-search', params],
+    () => getGlobalSearch(params),
+    config
+  );
 };

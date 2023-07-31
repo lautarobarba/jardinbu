@@ -14,7 +14,12 @@ import {
 } from '../interfaces/SpecimenInterface';
 import { UpdateUserDto } from '../interfaces/UpdateUserDto';
 import { User } from '../interfaces/User';
-import { PaginatedList, Pagination } from '../utils/iPagination';
+import {
+  PaginatedList,
+  PaginatedListNew,
+  Pagination,
+  PaginationNew,
+} from '../utils/iPagination';
 import {
   Family,
   CreateFamilyDto,
@@ -25,6 +30,16 @@ import {
   Genus,
   UpdateGenusDto,
 } from '../interfaces/GenusInterface';
+import {
+  CreateKingdomDto,
+  Kingdom,
+  UpdateKingdomDto,
+} from '../interfaces/KingdomInterface';
+import {
+  CreatePhylumDto,
+  Phylum,
+  UpdatePhylumDto,
+} from '../interfaces/PhylumInterface';
 
 // Api Url
 const apiBaseUrl: string =
@@ -95,6 +110,80 @@ export const sendEmailConfirmationEmail = async (
 export const confirmEmail = async (token: string): Promise<void> => {
   return axiosClient
     .post('auth/email-confirmation/confirm', null, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
+
+// ## Kingdoms
+export const createKingdom = async (params: {
+  token: string;
+  createKingdomDto: CreateKingdomDto;
+}): Promise<Kingdom> => {
+  const { token, createKingdomDto } = params;
+  return axiosClient
+    .post('kingdom', createKingdomDto, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
+
+export const updateKingdom = async (params: {
+  token: string;
+  updateKingdomDto: UpdateKingdomDto;
+}): Promise<Kingdom> => {
+  const { token, updateKingdomDto } = params;
+  return axiosClient
+    .patch('kingdom', updateKingdomDto, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
+
+export const deleteKingdom = async (params: {
+  token: string;
+  id: number;
+}): Promise<void> => {
+  const { token, id } = params;
+  return axiosClient
+    .delete(`kingdom/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
+
+// ## Phylums
+export const createPhylum = async (params: {
+  token: string;
+  createPhylumDto: CreatePhylumDto;
+}): Promise<Phylum> => {
+  const { token, createPhylumDto } = params;
+  return axiosClient
+    .post('phylum', createPhylumDto, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
+
+export const updatePhylum = async (params: {
+  token: string;
+  updatePhylumDto: UpdatePhylumDto;
+}): Promise<Phylum> => {
+  const { token, updatePhylumDto } = params;
+  return axiosClient
+    .patch('phylum', updatePhylumDto, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
+
+export const deletePhylum = async (params: {
+  token: string;
+  id: number;
+}): Promise<void> => {
+  const { token, id } = params;
+  return axiosClient
+    .delete(`phylum/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((response) => response.data);
@@ -257,6 +346,40 @@ export const getAuthUser = async (token: string): Promise<User> => {
     .then((response) => response.data);
 };
 
+// ## Kingdoms
+export const getKingdoms = async (params: {
+  pagination?: PaginationNew;
+}): Promise<PaginatedListNew<Kingdom>> => {
+  const { pagination } = params;
+  return axiosClient
+    .get(`kingdom`, {
+      params: pagination,
+    })
+    .then((response) => response.data);
+};
+
+export const getKingdom = async (params: { id: number }): Promise<Kingdom> => {
+  const { id } = params;
+  return axiosClient.get(`kingdom/${id}`).then((response) => response.data);
+};
+
+// ## Phylums
+export const getPhylums = async (params: {
+  pagination?: PaginationNew;
+}): Promise<PaginatedListNew<Phylum>> => {
+  const { pagination } = params;
+  return axiosClient
+    .get(`phylum`, {
+      params: pagination,
+    })
+    .then((response) => response.data);
+};
+
+export const getPhylum = async (params: { id: number }): Promise<Phylum> => {
+  const { id } = params;
+  return axiosClient.get(`phylum/${id}`).then((response) => response.data);
+};
+
 // ## Families
 export const getFamilies = async (params: {
   pagination?: Pagination;
@@ -327,4 +450,14 @@ export const getSpecimen = async (params: {
 }): Promise<Specimen> => {
   const { id } = params;
   return axiosClient.get(`specimen/${id}`).then((response) => response.data);
+};
+
+// ## Administration
+export const getGlobalSearch = async (params: {
+  value: string;
+}): Promise<any> => {
+  const { value } = params;
+  return axiosClient
+    .get(`administration/global-search`, { params: { value: value } })
+    .then((response) => response.data);
 };

@@ -9,9 +9,14 @@ import {
   // ListItemText,
   // AppBar,
   // Grid
-} from "@mui/material";
-import { MDBIcon, MDBNavbar, MDBNavbarBrand, MDBNavbarItem } from "mdb-react-ui-kit";
-import { Link } from "react-router-dom";
+} from '@mui/material';
+import {
+  MDBIcon,
+  MDBNavbar,
+  MDBNavbarBrand,
+  MDBNavbarItem,
+} from 'mdb-react-ui-kit';
+import { Link } from 'react-router-dom';
 // import { Link } from "react-router-dom";
 
 interface Props {
@@ -28,28 +33,30 @@ export const SideBar = (props: Props) => {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        "& .MuiDrawer-paper": {
+        '& .MuiDrawer-paper': {
           width: drawerWidth,
-          boxSizing: "border-box",
+          boxSizing: 'border-box',
         },
       }}
-      variant="persistent"
-      anchor="left"
+      variant='persistent'
+      anchor='left'
       open={menuState}
-      id="sidebar"
+      id='sidebar'
     >
-
       {/* Brand */}
-      <MDBNavbar className="navbar navbar-expand-md bg-dark">
-        <div className="d-flex justify-content-between" style={{ width: drawerWidth }}>
-          <MDBNavbarBrand className="text-white" href="/app/admin">
+      <MDBNavbar className='navbar navbar-expand-md bg-dark'>
+        <div
+          className='d-flex justify-content-between'
+          style={{ width: drawerWidth }}
+        >
+          <MDBNavbarBrand className='text-white' href='/app/admin'>
             Biblioteca
           </MDBNavbarBrand>
           <MDBIcon
-            icon='times' 
-            size='lg' 
-            className="text-white" 
-            style={{ marginTop: 'auto', marginBottom: 'auto' }} 
+            icon='times'
+            size='lg'
+            className='text-white'
+            style={{ marginTop: 'auto', marginBottom: 'auto' }}
             onClick={toggleSideBar}
           />
         </div>
@@ -57,14 +64,35 @@ export const SideBar = (props: Props) => {
 
       {/* Enlaces */}
       <hr style={{ margin: 0 }} />
-      <Link className="nav-link custom-link" to={"/app/admin/profile"} >Perfil</Link>
+      <Link className='nav-link custom-link' to={'/app/admin/profile'}>
+        Perfil
+      </Link>
       <hr style={{ margin: 0 }} />
-      <Link className="nav-link custom-link" to={"/app/admin/family"} >Familias</Link>
-      <Link className="nav-link custom-link" to={"/app/admin/genus"}>Géneros</Link>
-      <Link className="nav-link custom-link" to={"/app/admin/species"}>Especies</Link>
-      <Link className="nav-link custom-link" to={"/app/admin/specimen"} >Ejemplares</Link>
+      <Link className='nav-link custom-link' to={'/app/admin/browser'}>
+        Buscador
+      </Link>
+      <Link className='nav-link custom-link' to={'/app/admin/taxonomy'}>
+        Taxonomía
+      </Link>
+      {/* <Link className='nav-link custom-link' to={'/app/admin/family'}>
+        Familias
+      </Link>
+      <Link className='nav-link custom-link' to={'/app/admin/genus'}>
+        Géneros
+      </Link> */}
+      <Link className='nav-link custom-link' to={'/app/admin/species'}>
+        Especies
+      </Link>
+      <Link className='nav-link custom-link' to={'/app/admin/specimen'}>
+        Ejemplares
+      </Link>
+      <Link className='nav-link custom-link' to={'/app/admin/blog'}>
+        Blog
+      </Link>
       <hr style={{ margin: 0 }} />
-      <Link className="nav-link custom-link" to={"/app/auth/logout"} >Salir</Link>
+      <Link className='nav-link custom-link' to={'/app/auth/logout'}>
+        Salir
+      </Link>
     </Drawer>
   );
 };

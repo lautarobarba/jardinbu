@@ -1,0 +1,29 @@
+import { formatTitleCase } from '../utils/tools';
+import { User } from './User';
+
+export interface Kingdom {
+  id: number;
+  name: string;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deleted: boolean;
+  userMod: User;
+}
+
+export interface CreateKingdomDto {
+  name: string;
+  description?: string;
+}
+
+export interface UpdateKingdomDto extends CreateKingdomDto {
+  id: number;
+}
+
+export const kingdomToString = (kingdom: Kingdom) => {
+  if (kingdom.description)
+    return formatTitleCase(
+      `${kingdom.id}. ${kingdom.name} (${kingdom.description})`
+    );
+  return formatTitleCase(`${kingdom.id}. ${kingdom.name}`);
+};

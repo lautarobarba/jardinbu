@@ -1,0 +1,41 @@
+version: "3.8"
+name: jardin_app
+services:
+  dev:
+    container_name: jardin_app
+    image: jardin_app:1.0.0
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command: bash -c "npm install && npm run start"
+    restart: always
+    env_file: .env
+    environment:
+      - PORT=${FRONT_PORT}
+    ports:
+      - ${FRONT_PORT}:${FRONT_PORT}
+    volumes:
+      - ./app:/app
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  prod:
+    container_name: jardin_app
+    image: jardin_app:1.0.0
+    build:
+      context: .
+      target: production
+      dockerfile: ./Dockerfile
+    command: bash -c "npm install && npm run build && cp -r /app/build /usr/share/nginx/app && (nginx -g 'daemon off;' &) && touch /var/log/nginx/nginx.log && tail -f /var/log/nginx/nginx.log"
+    restart: always
+    env_file: .env
+    environment:
+      - PORT=80
+    ports:
+      - ${FRONT_PORT}:80
+    volumes:
+      - ./app:/app
+      - ./nginx.conf:/etc/nginx/sites-available/default
+    extra_hosts:
+      - host.docker.internal:host-gateway

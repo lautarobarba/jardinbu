@@ -11,14 +11,15 @@ import { TestPage } from '../pages/TestPage';
 import { HomePage } from '../pages/HomePage';
 import { SpeciesPublicPage } from '../pages/SpeciesPublicPage';
 import { SpeciesPrivatePage } from '../pages/SpeciesPrivatePage/SpeciesPrivatePage';
-import { FamiliesPrivatePage } from '../pages/FamiliesPrivatePage/FamiliesPrivatePage';
 import { LogoutPage } from '../pages/LogoutPage';
 import { SpecimensPublicPage } from '../pages/SpecimensPublicPage';
 import { EmailConfirmationRequiredPage } from '../pages/EmailConfirmationRequiredPage';
 import { ConfirmEmailPage } from '../pages/ConfirmEmailPage';
-import { GeneraPrivatePage } from '../pages/GeneraPrivatePage/GeneraPrivatePage';
 import { SpecimensPrivatePage } from '../pages/SpecimensPrivatePage/SpecimensPrivatePage';
 import { ProfilePage } from '../pages/ProfilePage';
+import { TaxonomyPage } from '../pages/TaxonomyPage';
+import { SearchPrivatePage } from '../pages/SearchPrivatePage';
+import { KingdomDetail } from '../pages/Kingdom/KingdomDetail';
 
 export const router = createBrowserRouter([
   {
@@ -74,14 +75,19 @@ export const router = createBrowserRouter([
             element: <ProfilePage />,
           },
           {
-            // path: '/app/admin/family',
-            path: ROUTES.FAMILY,
-            element: <FamiliesPrivatePage />,
+            // path: '/app/admin/browser',
+            path: ROUTES.BROWSER,
+            element: <SearchPrivatePage />,
           },
           {
-            // path: '/app/admin/genus',
-            path: ROUTES.GENUS,
-            element: <GeneraPrivatePage />,
+            // path: '/app/admin/taxonomy',
+            path: ROUTES.TAXONOMY,
+            element: <TaxonomyPage />,
+          },
+          {
+            // path: '/app/admin/kingdom/detail/:id',
+            path: ROUTES.KINGDOM_DETAIL,
+            element: <KingdomDetail />,
           },
           {
             // path: '/app/admin/species',

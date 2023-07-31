@@ -1,32 +1,36 @@
 // ROUTE NAMES
 
 export const ROUTES = {
-  ROOT: "",
-  APP: "/app",
+  ROOT: '',
+  APP: '/app',
   // App pública
-  PUBLIC: "",
-  HOME: "",
+  PUBLIC: '',
+  HOME: '',
   // App privada
-  PRIVATE: "admin",
-  DASHBOARD: "",
+  PRIVATE: 'admin',
+  DASHBOARD: '',
+  BROWSER: 'browser',
+  TAXONOMY: 'taxonomy',
   // Common routes
-  FAMILY: "family",
-  GENUS: "genus",
-  SPECIES: "species",
-  SPECIMEN: "specimen",
+  KINGDOM_LIST: 'kingdom',
+  KINGDOM_DETAIL: 'kingdom/detail/:id',
+  // FAMILY: "family",
+  // GENUS: "genus",
+  SPECIES: 'species',
+  SPECIMEN: 'specimen',
 
   // Auth
-  AUTH: "/app/auth",
-  REGISTER: "register",
-  LOGIN: "login",
-  LOGOUT: "logout",
+  AUTH: '/app/auth',
+  REGISTER: 'register',
+  LOGIN: 'login',
+  LOGOUT: 'logout',
   PROFILE: 'profile',
-  CONFIRM_EMAIL_REQUIRED: "email-confirmation-required",
-  CONFIRM_EMAIL: "confirm-email/:token",
+  CONFIRM_EMAIL_REQUIRED: 'email-confirmation-required',
+  CONFIRM_EMAIL: 'confirm-email/:token',
 
   // 404 Error
-  ELSE: "*",
+  ELSE: '*',
 
   // Test
-  TEST: "/test",
+  TEST: '/test',
 };
