@@ -30,6 +30,7 @@ import { Phylum, phylumToString } from '../interfaces/PhylumInterface';
 import { PageSubTitle } from '../components/PageSubTitle';
 import { FormEvent, useEffect, useState } from 'react';
 import { CreatePhylumForm } from './CrudPhylumForm';
+import { Kingdom } from '../interfaces/KingdomInterface';
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -55,6 +56,7 @@ export const CreateClassTaxForm = (props: CreateClassTaxFormProps) => {
   const token = useJwtToken();
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
+  const [kingdom, setKingdom] = useState<string>('');
 
   const [openCreatePhylumModal, setOpenCreatePhylumModal] =
     useState<boolean>(false);
@@ -177,9 +179,10 @@ export const CreateClassTaxForm = (props: CreateClassTaxFormProps) => {
             isOptionEqualToValue={(option: any, selection: any) =>
               option.value === selection.value
             }
-            onChange={(e, selection: Phylum) =>
-              formik.setFieldValue('phylumId', selection)
-            }
+            onChange={(e, selection: Phylum) => {
+              formik.setFieldValue('phylumId', selection);
+              setKingdom(selection?.kingdom.name ?? '');
+            }}
             fullWidth
             disableClearable={true}
             autoSelect={true}
@@ -213,6 +216,15 @@ export const CreateClassTaxForm = (props: CreateClassTaxFormProps) => {
               />
             </div>
           </Dialog>
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            name='Reino'
+            label='Reino'
+            fullWidth
+            value={kingdom}
+            disabled
+          />
         </Grid>
       </Grid>
       <br />
@@ -249,6 +261,7 @@ export const UpdateClassTaxForm = (props: UpdateClassTaxFormProps) => {
   const token = useJwtToken();
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
+  const [kingdom, setKingdom] = useState<string>('');
 
   const [openCreatePhylumModal, setOpenCreatePhylumModal] =
     useState<boolean>(false);
@@ -264,7 +277,7 @@ export const UpdateClassTaxForm = (props: UpdateClassTaxFormProps) => {
   // Query
   const {
     // isLoading: getClassTaxIsLoading,
-    // isSuccess: getClassTaxIsSuccess,
+    isSuccess: getClassTaxIsSuccess,
     data: getClassTaxData,
     // isError: getClassTaxIsError,
     // error: getClassTaxError,
@@ -323,8 +336,9 @@ export const UpdateClassTaxForm = (props: UpdateClassTaxFormProps) => {
   });
 
   useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
+    if (getClassTaxIsSuccess && getClassTaxData.phylum.kingdom)
+      setKingdom(getClassTaxData.phylum.kingdom.name);
+  }, [getClassTaxIsSuccess]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -389,9 +403,10 @@ export const UpdateClassTaxForm = (props: UpdateClassTaxFormProps) => {
             isOptionEqualToValue={(option: any, selection: any) =>
               option.value === selection.value
             }
-            onChange={(e, selection: Phylum) =>
-              formik.setFieldValue('phylum', selection)
-            }
+            onChange={(e, selection: Phylum) => {
+              formik.setFieldValue('phylum', selection);
+              setKingdom(selection?.kingdom.name ?? '');
+            }}
             fullWidth
             disableClearable={true}
             autoSelect={true}
@@ -425,6 +440,15 @@ export const UpdateClassTaxForm = (props: UpdateClassTaxFormProps) => {
               />
             </div>
           </Dialog>
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            name='Reino'
+            label='Reino'
+            fullWidth
+            value={kingdom}
+            disabled
+          />
         </Grid>
       </Grid>
       <br />
@@ -461,11 +485,12 @@ export const DeleteClassTaxForm = (props: DeleteClassTaxFormProps) => {
   const token = useJwtToken();
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
+  const [kingdom, setKingdom] = useState<string>('');
 
   // Query
   const {
     // isLoading: getClassTaxIsLoading,
-    // isSuccess: getClassTaxIsSuccess,
+    isSuccess: getClassTaxIsSuccess,
     data: getClassTaxData,
     // isError: getClassTaxIsError,
     // error: getClassTaxError,
@@ -506,6 +531,11 @@ export const DeleteClassTaxForm = (props: DeleteClassTaxFormProps) => {
       }
     );
   };
+
+  useEffect(() => {
+    if (getClassTaxIsSuccess && getClassTaxData.phylum.kingdom)
+      setKingdom(getClassTaxData.phylum.kingdom.name);
+  }, [getClassTaxIsSuccess]);
 
   return (
     <form onSubmit={(event) => deletePhylum(event)}>
@@ -555,6 +585,15 @@ export const DeleteClassTaxForm = (props: DeleteClassTaxFormProps) => {
             fullWidth
             autoComplete='phylum'
             autoFocus
+            disabled
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            name='Reino'
+            label='Reino'
+            fullWidth
+            value={kingdom}
             disabled
           />
         </Grid>

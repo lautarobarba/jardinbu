@@ -322,10 +322,6 @@ export const UpdatePhylumForm = (props: UpdatePhylumFormProps) => {
     },
   });
 
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
-
   return (
     <form onSubmit={formik.handleSubmit}>
       <Grid container spacing={2} justifyContent={'center'}>
