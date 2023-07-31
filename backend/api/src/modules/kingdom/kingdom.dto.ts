@@ -1,17 +1,14 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
-export class CreateFamilyDto {
+export class CreateKingdomDto {
   @ApiProperty()
   name: string;
 
   @ApiPropertyOptional()
   description?: string;
-
-  @ApiProperty()
-  orderTaxId: number;
 }
 
-export class UpdateFamilyDto {
+export class UpdateKingdomDto {
   @ApiProperty()
   id: number;
 
@@ -20,7 +17,4 @@ export class UpdateFamilyDto {
 
   @ApiPropertyOptional()
   description?: string;
-
-  @ApiProperty()
-  orderTaxId: number;
 }

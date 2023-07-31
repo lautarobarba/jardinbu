@@ -4,18 +4,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Family } from "../family/family.entity";
 import { User } from "../user/user.entity";
-import { Species } from "../species/species.entity";
+import { Phylum } from "../phylum/phylum.entity";
 
-@Entity("genera")
-export class Genus extends BaseEntity {
+@Entity("kingdoms")
+export class Kingdom extends BaseEntity {
   @ApiProperty()
   @PrimaryGeneratedColumn("increment")
   id: number;
@@ -38,21 +36,6 @@ export class Genus extends BaseEntity {
     unique: false,
   })
   description: string;
-
-  // Relation
-  @ApiProperty({
-    type: () => Family,
-  })
-  @ManyToOne(() => Family, (family) => family.genera, {
-    nullable: false,
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
-    eager: true,
-  })
-  @JoinColumn({
-    name: "family_id",
-  })
-  family: Family;
 
   @ApiProperty()
   @CreateDateColumn({ name: "created_at" })
@@ -81,11 +64,11 @@ export class Genus extends BaseEntity {
 
   // Relation
   @ApiProperty({
-    type: () => Species,
+    type: () => Phylum,
     isArray: true,
   })
-  @OneToMany(() => Species, (species) => species.genus, {
+  @OneToMany(() => Phylum, (phylum) => phylum.kingdom, {
     eager: false,
   })
-  species: Species[];
+  phylums: Phylum[];
 }

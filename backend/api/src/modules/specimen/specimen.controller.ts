@@ -26,7 +26,7 @@ import { SpecimenService } from "./specimen.service";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
 import { getUserIdFromRequest } from "modules/utils/user.request";
 import { RequestWithUser } from "modules/auth/request-with-user.interface";
-import { PaginatedList, PaginationDto } from "modules/utils/pagination.dto";
+// import { PaginatedList, PaginationDto } from "modules/utils/pagination.dto";
 
 @ApiTags("Ejemplares")
 @Controller("specimen")
@@ -108,19 +108,19 @@ export class SpecimenController {
     return this._specimenService.update(updateSpecimenDto, userId);
   }
 
-  @Get()
-  @UseInterceptors(ClassSerializerInterceptor)
-  @ApiResponse({
-    status: HttpStatus.OK,
-    type: Specimen,
-    isArray: true,
-  })
-  async findAll(
-    @Query() paginationDto: PaginationDto
-  ): Promise<PaginatedList<Specimen>> {
-    this._logger.debug("GET: /api/specimen");
-    return this._specimenService.findAll(paginationDto);
-  }
+  // @Get()
+  // @UseInterceptors(ClassSerializerInterceptor)
+  // @ApiResponse({
+  //   status: HttpStatus.OK,
+  //   type: Specimen,
+  //   isArray: true,
+  // })
+  // async findAll(
+  //   @Query() paginationDto: PaginationDto
+  // ): Promise<PaginatedList<Specimen>> {
+  //   this._logger.debug("GET: /api/specimen");
+  //   return this._specimenService.findAll(paginationDto);
+  // }
 
   @Get(":id")
   @UseInterceptors(ClassSerializerInterceptor)

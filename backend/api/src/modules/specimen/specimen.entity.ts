@@ -1,5 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Species } from "../species/species.entity";
+import { ApiProperty } from "@nestjs/swagger";
 import {
   BaseEntity,
   Column,
@@ -8,11 +7,11 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { QRCode } from "../qr-code/qr-code.entity";
+import { Species } from "../species/species.entity";
+import { User } from "../user/user.entity";
 
 @Entity("specimens")
 export class Specimen extends BaseEntity {
@@ -42,10 +41,12 @@ export class Specimen extends BaseEntity {
   // Relation
   @ApiProperty({
     type: () => Species,
+    isArray: false,
   })
   @ManyToOne(() => Species, (species) => species.specimens, {
-    cascade: true,
+    nullable: false,
     onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
     eager: true,
   })
   @JoinColumn({
@@ -82,4 +83,17 @@ export class Specimen extends BaseEntity {
   @ApiProperty()
   @Column({ name: "deleted", type: "boolean", default: false })
   deleted: boolean;
+
+  // Relation
+  @ApiProperty({
+    type: () => User,
+    isArray: false,
+  })
+  @ManyToOne(() => User, () => {}, {
+    nullable: true,
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
+    eager: false,
+  })
+  userMod: User;
 }

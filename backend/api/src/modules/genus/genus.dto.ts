@@ -15,12 +15,12 @@ export class UpdateGenusDto {
   @ApiProperty()
   id: number;
 
-  @ApiPropertyOptional()
-  name?: string;
+  @ApiProperty()
+  name: string;
 
   @ApiPropertyOptional()
   description?: string;
 
-  @ApiPropertyOptional()
-  familyId?: number;
+  @ApiProperty()
+  familyId: number;
 }

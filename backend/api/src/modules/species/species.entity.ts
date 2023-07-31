@@ -1,5 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Picture } from "../utils/picture.entity";
+import { ApiProperty } from "@nestjs/swagger";
 import {
   BaseEntity,
   Column,
@@ -8,27 +7,37 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { Genus } from "../genus/genus.entity";
+import { User } from "../user/user.entity";
 import { Specimen } from "../specimen/specimen.entity";
 
-export enum Status {
-  PRESENT = "PRESENT",
-  ABSENT = "ABSENT",
-  EXTINCT = "EXTINCT",
+export enum OrganismType {
+  TREE = "TREE", // ARBOL = "ARBOL",
+  BUSH = "BUSH", // ARBUSTO = "ARBUSTO"
+  SUBSHRUB = "SUBSHRUB", // SUBARBUSTO = "SUBARBUSTO"
+  FUNGUS = "FUNGUS", // HONGO = "HONGO"
+  GRASS = "GRASS", // HIERBA = "HIERBA"
+  LICHEN = "LICHEN", // LIQUEN = "LIQUEN"
+  HEMIPARASITE_SUBSHRUB = "HEMIPARASITE_SUBSHRUB", // SUBARBUSTO_HEMIPARÁSITO = "SUBARBUSTO_HEMIPARÁSITO"
 }
 
-export enum Origin {
-  NATIVE = "NATIVE",
-  INTRODUCED = "INTRODUCED",
+export enum Status {
+  NATIVE = "NATIVE", // NATIVA = "NATIVA",
+  ENDEMIC = "ENDEMIC", // ENDEMICA = "ENDEMICA",
+  INTRODUCED = "INTRODUCED", // INTRODUCIDA = "INTRODUCIDA",
 }
 
 export enum FoliageType {
-  PERENNE = "PERENNE",
-  CADUCIFOLIA = "CADUCIFOLIA",
+  PERENNIAL = "PERENNIAL", // PERENNE = "PERENNE",
+  DECIDUOUS = "DECIDUOUS", // CADUCIFOLIA = "CADUCIFOLIA",
+}
+
+export enum Presence {
+  PRESENT = "PRESENT", // PRESENTE = "PRESENTE",
+  ABSENT = "ABSENT", // AUSENTE = "AUSENTE",
 }
 
 @Entity("species")
@@ -41,8 +50,8 @@ export class Species extends BaseEntity {
   @Column({
     name: "scientific_name",
     type: "varchar",
-    nullable: false,
-    unique: true,
+    nullable: true,
+    unique: false,
     length: 255,
   })
   scientificName: string;
@@ -51,7 +60,7 @@ export class Species extends BaseEntity {
   @Column({
     name: "common_name",
     type: "varchar",
-    nullable: false,
+    nullable: true,
     unique: false,
     length: 255,
   })
@@ -81,8 +90,9 @@ export class Species extends BaseEntity {
     type: () => Genus,
   })
   @ManyToOne(() => Genus, (genus) => genus.species, {
-    cascade: true,
+    nullable: false,
     onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
     eager: true,
   })
   @JoinColumn({
@@ -92,61 +102,71 @@ export class Species extends BaseEntity {
 
   @ApiProperty()
   @Column({
+    name: "organism_type",
+    type: "enum",
+    enum: OrganismType,
+    default: OrganismType.TREE,
+    nullable: true,
+  })
+  organismType: OrganismType;
+
+  @ApiProperty()
+  @Column({
     name: "status",
     type: "enum",
     enum: Status,
-    default: Status.PRESENT,
+    default: Status.NATIVE,
     nullable: true,
   })
   status: Status;
 
   @ApiProperty()
   @Column({
-    name: "origin",
-    type: "enum",
-    enum: Origin,
-    default: Origin.NATIVE,
-    nullable: true,
-  })
-  origin: Origin;
-
-  // Relation
-  @ApiProperty({
-    type: () => Picture,
-  })
-  @OneToOne(() => Picture, (picture) => picture.speciesExample, {
-    cascade: true,
-    onDelete: "RESTRICT",
-    eager: true,
-  })
-  @JoinColumn({
-    name: "example_img",
-  })
-  exampleImg: Picture;
-
-  @ApiProperty()
-  @Column({
     name: "foliage_type",
     type: "enum",
     enum: FoliageType,
-    default: FoliageType.PERENNE,
+    default: FoliageType.DECIDUOUS,
     nullable: true,
   })
   foliageType: FoliageType;
 
-  // Relation
-  @ApiProperty({
-    type: () => Picture,
+  @ApiProperty()
+  @Column({
+    name: "presence",
+    type: "enum",
+    enum: Presence,
+    default: Presence.PRESENT,
+    nullable: true,
   })
-  @OneToOne(() => Picture, (picture) => picture.speciesFoliage, {
-    cascade: true,
-    onDelete: "RESTRICT",
-    eager: true,
-  })
-  @JoinColumn({
-    name: "foliage_img",
-  })
-  foliageImg: Picture;
+  presence: Presence;
+
+  // // Relation
+  // @ApiProperty({
+  //   type: () => Picture,
+  // })
+  // @OneToOne(() => Picture, (picture) => picture.speciesExample, {
+  //   cascade: true,
+  //   onDelete: "RESTRICT",
+  //   eager: true,
+  // })
+  // @JoinColumn({
+  //   name: "example_img",
+  // })
+  // exampleImg: Picture;
+
+  // // Relation
+  // @ApiProperty({
+  //   type: () => Picture,
+  // })
+  // @OneToOne(() => Picture, (picture) => picture.speciesFoliage, {
+  //   cascade: true,
+  //   onDelete: "RESTRICT",
+  //   eager: true,
+  // })
+  // @JoinColumn({
+  //   name: "foliage_img",
+  // })
+  // foliageImg: Picture;
 
   @ApiProperty()
   @CreateDateColumn({ name: "created_at" })
@@ -159,6 +179,19 @@ export class Species extends BaseEntity {
   @ApiProperty()
   @Column({ name: "deleted", type: "boolean", default: false })
   deleted: boolean;
+
+  // Relation
+  @ApiProperty({
+    type: () => User,
+    isArray: false,
+  })
+  @ManyToOne(() => User, () => {}, {
+    nullable: true,
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
+    eager: false,
+  })
+  userMod: User;
 
   // Relation
   @ApiProperty({

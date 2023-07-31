@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Express } from "express";
-import { FoliageType, Origin, Status } from "./species.entity";
+import { FoliageType, Status } from "./species.entity";
 
 export class CreateSpeciesDto {
   @ApiProperty()
@@ -8,9 +8,6 @@ export class CreateSpeciesDto {
 
   @ApiPropertyOptional()
   commonName?: string;
-
-  @ApiPropertyOptional()
-  englishName?: string;
 
   @ApiPropertyOptional()
   description?: string;
@@ -21,8 +18,8 @@ export class CreateSpeciesDto {
   @ApiPropertyOptional()
   status?: Status;
 
-  @ApiPropertyOptional()
-  origin?: Origin;
+  // @ApiPropertyOptional()
+  // origin?: Origin;
 
   @ApiPropertyOptional({
     type: "string",
@@ -51,9 +48,6 @@ export class UpdateSpeciesDto {
   commonName?: string;
 
   @ApiPropertyOptional()
-  englishName?: string;
-
-  @ApiPropertyOptional()
   description?: string;
 
   @ApiPropertyOptional()
@@ -62,8 +56,8 @@ export class UpdateSpeciesDto {
   @ApiPropertyOptional()
   status?: Status;
 
-  @ApiPropertyOptional()
-  origin?: Origin;
+  // @ApiPropertyOptional()
+  // origin?: Origin;
 
   @ApiPropertyOptional({
     type: "string",

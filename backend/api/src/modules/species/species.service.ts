@@ -13,17 +13,14 @@ import { CreateSpeciesDto, UpdateSpeciesDto } from "./species.dto";
 import { Species } from "./species.entity";
 import { GenusService } from "../genus/genus.service";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
-import { PaginatedList, PaginationDto } from "modules/utils/pagination.dto";
-import { Picture } from "modules/utils/picture.entity";
-import { UtilsService } from "modules/utils/utils.service";
+// import { PaginatedList, PaginationDto } from "modules/utils/pagination.dto";
 
 @Injectable()
 export class SpeciesService {
   constructor(
     @InjectRepository(Species)
     private readonly _speciesRepository: Repository<Species>,
-    private readonly _genusService: GenusService,
-    private readonly _utilsService: UtilsService
+    private readonly _genusService: GenusService
   ) {}
   private readonly _logger = new Logger(SpeciesService.name);
 
@@ -39,7 +36,7 @@ export class SpeciesService {
       description,
       genusId,
       status,
-      origin,
+      // origin,
       exampleImg,
       foliageType,
       foliageImg,
@@ -66,28 +63,11 @@ export class SpeciesService {
       species.genus = await this._genusService.findOne(genusId);
     else species.genus = null;
     species.status = status;
-    species.origin = origin;
+    // species.origin = origin;
     species.foliageType = foliageType;
     species.createdAt = timestamp;
     species.updatedAt = timestamp;
     species.deleted = false;
-
-    // Guardo foto de ejemplo
-    // Primero reviso si existía una foto de perfil previa y la marco como eliminada.
-    if (exampleImg) {
-      // Si recibí una nueva foto de perfil
-      // 1° Elimino la vieja
-      // if (user.profilePicture) {
-      //   await this._utilsService.deletePicture(user.profilePicture.id);
-      // }
-
-      // 1° La guardo en la DB
-      const newExamplePicture: Picture =
-        await await this._utilsService.saveProfilePicture(exampleImg);
-
-      // 3° Asigno la nueva foto al usuario
-      species.exampleImg = newExamplePicture;
-    }
 
     // Controlo que el modelo no tenga errores antes de guardar
     const errors = await validate(species);
@@ -111,7 +91,7 @@ export class SpeciesService {
       description,
       genusId,
       status,
-      origin,
+      // origin,
       exampleImg,
       foliageType,
       foliageImg,
@@ -148,7 +128,7 @@ export class SpeciesService {
       species.genus = await this._genusService.findOne(genusId);
     else species.genus = null;
     if (status) species.status = status;
-    if (origin) species.origin = origin;
+    // if (origin) species.origin = origin;
     if (foliageType) species.foliageType = foliageType;
     species.updatedAt = timestamp;
 
@@ -162,95 +142,93 @@ export class SpeciesService {
     return this._speciesRepository.save(species);
   }
 
-  async findAll(paginationDto: PaginationDto): Promise<PaginatedList<Species>> {
-    this._logger.debug("findAll()");
-    const { paginationState, sortingState, columnFiltersState } = paginationDto;
+  // async findAll(paginationDto: PaginationDto): Promise<PaginatedList<Species>> {
+  //   this._logger.debug("findAll()");
+  //   const { paginationState, sortingState, columnFiltersState } = paginationDto;
 
-    const tieneFiltros: boolean =
-      columnFiltersState && columnFiltersState.length > 0 ? true : false;
-    const tienePaginado: boolean =
-      paginationState && paginationState.pageSize && paginationState.pageIndex
-        ? true
-        : false;
-    const tieneOrdenamiento: boolean =
-      sortingState && sortingState.length > 0 ? true : false;
+  //   const tieneFiltros: boolean =
+  //     columnFiltersState && columnFiltersState.length > 0 ? true : false;
+  //   const tienePaginado: boolean =
+  //     paginationState && paginationState.pageSize && paginationState.pageIndex
+  //       ? true
+  //       : false;
+  //   const tieneOrdenamiento: boolean =
+  //     sortingState && sortingState.length > 0 ? true : false;
 
-    // Preparo filtros
-    let where: any = {};
+  //   // Preparo filtros
+  //   let where: any = {};
 
-    // Preparo paginado
-    const count: number = await this._speciesRepository.count({
-      where: where,
-    }); // COUNT(*)
-    let skip: number = 0;
-    let take: number = count;
-    let pageCount: number = 1;
-    if (tienePaginado) {
-      skip = paginationState.pageIndex * paginationState.pageSize;
-      take = paginationState.pageSize;
-      pageCount = Math.ceil(count / paginationState.pageSize);
-    }
+  //   // Preparo paginado
+  //   const count: number = await this._speciesRepository.count({
+  //     where: where,
+  //   }); // COUNT(*)
+  //   let skip: number = 0;
+  //   let take: number = count;
+  //   let pageCount: number = 1;
+  //   if (tienePaginado) {
+  //     skip = paginationState.pageIndex * paginationState.pageSize;
+  //     take = paginationState.pageSize;
+  //     pageCount = Math.ceil(count / paginationState.pageSize);
+  //   }
 
-    // Preparo ordenamiento
-    let order: any = {};
-    if (tieneOrdenamiento) {
-      sortingState.map((field: any) => {
-        if (field.id.split(".").length === 1) {
-          // console.log('Es una prop de la entidad');
-          order = {
-            ...order,
-            [field.id]: field.desc === "true" ? "DESC" : "ASC",
-          };
-          // console.log({[field.id]: field.desc ? 'DESC' : 'ASC' });
-        } else if (field.id.split(".").length === 2) {
-          // console.log('Es una prop de relacion');
-          const [relacion, attributo] = field.id.split(".");
-          order = {
-            ...order,
-            [relacion]: { [attributo]: field.desc === "true" ? "DESC" : "ASC" },
-          };
-          // console.log({ ...order, [relacion]: { [attributo]: field.desc === 'true' ? 'DESC' : 'ASC' } });
-        } else if (field.id.split(".").length === 3) {
-          console.log("Es una prop de relacion de relacion");
-          const [relacion1, relacion2, attributo] = field.id.split(".");
-          order = {
-            ...order,
-            [relacion1]: {
-              [relacion2]: {
-                [attributo]: field.desc === "true" ? "DESC" : "ASC",
-              },
-            },
-          };
-          // console.log({ ...order, [relacion1]: { [relacion2]: { [attributo]: field.desc === 'true' ? 'DESC' : 'ASC' } } });
-        }
-      });
-    }
-    // Si no tiene la prop id entonces agrego id: 'DESC' por default
-    if (order.id === undefined) order = { ...order, id: "DESC" };
-    // console.log(order);
+  //   // Preparo ordenamiento
+  //   let order: any = {};
+  //   if (tieneOrdenamiento) {
+  //     sortingState.map((field: any) => {
+  //       if (field.id.split(".").length === 1) {
+  //         // console.log('Es una prop de la entidad');
+  //         order = {
+  //           ...order,
+  //           [field.id]: field.desc === "true" ? "DESC" : "ASC",
+  //         };
+  //         // console.log({[field.id]: field.desc ? 'DESC' : 'ASC' });
+  //       } else if (field.id.split(".").length === 2) {
+  //         // console.log('Es una prop de relacion');
+  //         const [relacion, attributo] = field.id.split(".");
+  //         order = {
+  //           ...order,
+  //           [relacion]: { [attributo]: field.desc === "true" ? "DESC" : "ASC" },
+  //         };
+  //         // console.log({ ...order, [relacion]: { [attributo]: field.desc === 'true' ? 'DESC' : 'ASC' } });
+  //       } else if (field.id.split(".").length === 3) {
+  //         console.log("Es una prop de relacion de relacion");
+  //         const [relacion1, relacion2, attributo] = field.id.split(".");
+  //         order = {
+  //           ...order,
+  //           [relacion1]: {
+  //             [relacion2]: {
+  //               [attributo]: field.desc === "true" ? "DESC" : "ASC",
+  //             },
+  //           },
+  //         };
+  //         // console.log({ ...order, [relacion1]: { [relacion2]: { [attributo]: field.desc === 'true' ? 'DESC' : 'ASC' } } });
+  //       }
+  //     });
+  //   }
+  //   // Si no tiene la prop id entonces agrego id: 'DESC' por default
+  //   if (order.id === undefined) order = { ...order, id: "DESC" };
+  //   // console.log(order);
 
-    // Busco las especies utilizando todos los filtros
-    const species: Species[] = await this._speciesRepository.find({
-      where: where,
-      order: order,
-      skip: skip,
-      take: take,
-      relations: ["exampleImg"],
-    });
+  //   // Busco las especies utilizando todos los filtros
+  //   const species: Species[] = await this._speciesRepository.find({
+  //     where: where,
+  //     order: order,
+  //     skip: skip,
+  //     take: take,
+  //   });
 
-    const paginatedList: PaginatedList<Species> = {
-      pageCount: pageCount,
-      rows: species,
-    };
+  //   const paginatedList: PaginatedList<Species> = {
+  //     pageCount: pageCount,
+  //     rows: species,
+  //   };
 
-    return paginatedList;
-  }
+  //   return paginatedList;
+  // }
 
   async findOne(id: number): Promise<Species> {
     this._logger.debug("findOne()");
     return this._speciesRepository.findOne({
       where: { id },
-      relations: ["exampleImg"],
     });
   }
 

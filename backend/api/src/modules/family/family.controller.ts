@@ -15,7 +15,7 @@ import {
   UseGuards,
   Query,
 } from "@nestjs/common";
-import { Response, Express } from "express";
+import { Response } from "express";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { IsEmailConfirmedGuard } from "modules/auth/guards/is-email-confirmed.guard";
 import { RoleGuard } from "modules/auth/guards/role.guard";
@@ -26,8 +26,8 @@ import { FamilyService } from "./family.service";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
 import { RequestWithUser } from "modules/auth/request-with-user.interface";
 import { getUserIdFromRequest } from "modules/utils/user.request";
-import { PaginatedList, PaginationDto } from "modules/utils/pagination.dto";
-
+import { Pagination } from "nestjs-typeorm-paginate";
+import { PaginationDto } from "modules/utils/pagination.dto";
 @ApiTags("Familia")
 @Controller("family")
 export class FamilyController {
@@ -35,7 +35,7 @@ export class FamilyController {
   private readonly _logger = new Logger(FamilyController.name);
 
   @Post()
-  @UseGuards(RoleGuard([Role.ADMIN]))
+  @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiBearerAuth()
@@ -70,7 +70,7 @@ export class FamilyController {
   }
 
   @Patch()
-  @UseGuards(RoleGuard([Role.ADMIN]))
+  @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiBearerAuth()
@@ -117,9 +117,19 @@ export class FamilyController {
   })
   async findAll(
     @Query() paginationDto: PaginationDto
-  ): Promise<PaginatedList<Family>> {
+  ): Promise<Pagination<Family> | Family[]> {
     this._logger.debug("GET: /api/family");
-    return this._familyService.findAll(paginationDto);
+    if (paginationDto.page && paginationDto.limit) {
+      return this._familyService.findPaginated({
+        page: paginationDto.page,
+        limit: paginationDto.limit,
+        orderBy: paginationDto.orderBy,
+        orderDirection: paginationDto.orderDirection,
+        route: `${process.env.API_URL}/api/family`,
+      });
+    } else {
+      return this._familyService.findAll();
+    }
   }
 
   @Get(":id")
@@ -142,7 +152,7 @@ export class FamilyController {
   }
 
   @Delete(":id")
-  @UseGuards(RoleGuard([Role.ADMIN]))
+  @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @ApiBearerAuth()
   @ApiResponse({
@@ -152,6 +162,10 @@ export class FamilyController {
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
     description: ERROR_MESSAGE.NO_ENCONTRADO,
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: ERROR_MESSAGE.OBJETO_REFERENCIADO,
   })
   async delete(
     @Req() request: RequestWithUser,

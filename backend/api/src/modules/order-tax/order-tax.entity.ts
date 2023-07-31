@@ -10,12 +10,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Family } from "../family/family.entity";
+import { ClassTax } from "../class-tax/class-tax.entity";
 import { User } from "../user/user.entity";
-import { Species } from "../species/species.entity";
+import { Family } from "../family/family.entity";
 
-@Entity("genera")
-export class Genus extends BaseEntity {
+@Entity("orders_tax")
+export class OrderTax extends BaseEntity {
   @ApiProperty()
   @PrimaryGeneratedColumn("increment")
   id: number;
@@ -41,18 +41,19 @@ export class Genus extends BaseEntity {
 
   // Relation
   @ApiProperty({
-    type: () => Family,
+    type: () => ClassTax,
+    isArray: false,
   })
-  @ManyToOne(() => Family, (family) => family.genera, {
+  @ManyToOne(() => ClassTax, (classTax) => classTax.ordersTax, {
     nullable: false,
     onDelete: "RESTRICT",
     onUpdate: "CASCADE",
     eager: true,
   })
   @JoinColumn({
-    name: "family_id",
+    name: "class_tax_id",
   })
-  family: Family;
+  classTax: ClassTax;
 
   @ApiProperty()
   @CreateDateColumn({ name: "created_at" })
@@ -81,11 +82,11 @@ export class Genus extends BaseEntity {
 
   // Relation
   @ApiProperty({
-    type: () => Species,
+    type: () => Family,
     isArray: true,
   })
-  @OneToMany(() => Species, (species) => species.genus, {
+  @OneToMany(() => Family, (family) => family.orderTax, {
     eager: false,
   })
-  species: Species[];
+  families: Family[];
 }

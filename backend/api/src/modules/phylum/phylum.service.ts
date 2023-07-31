@@ -14,34 +14,34 @@ import {
   Pagination,
   IPaginationOptions,
 } from "nestjs-typeorm-paginate";
-import { CreateFamilyDto, UpdateFamilyDto } from "./family.dto";
-import { Family } from "./family.entity";
+import { CreatePhylumDto, UpdatePhylumDto } from "./phylum.dto";
+import { Phylum } from "./phylum.entity";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
 import { UserService } from "modules/user/user.service";
-import { OrderTaxService } from "modules/order-tax/order-tax.service";
+import { KingdomService } from "modules/kingdom/kingdom.service";
 
 @Injectable()
-export class FamilyService {
+export class PhylumService {
   constructor(
-    @InjectRepository(Family)
-    private readonly _familyRepository: Repository<Family>,
-    private readonly _orderTaxService: OrderTaxService,
+    @InjectRepository(Phylum)
+    private readonly _phylumRepository: Repository<Phylum>,
+    private readonly _kingdomService: KingdomService,
     private readonly _userService: UserService
   ) {}
-  private readonly _logger = new Logger(FamilyService.name);
+  private readonly _logger = new Logger(PhylumService.name);
 
   async create(
-    createFamilyDto: CreateFamilyDto,
+    createPhylumDto: CreatePhylumDto,
     userId: number
-  ): Promise<Family> {
+  ): Promise<Phylum> {
     this._logger.debug("create()");
-    const { name, description, orderTaxId } = createFamilyDto;
+    const { name, description, kingdomId } = createPhylumDto;
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
 
     // Sólo voy a permitir que se repita la clave: name = "SIN DEFINIR"
     if (name.toLowerCase() != "sin definir") {
       // Controlo que las claves no estén en uso
-      const exists: Family = await this._familyRepository.findOne({
+      const exists: Phylum = await this._phylumRepository.findOne({
         where: { name: name.toLowerCase(), deleted: false },
       });
 
@@ -53,38 +53,38 @@ export class FamilyService {
     }
 
     // Si no existe entonces creo uno nuevo
-    const family: Family = this._familyRepository.create();
-    family.name = name.toLowerCase();
-    family.description = description ? description.toLowerCase() : null;
-    family.orderTax = await this._orderTaxService.findOne(orderTaxId);
-    family.createdAt = timestamp;
-    family.updatedAt = timestamp;
-    family.deleted = false;
-    family.userMod = await this._userService.findOne(userId);
+    const phylum: Phylum = this._phylumRepository.create();
+    phylum.name = name.toLowerCase();
+    phylum.description = description ? description.toLowerCase() : null;
+    phylum.kingdom = await this._kingdomService.findOne(kingdomId);
+    phylum.createdAt = timestamp;
+    phylum.updatedAt = timestamp;
+    phylum.deleted = false;
+    phylum.userMod = await this._userService.findOne(userId);
 
     // Controlo que el modelo no tenga errores antes de guardar
-    const errors = await validate(family);
+    const errors = await validate(phylum);
     if (errors && errors.length > 0) {
       this._logger.debug(ERROR_MESSAGE.NO_ACEPTABLE);
       throw new NotAcceptableException(ERROR_MESSAGE.NO_ACEPTABLE);
     }
 
-    return this._familyRepository.save(family);
+    return this._phylumRepository.save(phylum);
   }
 
   async update(
-    updateFamilyDto: UpdateFamilyDto,
+    updatePhylumDto: UpdatePhylumDto,
     userId: number
-  ): Promise<Family> {
+  ): Promise<Phylum> {
     this._logger.debug("update()");
-    const { id, name, description, orderTaxId } = updateFamilyDto;
+    const { id, name, description, kingdomId } = updatePhylumDto;
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
 
-    const family: Family = await this._familyRepository.findOne({
+    const phylum: Phylum = await this._phylumRepository.findOne({
       where: { id },
     });
 
-    if (!family) {
+    if (!phylum) {
       this._logger.debug(ERROR_MESSAGE.NO_ENCONTRADO);
       throw new NotFoundException(ERROR_MESSAGE.NO_ENCONTRADO);
     }
@@ -92,7 +92,7 @@ export class FamilyService {
     // Sólo voy a permitir que se repita la clave: name = "SIN DEFINIR"
     if (name.toLowerCase() != "sin definir") {
       // Controlo que las claves no estén en uso
-      const exists: Family = await this._familyRepository.findOne({
+      const exists: Phylum = await this._phylumRepository.findOne({
         where: { name: name.toLowerCase(), deleted: false, id: Not(id) },
       });
 
@@ -104,56 +104,54 @@ export class FamilyService {
     }
 
     // Si no hay problemas actualizo los atributos
-    family.name = name.toLowerCase();
-    family.description = description ? description.toLowerCase() : null;
-    family.orderTax = await this._orderTaxService.findOne(orderTaxId);
-    family.createdAt = timestamp;
-    family.updatedAt = timestamp;
-    family.deleted = false;
-    family.userMod = await this._userService.findOne(userId);
+    phylum.name = name.toLowerCase();
+    phylum.description = description ? description.toLowerCase() : null;
+    phylum.kingdom = await this._kingdomService.findOne(kingdomId);
+    phylum.updatedAt = timestamp;
+    phylum.userMod = await this._userService.findOne(userId);
 
     // Controlo que el modelo no tenga errores antes de guardar
-    const errors = await validate(family);
+    const errors = await validate(phylum);
     if (errors && errors.length > 0) {
       this._logger.debug(ERROR_MESSAGE.NO_ACEPTABLE);
       throw new NotAcceptableException(ERROR_MESSAGE.NO_ACEPTABLE);
     }
 
-    return this._familyRepository.save(family);
+    return this._phylumRepository.save(phylum);
   }
 
   async findPaginated(
     options: IPaginationOptions & { orderBy?: string; orderDirection?: string }
-  ): Promise<Pagination<Family>> {
+  ): Promise<Pagination<Phylum>> {
     this._logger.debug("findPaginated()");
 
-    return paginate<Family>(this._familyRepository, options, {
+    return paginate<Phylum>(this._phylumRepository, options, {
       where: { deleted: false },
       order: { [options.orderBy]: options.orderDirection },
     });
   }
 
-  async findAll(): Promise<Family[]> {
+  async findAll(): Promise<Phylum[]> {
     this._logger.debug("findAll()");
 
-    return this._familyRepository.find({
+    return this._phylumRepository.find({
       where: { deleted: false },
       order: { name: "ASC" },
     });
   }
 
-  async findOne(id: number): Promise<Family> {
+  async findOne(id: number): Promise<Phylum> {
     this._logger.debug("findOne()");
 
-    return this._familyRepository.findOne({
+    return this._phylumRepository.findOne({
       where: { id },
     });
   }
 
-  async search(value: string): Promise<Family[]> {
+  async search(value: string): Promise<Phylum[]> {
     this._logger.debug("search()");
 
-    return this._familyRepository.find({
+    return this._phylumRepository.find({
       where: [
         { name: ILike(`%${value}%`) },
         { description: ILike(`%${value}%`) },
@@ -165,28 +163,28 @@ export class FamilyService {
     this._logger.debug("delete()");
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
 
-    const family: Family = await this._familyRepository.findOne({
+    const phylum: Phylum = await this._phylumRepository.findOne({
       where: { id },
-      relations: ["families"],
+      relations: ["classesTax"],
     });
 
-    if (!family) {
+    if (!phylum) {
       this._logger.debug(ERROR_MESSAGE.NO_ENCONTRADO);
       throw new NotFoundException(ERROR_MESSAGE.NO_ENCONTRADO);
     }
 
     // Controlo referencias
-    if (family.genera.length > 0) {
+    if (phylum.classesTax.length > 0) {
       this._logger.debug(ERROR_MESSAGE.OBJETO_REFERENCIADO);
       throw new NotFoundException(ERROR_MESSAGE.OBJETO_REFERENCIADO);
     }
 
     // Soft Delete
-    family.deleted = true;
-    family.updatedAt = timestamp;
-    await this._familyRepository.save(family);
+    phylum.deleted = true;
+    phylum.updatedAt = timestamp;
+    await this._phylumRepository.save(phylum);
 
     // Hard Delete
-    // await this._familyRepository.remove(family);
+    // await this._phylumRepository.remove(phylum);
   }
 }

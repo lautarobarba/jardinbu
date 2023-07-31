@@ -15,18 +15,19 @@ import {
   UseGuards,
   Query,
 } from "@nestjs/common";
-import { Response, Express } from "express";
+import { Response } from "express";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { GenusService } from "./genus.service";
-import { CreateGenusDto, UpdateGenusDto } from "./genus.dto";
-import { Genus } from "./genus.entity";
+import { IsEmailConfirmedGuard } from "modules/auth/guards/is-email-confirmed.guard";
 import { RoleGuard } from "modules/auth/guards/role.guard";
 import { Role } from "modules/auth/role.enum";
-import { IsEmailConfirmedGuard } from "modules/auth/guards/is-email-confirmed.guard";
+import { CreateGenusDto, UpdateGenusDto } from "./genus.dto";
+import { Genus } from "./genus.entity";
+import { GenusService } from "./genus.service";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
 import { RequestWithUser } from "modules/auth/request-with-user.interface";
 import { getUserIdFromRequest } from "modules/utils/user.request";
-import { PaginatedList, PaginationDto } from "modules/utils/pagination.dto";
+import { Pagination } from "nestjs-typeorm-paginate";
+import { PaginationDto } from "modules/utils/pagination.dto";
 
 @ApiTags("Géneros")
 @Controller("genus")
@@ -35,7 +36,7 @@ export class GenusController {
   private readonly _logger = new Logger(GenusController.name);
 
   @Post()
-  @UseGuards(RoleGuard([Role.ADMIN]))
+  @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiBearerAuth()
@@ -70,7 +71,7 @@ export class GenusController {
   }
 
   @Patch()
-  @UseGuards(RoleGuard([Role.ADMIN]))
+  @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiBearerAuth()
@@ -117,9 +118,19 @@ export class GenusController {
   })
   async findAll(
     @Query() paginationDto: PaginationDto
-  ): Promise<PaginatedList<Genus>> {
+  ): Promise<Pagination<Genus> | Genus[]> {
     this._logger.debug("GET: /api/genus");
-    return this._genusService.findAll(paginationDto);
+    if (paginationDto.page && paginationDto.limit) {
+      return this._genusService.findPaginated({
+        page: paginationDto.page,
+        limit: paginationDto.limit,
+        orderBy: paginationDto.orderBy,
+        orderDirection: paginationDto.orderDirection,
+        route: `${process.env.API_URL}/api/genus`,
+      });
+    } else {
+      return this._genusService.findAll();
+    }
   }
 
   @Get(":id")
@@ -142,7 +153,7 @@ export class GenusController {
   }
 
   @Delete(":id")
-  @UseGuards(RoleGuard([Role.ADMIN]))
+  @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @ApiBearerAuth()
   @ApiResponse({
@@ -152,6 +163,10 @@ export class GenusController {
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
     description: ERROR_MESSAGE.NO_ENCONTRADO,
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: ERROR_MESSAGE.OBJETO_REFERENCIADO,
   })
   async delete(
     @Req() request: RequestWithUser,
