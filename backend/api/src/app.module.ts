@@ -28,7 +28,7 @@ import { OrderTaxModule } from "modules/order-tax/order-tax.module";
     BullModule.forRootAsync({
       useFactory: async () => ({
         redis: {
-          host: "redis",
+          host: "jbu_redis",
           port: 6379,
         },
       }),

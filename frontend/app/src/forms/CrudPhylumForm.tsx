@@ -157,7 +157,6 @@ export const CreatePhylumForm = (props: CreatePhylumFormProps) => {
             helperText={formik.touched.description && formik.errors.description}
             fullWidth
             autoComplete='description'
-            autoFocus
           />
         </Grid>
         <Grid item xs={11}>

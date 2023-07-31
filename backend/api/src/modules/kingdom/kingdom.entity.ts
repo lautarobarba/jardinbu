@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -59,6 +60,9 @@ export class Kingdom extends BaseEntity {
     onDelete: "RESTRICT",
     onUpdate: "CASCADE",
     eager: false,
+  })
+  @JoinColumn({
+    name: "user_mod_id",
   })
   userMod: User;
 

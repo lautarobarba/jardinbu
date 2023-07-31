@@ -130,7 +130,6 @@ export const CreateKingdomForm = (props: CreateKingdomFormProps) => {
             helperText={formik.touched.description && formik.errors.description}
             fullWidth
             autoComplete='description'
-            autoFocus
           />
         </Grid>
       </Grid>

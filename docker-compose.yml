@@ -40,7 +40,7 @@ services:
       - jbu_db
       - jbu_redis
     restart: always
-    env_file: ./.env
+    env_file: .env
     environment:
       # Configuracion DB
       - DB_HOST=host.docker.internal

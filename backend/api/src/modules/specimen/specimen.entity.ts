@@ -95,5 +95,8 @@ export class Specimen extends BaseEntity {
     onUpdate: "CASCADE",
     eager: false,
   })
+  @JoinColumn({
+    name: "user_mod_id",
+  })
   userMod: User;
 }
