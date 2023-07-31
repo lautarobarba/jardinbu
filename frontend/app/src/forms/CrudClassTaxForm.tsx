@@ -12,101 +12,101 @@ import {
 import { Add as AddIcon } from '@mui/icons-material';
 import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
 import {
-  useCreatePhylum,
-  useDeletePhylum,
-  useGetKingdoms,
-  useGetPhylum,
-  useUpdatePhylum,
+  useCreateClassTax,
+  useDeleteClassTax,
+  useGetClassTax,
+  useGetPhylums,
+  useUpdateClassTax,
 } from '../api/hooks';
 import {
-  CreatePhylumDto,
-  UpdatePhylumDto,
-} from '../interfaces/PhylumInterface';
+  ClassTax,
+  CreateClassTaxDto,
+  UpdateClassTaxDto,
+} from '../interfaces/ClassTaxInterface';
 import { useJwtToken } from '../features/auth/authHooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
-import { Phylum } from '../interfaces/PhylumInterface';
+import { Phylum, phylumToString } from '../interfaces/PhylumInterface';
 import { PageSubTitle } from '../components/PageSubTitle';
 import { FormEvent, useEffect, useState } from 'react';
-import { Kingdom, kingdomToString } from '../interfaces/KingdomInterface';
-import { CreateKingdomForm } from './CrudKingdomForm';
+import { CreatePhylumForm } from './CrudPhylumForm';
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, 'Demasiado corto')
     .max(100, 'Demasiado largo')
-    .required('El filo necesita un nombre'),
+    .required('La clase necesita un nombre'),
   description: Yup.string(),
-  kingdom: Yup.object().required('Por favor seleccione un reino'),
+  phylum: Yup.object().required('Por favor seleccione un filo'),
 });
 
 interface Values {
   name: string;
   description: string;
-  kingdom: any;
+  phylum: any;
 }
 
-interface CreatePhylumFormProps {
+interface CreateClassTaxFormProps {
   toggleVisibility: Function;
 }
 
-export const CreatePhylumForm = (props: CreatePhylumFormProps) => {
+export const CreateClassTaxForm = (props: CreateClassTaxFormProps) => {
   const { toggleVisibility } = props;
   const token = useJwtToken();
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [openCreateKingdomModal, setOpenCreateKingdomModal] =
+  const [openCreatePhylumModal, setOpenCreatePhylumModal] =
     useState<boolean>(false);
 
-  const toggleOpenCreateKingdomModal = () => {
-    setOpenCreateKingdomModal(!openCreateKingdomModal);
+  const toggleOpenCreatePhylumModal = () => {
+    setOpenCreatePhylumModal(!openCreatePhylumModal);
   };
 
-  // Lista de reinos para Select
-  const { isSuccess: getKingdomsIsSuccess, data: getKingdomsData } =
-    useGetKingdoms({});
+  // Lista de filos para Select
+  const { isSuccess: getPhylumsIsSuccess, data: getPhylumsData } =
+    useGetPhylums({});
 
   // Mutación
   const {
-    mutate: createPhylumMutate,
-    isLoading: createPhylumIsLoading,
-    // isSuccess: createPhylumIsSuccess,
-    // isError: createPhylumIsError,
-    // error: createPhylumError,
-  } = useCreatePhylum();
+    mutate: createClassTaxMutate,
+    isLoading: createClassTaxIsLoading,
+    // isSuccess: createClassTaxIsSuccess,
+    // isError: createClassTaxIsError,
+    // error: createClassTaxError,
+  } = useCreateClassTax();
 
   const formik = useFormik({
     initialValues: {
       name: '',
       description: '',
-      kingdom: {},
+      phylum: {},
     },
     validationSchema: ValidationSchema,
     onSubmit: async (values: Values, { setErrors }: FormikHelpers<Values>) => {
-      const createPhylumDto: CreatePhylumDto = {
+      const createClassTaxDto: CreateClassTaxDto = {
         name: values.name,
         description: values.description,
-        kingdomId: values.kingdom.id,
+        phylumId: values.phylum.id,
       };
 
-      createPhylumMutate(
-        { token: token ?? '', createPhylumDto },
+      createClassTaxMutate(
+        { token: token ?? '', createClassTaxDto },
         {
           onError: (error: any) => {
-            console.log('ERROR: Error al crear filo');
+            console.log('ERROR: Error al crear clase');
             console.log(error);
-            enqueueSnackbar('ERROR: Error al crear filo', {
+            enqueueSnackbar('ERROR: Error al crear clase', {
               anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
               variant: 'error',
             });
           },
-          onSuccess: (phylum: Phylum) => {
-            console.log('Filo creado correctamente');
-            console.log(phylum);
-            queryClient.invalidateQueries(['phylums']);
+          onSuccess: (classTax: ClassTax) => {
+            console.log('Clase creada correctamente');
+            console.log(classTax);
+            queryClient.invalidateQueries(['classes-tax']);
             toggleVisibility(false);
-            enqueueSnackbar('Filo creado correctamente', {
+            enqueueSnackbar('Clase creada correctamente', {
               anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
               variant: 'success',
             });
@@ -120,12 +120,12 @@ export const CreatePhylumForm = (props: CreatePhylumFormProps) => {
     <form onSubmit={formik.handleSubmit}>
       <Grid container spacing={2} justifyContent={'center'}>
         <Grid container item xs={12} justifyContent={'center'}>
-          <PageSubTitle title='Registrar nuevo filo' />
+          <PageSubTitle title='Registrar nueva clase' />
         </Grid>
 
         <Grid item xs={12}>
           <Alert severity='info'>
-            Recuerde que si no conoce el filo puede agregar en Nombre: SIN
+            Recuerde que si no conoce la clase puede agregar en Nombre: SIN
             DEFINIR
           </Alert>
         </Grid>
@@ -161,24 +161,24 @@ export const CreatePhylumForm = (props: CreatePhylumFormProps) => {
         </Grid>
         <Grid item xs={11}>
           <Autocomplete
-            id='kingdom'
-            options={(getKingdomsData ?? []) as Kingdom[]}
-            getOptionLabel={(kingdom: Kingdom) => kingdomToString(kingdom)}
+            id='phylum'
+            options={(getPhylumsData ?? []) as Phylum[]}
+            getOptionLabel={(phylum: Phylum) => phylumToString(phylum)}
             renderInput={(params) => (
               <TextField
                 {...params}
-                name='kingdom'
-                label='Reino'
-                placeholder='Reino...'
-                error={formik.touched.kingdom && Boolean(formik.errors.kingdom)}
+                name='phylum'
+                label='Filo'
+                placeholder='Filo...'
+                error={formik.touched.phylum && Boolean(formik.errors.phylum)}
                 required={true}
               />
             )}
             isOptionEqualToValue={(option: any, selection: any) =>
               option.value === selection.value
             }
-            onChange={(e, selection: Kingdom) =>
-              formik.setFieldValue('kingdomId', selection)
+            onChange={(e, selection: Phylum) =>
+              formik.setFieldValue('phylumId', selection)
             }
             fullWidth
             disableClearable={true}
@@ -195,21 +195,21 @@ export const CreatePhylumForm = (props: CreatePhylumFormProps) => {
           <Tooltip title='Nuevo' arrow>
             <IconButton
               type='button'
-              onClick={() => toggleOpenCreateKingdomModal()}
+              onClick={() => toggleOpenCreatePhylumModal()}
             >
               <AddIcon className='text-primary' fontSize={'large'} />
             </IconButton>
           </Tooltip>
 
           <Dialog
-            onClose={() => setOpenCreateKingdomModal(false)}
-            open={openCreateKingdomModal}
+            onClose={() => setOpenCreatePhylumModal(false)}
+            open={openCreatePhylumModal}
             maxWidth={'md'}
             fullWidth
           >
             <div className='p-5'>
-              <CreateKingdomForm
-                toggleVisibility={toggleOpenCreateKingdomModal}
+              <CreatePhylumForm
+                toggleVisibility={toggleOpenCreatePhylumModal}
               />
             </div>
           </Dialog>
@@ -221,7 +221,7 @@ export const CreatePhylumForm = (props: CreatePhylumFormProps) => {
           color='danger'
           type='button'
           style={{ margin: '1rem' }}
-          disabled={createPhylumIsLoading}
+          disabled={createClassTaxIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
@@ -230,89 +230,89 @@ export const CreatePhylumForm = (props: CreatePhylumFormProps) => {
           color='primary'
           type='submit'
           style={{ margin: '1rem' }}
-          disabled={createPhylumIsLoading}
+          disabled={createClassTaxIsLoading}
         >
-          {createPhylumIsLoading ? 'Guardando...' : 'Guardar'}
+          {createClassTaxIsLoading ? 'Guardando...' : 'Guardar'}
         </MDBBtn>
       </Grid>
     </form>
   );
 };
 
-interface UpdatePhylumFormProps {
+interface UpdateClassTaxFormProps {
   toggleVisibility: Function;
   id: number;
 }
 
-export const UpdatePhylumForm = (props: UpdatePhylumFormProps) => {
+export const UpdateClassTaxForm = (props: UpdateClassTaxFormProps) => {
   const { toggleVisibility, id } = props;
   const token = useJwtToken();
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [openCreateKingdomModal, setOpenCreateKingdomModal] =
+  const [openCreatePhylumModal, setOpenCreatePhylumModal] =
     useState<boolean>(false);
 
-  const toggleOpenCreateKingdomModal = () => {
-    setOpenCreateKingdomModal(!openCreateKingdomModal);
+  const toggleOpenCreatePhylumModal = () => {
+    setOpenCreatePhylumModal(!openCreatePhylumModal);
   };
 
-  // Lista de reinos para Select
-  const { isSuccess: getKingdomsIsSuccess, data: getKingdomsData } =
-    useGetKingdoms({});
+  // Lista de filos para Select
+  const { isSuccess: getPhylumsIsSuccess, data: getPhylumsData } =
+    useGetPhylums({});
 
   // Query
   const {
-    // isLoading: getPhylumIsLoading,
-    // isSuccess: getPhylumIsSuccess,
-    data: getPhylumData,
-    // isError: getPhylumIsError,
-    // error: getPhylumError,
-  } = useGetPhylum({ id: id }, { keepPreviousData: true });
+    // isLoading: getClassTaxIsLoading,
+    // isSuccess: getClassTaxIsSuccess,
+    data: getClassTaxData,
+    // isError: getClassTaxIsError,
+    // error: getClassTaxError,
+  } = useGetClassTax({ id: id }, { keepPreviousData: true });
 
   // Mutación
   const {
-    mutate: updatePhylumMutate,
-    isLoading: updatePhylumIsLoading,
-    // isSuccess: updatePhylumIsSuccess,
-    // isError: updatePhylumIsError,
-    // error: updatePhylumError,
-  } = useUpdatePhylum();
+    mutate: updateClassTaxMutate,
+    isLoading: updateClassTaxIsLoading,
+    // isSuccess: updateClassTaxIsSuccess,
+    // isError: updateClassTaxIsError,
+    // error: updateClassTaxError,
+  } = useUpdateClassTax();
 
   const formik = useFormik({
     initialValues: {
-      name: getPhylumData?.name ?? '',
-      description: getPhylumData?.description ?? '',
-      kingdom: getPhylumData?.kingdom ?? {},
+      name: getClassTaxData?.name ?? '',
+      description: getClassTaxData?.description ?? '',
+      phylum: getClassTaxData?.phylum ?? {},
     },
     enableReinitialize: true,
     validationSchema: ValidationSchema,
     onSubmit: async (values: Values, { setErrors }: FormikHelpers<Values>) => {
-      const updatePhylumDto: UpdatePhylumDto = {
+      const updateClassTaxDto: UpdateClassTaxDto = {
         id: id,
         name: values.name,
         description: values.description,
-        kingdomId: values.kingdom.id,
+        phylumId: values.phylum.id,
       };
 
-      updatePhylumMutate(
-        { token: token ?? '', updatePhylumDto },
+      updateClassTaxMutate(
+        { token: token ?? '', updateClassTaxDto },
         {
           onError: (error: any) => {
-            console.log('ERROR: Error al actualizar filo');
+            console.log('ERROR: Error al actualizar clase');
             console.log(error);
-            enqueueSnackbar('ERROR: Error al actualizar filo', {
+            enqueueSnackbar('ERROR: Error al actualizar clase', {
               anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
               variant: 'error',
             });
           },
-          onSuccess: (phylum: Phylum) => {
-            console.log('Filo actualizado correctamente');
-            console.log(phylum);
-            queryClient.invalidateQueries(['phylums']);
-            queryClient.invalidateQueries([`phylum-${id}`]);
+          onSuccess: (classTax: ClassTax) => {
+            console.log('Clase actualizada correctamente');
+            console.log(classTax);
+            queryClient.invalidateQueries(['classes-tax']);
+            queryClient.invalidateQueries([`class-tax-${id}`]);
             toggleVisibility(false);
-            enqueueSnackbar('Filo actualizado correctamente', {
+            enqueueSnackbar('Clase actualizada correctamente', {
               anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
               variant: 'success',
             });
@@ -330,12 +330,12 @@ export const UpdatePhylumForm = (props: UpdatePhylumFormProps) => {
     <form onSubmit={formik.handleSubmit}>
       <Grid container spacing={2} justifyContent={'center'}>
         <Grid container item xs={12} justifyContent={'center'}>
-          <PageSubTitle title={`Actualizar filo N° ${id}`} />
+          <PageSubTitle title={`Actualizar clase N° ${id}`} />
         </Grid>
 
         <Grid item xs={12}>
           <Alert severity='info'>
-            Recuerde que si no conoce el filo puede agregar en Nombre: SIN
+            Recuerde que si no conoce la clase puede agregar en Nombre: SIN
             DEFINIR
           </Alert>
         </Grid>
@@ -372,25 +372,25 @@ export const UpdatePhylumForm = (props: UpdatePhylumFormProps) => {
         </Grid>
         <Grid item xs={11}>
           <Autocomplete
-            id='kingdom'
-            options={(getKingdomsData ?? []) as Kingdom[]}
-            getOptionLabel={(kingdom: Kingdom) => kingdomToString(kingdom)}
-            value={formik.values.kingdom as Kingdom}
+            id='phylum'
+            options={(getPhylumsData ?? []) as Phylum[]}
+            getOptionLabel={(phylum: Phylum) => phylumToString(phylum)}
+            value={formik.values.phylum as Phylum}
             renderInput={(params) => (
               <TextField
                 {...params}
-                name='kingdomId'
-                label='Reino'
-                placeholder='Reino...'
-                error={formik.touched.kingdom && Boolean(formik.errors.kingdom)}
+                name='phylumId'
+                label='Filo'
+                placeholder='Filo...'
+                error={formik.touched.phylum && Boolean(formik.errors.phylum)}
                 required={true}
               />
             )}
             isOptionEqualToValue={(option: any, selection: any) =>
               option.value === selection.value
             }
-            onChange={(e, selection: Kingdom) =>
-              formik.setFieldValue('kingdom', selection)
+            onChange={(e, selection: Phylum) =>
+              formik.setFieldValue('phylum', selection)
             }
             fullWidth
             disableClearable={true}
@@ -407,21 +407,21 @@ export const UpdatePhylumForm = (props: UpdatePhylumFormProps) => {
           <Tooltip title='Nuevo' arrow>
             <IconButton
               type='button'
-              onClick={() => toggleOpenCreateKingdomModal()}
+              onClick={() => toggleOpenCreatePhylumModal()}
             >
               <AddIcon className='text-primary' fontSize={'large'} />
             </IconButton>
           </Tooltip>
 
           <Dialog
-            onClose={() => setOpenCreateKingdomModal(false)}
-            open={openCreateKingdomModal}
+            onClose={() => setOpenCreatePhylumModal(false)}
+            open={openCreatePhylumModal}
             maxWidth={'md'}
             fullWidth
           >
             <div className='p-5'>
-              <CreateKingdomForm
-                toggleVisibility={toggleOpenCreateKingdomModal}
+              <CreatePhylumForm
+                toggleVisibility={toggleOpenCreatePhylumModal}
               />
             </div>
           </Dialog>
@@ -433,7 +433,7 @@ export const UpdatePhylumForm = (props: UpdatePhylumFormProps) => {
           color='danger'
           type='button'
           style={{ margin: '1rem' }}
-          disabled={updatePhylumIsLoading}
+          disabled={updateClassTaxIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
@@ -442,21 +442,21 @@ export const UpdatePhylumForm = (props: UpdatePhylumFormProps) => {
           color='primary'
           type='submit'
           style={{ margin: '1rem' }}
-          disabled={updatePhylumIsLoading}
+          disabled={updateClassTaxIsLoading}
         >
-          {updatePhylumIsLoading ? 'Guardando...' : 'Guardar'}
+          {updateClassTaxIsLoading ? 'Guardando...' : 'Guardar'}
         </MDBBtn>
       </Grid>
     </form>
   );
 };
 
-interface DeletePhylumFormProps {
+interface DeleteClassTaxFormProps {
   toggleVisibility: Function;
   id: number;
 }
 
-export const DeletePhylumForm = (props: DeletePhylumFormProps) => {
+export const DeleteClassTaxForm = (props: DeleteClassTaxFormProps) => {
   const { toggleVisibility, id } = props;
   const token = useJwtToken();
   const queryClient = useQueryClient();
@@ -464,41 +464,41 @@ export const DeletePhylumForm = (props: DeletePhylumFormProps) => {
 
   // Query
   const {
-    // isLoading: getPhylumIsLoading,
-    // isSuccess: getPhylumIsSuccess,
-    data: getPhylumData,
-    // isError: getPhylumIsError,
-    // error: getPhylumError,
-  } = useGetPhylum({ id: id }, { keepPreviousData: true });
+    // isLoading: getClassTaxIsLoading,
+    // isSuccess: getClassTaxIsSuccess,
+    data: getClassTaxData,
+    // isError: getClassTaxIsError,
+    // error: getClassTaxError,
+  } = useGetClassTax({ id: id }, { keepPreviousData: true });
 
   // Mutación
   const {
-    mutate: deletePhylumMutate,
-    isLoading: deletePhylumIsLoading,
-    // isSuccess: deletePhylumIsSuccess,
-    // isError: deletePhylumIsError,
-    // error: deletePhylumError,
-  } = useDeletePhylum();
+    mutate: deleteClassTaxMutate,
+    isLoading: deleteClassTaxIsLoading,
+    // isSuccess: deleteClassTaxIsSuccess,
+    // isError: deleteClassTaxIsError,
+    // error: deleteClassTaxError,
+  } = useDeleteClassTax();
 
   const deletePhylum = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    deletePhylumMutate(
+    deleteClassTaxMutate(
       { token: token ?? '', id: id },
       {
         onError: (error: any) => {
-          console.log('ERROR: Error al eliminar filo');
+          console.log('ERROR: Error al eliminar clase');
           console.log(error);
-          enqueueSnackbar('ERROR: Error al eliminar filo', {
+          enqueueSnackbar('ERROR: Error al eliminar clase', {
             anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
             variant: 'error',
           });
         },
         onSuccess: () => {
-          console.log('Filo eliminado correctamente');
-          queryClient.invalidateQueries(['phylums']);
-          queryClient.invalidateQueries([`phylum-${id}`]);
+          console.log('Clase eliminada correctamente');
+          queryClient.invalidateQueries(['classes-tax']);
+          queryClient.invalidateQueries([`class-tax-${id}`]);
           toggleVisibility(false);
-          enqueueSnackbar('Filo eliminado correctamente', {
+          enqueueSnackbar('Clase eliminada correctamente', {
             anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
             variant: 'success',
           });
@@ -511,18 +511,18 @@ export const DeletePhylumForm = (props: DeletePhylumFormProps) => {
     <form onSubmit={(event) => deletePhylum(event)}>
       <Grid container spacing={2} justifyContent={'center'}>
         <Grid container item xs={12} justifyContent={'center'}>
-          <PageSubTitle title={`Eliminar filo N° ${id}`} />
+          <PageSubTitle title={`Eliminar clase N° ${id}`} />
         </Grid>
 
         <Grid item xs={12}>
-          <Alert severity='error'>¡Está por eliminar un filo!</Alert>
+          <Alert severity='error'>¡Está por eliminar una clase!</Alert>
         </Grid>
         <Grid item xs={12} md={4}>
           <TextField
             id='name'
             name='name'
             label='Nombre'
-            value={getPhylumData?.name ?? ''}
+            value={getClassTaxData?.name ?? ''}
             fullWidth
             required
             autoComplete='name'
@@ -535,7 +535,7 @@ export const DeletePhylumForm = (props: DeletePhylumFormProps) => {
             id='description'
             name='description'
             label='Descripción'
-            value={getPhylumData?.description ?? ''}
+            value={getClassTaxData?.description ?? ''}
             fullWidth
             autoComplete='description'
             autoFocus
@@ -544,16 +544,16 @@ export const DeletePhylumForm = (props: DeletePhylumFormProps) => {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            id='kingdom'
-            name='kingdom'
-            label='Reino'
+            id='phylum'
+            name='phylum'
+            label='Filo'
             value={
-              getPhylumData?.kingdom
-                ? kingdomToString(getPhylumData.kingdom)
+              getClassTaxData?.phylum
+                ? phylumToString(getClassTaxData.phylum)
                 : ''
             }
             fullWidth
-            autoComplete='kingdom'
+            autoComplete='phylum'
             autoFocus
             disabled
           />
@@ -565,7 +565,7 @@ export const DeletePhylumForm = (props: DeletePhylumFormProps) => {
           color='primary'
           type='button'
           style={{ margin: '1rem' }}
-          disabled={deletePhylumIsLoading}
+          disabled={deleteClassTaxIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
@@ -574,20 +574,20 @@ export const DeletePhylumForm = (props: DeletePhylumFormProps) => {
           color='danger'
           type='submit'
           style={{ margin: '1rem' }}
-          disabled={deletePhylumIsLoading}
+          disabled={deleteClassTaxIsLoading}
         >
-          {deletePhylumIsLoading ? 'Eliminando...' : 'Eliminar'}
+          {deleteClassTaxIsLoading ? 'Eliminando...' : 'Eliminar'}
         </MDBBtn>
       </Grid>
     </form>
   );
 };
 
-interface ModalCrudPhylumProps {
+interface ModalCrudClassTaxProps {
   id: number;
 }
 
-export const ModalCrudPhylum = (props: ModalCrudPhylumProps) => {
+export const ModalCrudClassTax = (props: ModalCrudClassTaxProps) => {
   const { id } = props;
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
@@ -617,7 +617,7 @@ export const ModalCrudPhylum = (props: ModalCrudPhylumProps) => {
           fullWidth
         >
           <div className='p-5'>
-            <UpdatePhylumForm toggleVisibility={setShowEditModal} id={id} />
+            <UpdateClassTaxForm toggleVisibility={setShowEditModal} id={id} />
           </div>
         </Dialog>
         <Dialog
@@ -627,7 +627,7 @@ export const ModalCrudPhylum = (props: ModalCrudPhylumProps) => {
           fullWidth
         >
           <div className='p-5'>
-            <DeletePhylumForm toggleVisibility={setShowDeleteModal} id={id} />
+            <DeleteClassTaxForm toggleVisibility={setShowDeleteModal} id={id} />
           </div>
         </Dialog>
       </div>

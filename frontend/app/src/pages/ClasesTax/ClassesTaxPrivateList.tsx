@@ -1,9 +1,8 @@
 import { PageSubTitle } from '../../components/PageSubTitle';
 import { PageTitle } from '../../components/PageTitle';
-import { useGetPhylums } from '../../api/hooks';
+import { useGetClassesTax } from '../../api/hooks';
 import { useEffect, useMemo, useState } from 'react';
 import { CircularProgress, Dialog } from '@mui/material';
-import { CreatePhylumForm } from '../../forms/CrudPhylumForm';
 import { CustomTable } from '../../utils/CustomTable';
 import {
   PaginationState,
@@ -11,10 +10,11 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { Phylum } from '../../interfaces/PhylumInterface';
 import { columns } from './columns';
+import { ClassTax } from '../../interfaces/ClassTaxInterface';
+import { CreateClassTaxForm } from '../../forms/CrudClassTaxForm';
 
-export const PhylumPrivateList = () => {
+export const ClassesTaxPrivateList = () => {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -33,12 +33,12 @@ export const PhylumPrivateList = () => {
 
   // Queries
   const {
-    isLoading: getPhylumsIsLoading,
-    isSuccess: getPhylumsIsSuccess,
-    data: getPhylumsData,
-    isError: getPhylumsIsError,
-    error: getPhylumsError,
-  } = useGetPhylums(
+    isLoading: getClassesTaxIsLoading,
+    isSuccess: getClassesTaxIsSuccess,
+    data: getClassesTaxData,
+    isError: getClassesTaxIsError,
+    error: getClassesTaxError,
+  } = useGetClassesTax(
     {
       pagination: {
         page: pagination.pageIndex + 1,
@@ -57,12 +57,12 @@ export const PhylumPrivateList = () => {
     setOpenCreate(!openCreate);
   };
 
-  const table = useReactTable<Phylum>({
-    data: getPhylumsData?.items ?? [],
+  const table = useReactTable<ClassTax>({
+    data: getClassesTaxData?.items ?? [],
     columns: columns,
     state: { pagination, sorting },
     manualPagination: true,
-    pageCount: getPhylumsData?.meta?.totalPages ?? 1,
+    pageCount: getClassesTaxData?.meta?.totalPages ?? 1,
     onPaginationChange: setPagination,
     manualSorting: true,
     enableMultiSort: false,
@@ -72,19 +72,24 @@ export const PhylumPrivateList = () => {
   });
 
   useEffect(() => {
-    if (getPhylumsIsSuccess) {
-      console.log({ getPhylumsData });
-    } else if (getPhylumsIsError) {
-      console.log({ getPhylumsError });
+    if (getClassesTaxIsSuccess) {
+      console.log({ getClassesTaxData });
+    } else if (getClassesTaxIsError) {
+      console.log({ getClassesTaxError });
     }
-  }, [getPhylumsIsSuccess, getPhylumsData, getPhylumsIsError, getPhylumsError]);
+  }, [
+    getClassesTaxIsSuccess,
+    getClassesTaxData,
+    getClassesTaxIsError,
+    getClassesTaxError,
+  ]);
 
   return (
     <div className='bg-white p-3'>
-      <PageTitle title='Filos' />
+      <PageTitle title='Clases' />
 
       <div className='d-flex justify-content-between'>
-        <PageSubTitle title='Listado de filos' />
+        <PageSubTitle title='Listado de clases' />
         <button
           className={
             openCreate
@@ -106,20 +111,20 @@ export const PhylumPrivateList = () => {
         fullWidth
       >
         <div className='p-5'>
-          <CreatePhylumForm toggleVisibility={setOpenCreate} />
+          <CreateClassTaxForm toggleVisibility={setOpenCreate} />
         </div>
       </Dialog>
 
-      {getPhylumsIsError && <p className='text-danger'>Error...</p>}
+      {getClassesTaxIsError && <p className='text-danger'>Error...</p>}
 
-      {getPhylumsIsLoading && (
+      {getClassesTaxIsLoading && (
         <div className='text-center'>
           <CircularProgress />
         </div>
       )}
 
-      {getPhylumsIsSuccess && (
-        <section id='phylums' className='phylums'>
+      {getClassesTaxIsSuccess && (
+        <section id='classes-tax' className='classes-tax'>
           <CustomTable table={table} />
         </section>
       )}

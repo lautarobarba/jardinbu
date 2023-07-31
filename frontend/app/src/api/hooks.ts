@@ -38,6 +38,11 @@ import {
   deletePhylum,
   getPhylums,
   getPhylum,
+  createClassTax,
+  updateClassTax,
+  deleteClassTax,
+  getClassesTax,
+  getClassTax,
 } from './services';
 import { Pagination, PaginationNew } from '../utils/iPagination';
 
@@ -91,6 +96,19 @@ export const useUpdatePhylum = () => {
 
 export const useDeletePhylum = () => {
   return useMutation(deletePhylum);
+};
+
+// ## ClassesTax
+export const useCreateClassTax = () => {
+  return useMutation(createClassTax);
+};
+
+export const useUpdateClassTax = () => {
+  return useMutation(updateClassTax);
+};
+
+export const useDeleteClassTax = () => {
+  return useMutation(deleteClassTax);
 };
 
 // ## Families
@@ -185,6 +203,29 @@ export const useGetPhylums = (
 
 export const useGetPhylum = (params: { id: number }, config?: any) => {
   return useQuery([`phylum-${params.id}`], () => getPhylum(params), config);
+};
+
+// ## ClassesTax
+export const useGetClassesTax = (
+  params: {
+    pagination?: PaginationNew;
+  },
+  config?: any
+) => {
+  const { pagination } = params;
+  return useQuery(
+    ['class-tax', pagination],
+    () => getClassesTax(params),
+    config
+  );
+};
+
+export const useGetClassTax = (params: { id: number }, config?: any) => {
+  return useQuery(
+    [`class-tax-${params.id}`],
+    () => getClassTax(params),
+    config
+  );
 };
 
 // ## Families

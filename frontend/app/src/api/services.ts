@@ -40,6 +40,11 @@ import {
   Phylum,
   UpdatePhylumDto,
 } from '../interfaces/PhylumInterface';
+import {
+  ClassTax,
+  CreateClassTaxDto,
+  UpdateClassTaxDto,
+} from '../interfaces/ClassTaxInterface';
 
 // Api Url
 const apiBaseUrl: string =
@@ -184,6 +189,43 @@ export const deletePhylum = async (params: {
   const { token, id } = params;
   return axiosClient
     .delete(`phylum/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
+
+// ## ClassesTax
+export const createClassTax = async (params: {
+  token: string;
+  createClassTaxDto: CreateClassTaxDto;
+}): Promise<ClassTax> => {
+  const { token, createClassTaxDto } = params;
+  return axiosClient
+    .post('class-tax', createClassTaxDto, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
+
+export const updateClassTax = async (params: {
+  token: string;
+  updateClassTaxDto: UpdateClassTaxDto;
+}): Promise<ClassTax> => {
+  const { token, updateClassTaxDto } = params;
+  return axiosClient
+    .patch('class-tax', updateClassTaxDto, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
+
+export const deleteClassTax = async (params: {
+  token: string;
+  id: number;
+}): Promise<void> => {
+  const { token, id } = params;
+  return axiosClient
+    .delete(`class-tax/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((response) => response.data);
@@ -378,6 +420,25 @@ export const getPhylums = async (params: {
 export const getPhylum = async (params: { id: number }): Promise<Phylum> => {
   const { id } = params;
   return axiosClient.get(`phylum/${id}`).then((response) => response.data);
+};
+
+// ## ClassesTax
+export const getClassesTax = async (params: {
+  pagination?: PaginationNew;
+}): Promise<PaginatedListNew<ClassTax>> => {
+  const { pagination } = params;
+  return axiosClient
+    .get(`class-tax`, {
+      params: pagination,
+    })
+    .then((response) => response.data);
+};
+
+export const getClassTax = async (params: {
+  id: number;
+}): Promise<ClassTax> => {
+  const { id } = params;
+  return axiosClient.get(`class-tax/${id}`).then((response) => response.data);
 };
 
 // ## Families
