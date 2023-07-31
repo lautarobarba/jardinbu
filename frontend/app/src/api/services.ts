@@ -45,6 +45,11 @@ import {
   CreateClassTaxDto,
   UpdateClassTaxDto,
 } from '../interfaces/ClassTaxInterface';
+import {
+  CreateOrderTaxDto,
+  OrderTax,
+  UpdateOrderTaxDto,
+} from '../interfaces/OrderTaxInterface';
 
 // Api Url
 const apiBaseUrl: string =
@@ -226,6 +231,43 @@ export const deleteClassTax = async (params: {
   const { token, id } = params;
   return axiosClient
     .delete(`class-tax/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
+
+// ## OrdersTax
+export const createOrderTax = async (params: {
+  token: string;
+  createOrderTaxDto: CreateOrderTaxDto;
+}): Promise<OrderTax> => {
+  const { token, createOrderTaxDto } = params;
+  return axiosClient
+    .post('order-tax', createOrderTaxDto, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
+
+export const updateOrderTax = async (params: {
+  token: string;
+  updateOrderTaxDto: UpdateOrderTaxDto;
+}): Promise<OrderTax> => {
+  const { token, updateOrderTaxDto } = params;
+  return axiosClient
+    .patch('order-tax', updateOrderTaxDto, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
+
+export const deleteOrderTax = async (params: {
+  token: string;
+  id: number;
+}): Promise<void> => {
+  const { token, id } = params;
+  return axiosClient
+    .delete(`order-tax/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((response) => response.data);
@@ -439,6 +481,25 @@ export const getClassTax = async (params: {
 }): Promise<ClassTax> => {
   const { id } = params;
   return axiosClient.get(`class-tax/${id}`).then((response) => response.data);
+};
+
+// ## OrdersTax
+export const getOrdersTax = async (params: {
+  pagination?: PaginationNew;
+}): Promise<PaginatedListNew<OrderTax>> => {
+  const { pagination } = params;
+  return axiosClient
+    .get(`order-tax`, {
+      params: pagination,
+    })
+    .then((response) => response.data);
+};
+
+export const getOrderTax = async (params: {
+  id: number;
+}): Promise<OrderTax> => {
+  const { id } = params;
+  return axiosClient.get(`order-tax/${id}`).then((response) => response.data);
 };
 
 // ## Families

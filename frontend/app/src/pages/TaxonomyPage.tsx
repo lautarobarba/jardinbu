@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import { KingdomPrivateList } from './Kingdom/KingdomPrivateList';
 import { PhylumPrivateList } from './Phylum/PhylumPrivateList';
 import { ClassesTaxPrivateList } from './ClasesTax/ClassesTaxPrivateList';
+import { OrdersTaxPrivateList } from './OrderTax/OrdersTaxPrivateList';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -66,6 +67,9 @@ export const TaxonomyPage = () => {
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         <ClassesTaxPrivateList />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={3}>
+        <OrdersTaxPrivateList />
       </CustomTabPanel>
     </Box>
   );

@@ -43,6 +43,11 @@ import {
   deleteClassTax,
   getClassesTax,
   getClassTax,
+  createOrderTax,
+  updateOrderTax,
+  deleteOrderTax,
+  getOrdersTax,
+  getOrderTax,
 } from './services';
 import { Pagination, PaginationNew } from '../utils/iPagination';
 
@@ -109,6 +114,19 @@ export const useUpdateClassTax = () => {
 
 export const useDeleteClassTax = () => {
   return useMutation(deleteClassTax);
+};
+
+// ## OrdersTax
+export const useCreateOrderTax = () => {
+  return useMutation(createOrderTax);
+};
+
+export const useUpdateOrderTax = () => {
+  return useMutation(updateOrderTax);
+};
+
+export const useDeleteOrderTax = () => {
+  return useMutation(deleteOrderTax);
 };
 
 // ## Families
@@ -224,6 +242,29 @@ export const useGetClassTax = (params: { id: number }, config?: any) => {
   return useQuery(
     [`class-tax-${params.id}`],
     () => getClassTax(params),
+    config
+  );
+};
+
+// ## OrdersTax
+export const useGetOrdersTax = (
+  params: {
+    pagination?: PaginationNew;
+  },
+  config?: any
+) => {
+  const { pagination } = params;
+  return useQuery(
+    ['orders-tax', pagination],
+    () => getOrdersTax(params),
+    config
+  );
+};
+
+export const useGetOrderTax = (params: { id: number }, config?: any) => {
+  return useQuery(
+    [`order-tax-${params.id}`],
+    () => getOrderTax(params),
     config
   );
 };

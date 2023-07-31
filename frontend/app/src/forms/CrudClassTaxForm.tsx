@@ -180,7 +180,7 @@ export const CreateClassTaxForm = (props: CreateClassTaxFormProps) => {
               option.value === selection.value
             }
             onChange={(e, selection: Phylum) => {
-              formik.setFieldValue('phylumId', selection);
+              formik.setFieldValue('phylum', selection);
               setKingdom(selection?.kingdom.name ?? '');
             }}
             fullWidth
@@ -393,7 +393,7 @@ export const UpdateClassTaxForm = (props: UpdateClassTaxFormProps) => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                name='phylumId'
+                name='phylum'
                 label='Filo'
                 placeholder='Filo...'
                 error={formik.touched.phylum && Boolean(formik.errors.phylum)}
@@ -505,7 +505,7 @@ export const DeleteClassTaxForm = (props: DeleteClassTaxFormProps) => {
     // error: deleteClassTaxError,
   } = useDeleteClassTax();
 
-  const deletePhylum = (event: FormEvent<HTMLFormElement>) => {
+  const deleteClasstax = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     deleteClassTaxMutate(
       { token: token ?? '', id: id },
@@ -538,7 +538,7 @@ export const DeleteClassTaxForm = (props: DeleteClassTaxFormProps) => {
   }, [getClassTaxIsSuccess]);
 
   return (
-    <form onSubmit={(event) => deletePhylum(event)}>
+    <form onSubmit={(event) => deleteClasstax(event)}>
       <Grid container spacing={2} justifyContent={'center'}>
         <Grid container item xs={12} justifyContent={'center'}>
           <PageSubTitle title={`Eliminar clase N° ${id}`} />
