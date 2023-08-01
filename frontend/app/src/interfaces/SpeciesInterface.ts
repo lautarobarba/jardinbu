@@ -58,12 +58,13 @@ export interface CreateSpeciesDto {
   status: Status;
   foliageType: FoliageType;
   presence: Presence;
-  // exampleImg?: Picture | null,
-  // foliageImg?: Picture | null,
+  exampleImg?: Picture | null;
+  // files?: { exampleImg?: Picture | null; foliageImg?: Picture | null };
 }
 
 export interface UpdateSpeciesDto extends CreateSpeciesDto {
   id: number;
+  exampleImg?: Picture | null;
 }
 
 export const speciesToString = (species: Species) => {

@@ -368,6 +368,7 @@ export const updateSpecies = async (params: {
   updateSpeciesDto: UpdateSpeciesDto;
 }): Promise<Species> => {
   const { token, updateSpeciesDto } = params;
+
   return axiosClient
     .patch('species', updateSpeciesDto, {
       headers: {

@@ -14,7 +14,7 @@ import {
   Alert,
 } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
-import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
+import { MDBBtn, MDBFile, MDBIcon } from 'mdb-react-ui-kit';
 import { useCreateSpecies, useDeleteSpecies, useGetGenera, useGetOneSpecies, useUpdateSpecies } from '../api/hooks';
 import { useJwtToken } from '../features/auth/authHooks';
 import { useQueryClient } from '@tanstack/react-query';
@@ -51,6 +51,12 @@ const ValidationSchema = Yup.object().shape({
   presence: Yup.string().required(
     'Por favor seleccione el estado de presencia'
   ),
+  exampleImg: Yup.mixed()
+    .nullable()
+    .notRequired(),
+  foliageImg: Yup.mixed()
+    .nullable()
+    .notRequired(),
 });
 
 interface Values {
@@ -63,6 +69,8 @@ interface Values {
   status: string;
   foliageType: string;
   presence: string;
+  exampleImg?: null,
+  foliageImg?: null,
 }
 
 interface CreateSpeciesFormProps {
@@ -551,6 +559,10 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         status: values.status as Status,
         foliageType: values.foliageType as FoliageType,
         presence: values.presence as Presence,
+
+        exampleImg: values.exampleImg,
+        //   foliageImg: values.foliageImg,
+        // }
       };
 
       updateSpeciesMutate(
@@ -592,6 +604,10 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
       setKingdom(getOneSpeciesData.genus.family.orderTax.classTax.phylum.kingdom.name);
     }
   }, [getOneSpeciesIsSuccess]);
+
+  useEffect(() => {
+    console.log(formik.errors);
+  }, [formik.errors]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -895,6 +911,26 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
             </Select>
           </FormControl>
         </Grid>
+      </Grid>
+
+      <Grid item xs={12} md={4}>
+        {/* exampleImg?: null,
+  foliageImg?: null, */}
+        <MDBFile
+          // disabled={!editMode}
+          id='exampleImg'
+          name='exampleImg'
+          label='Ejemplar'
+          // value={formik.values.exampleImg}
+          onChange={(event: any) => {
+            formik.setFieldValue(
+              'exampleImg',
+              event.target.files[0]
+            );
+          }}
+        // error={formik.touched.exampleImg && Boolean(formik.errors.exampleImg)}
+        // helperText={formik.touched.exampleImg && formik.errors.exampleImg}
+        />
       </Grid>
 
       <br />

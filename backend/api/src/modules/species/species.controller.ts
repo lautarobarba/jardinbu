@@ -15,6 +15,7 @@ import {
   UseGuards,
   Query,
   BadRequestException,
+  UploadedFile,
 } from "@nestjs/common";
 import { Response, Express } from "express";
 import {
@@ -48,21 +49,21 @@ export class SpeciesController {
   @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
-  @UseInterceptors(
-    LocalFilesInterceptor({
-      fieldName: "exampleImg",
-      path: "/temp",
-      fileFilter: (request, file, callback) => {
-        if (!file.mimetype.includes("image")) {
-          return callback(new BadRequestException("Invalid image file"), false);
-        }
-        callback(null, true);
-      },
-      limits: {
-        fileSize: 1024 * 1024 * 10, // 10MB
-      },
-    })
-  )
+  // @UseInterceptors(
+  //   LocalFilesInterceptor({
+  //     fieldName: "exampleImg",
+  //     path: "/temp",
+  //     fileFilter: (request, file, callback) => {
+  //       if (!file.mimetype.includes("image")) {
+  //         return callback(new BadRequestException("Invalid image file"), false);
+  //       }
+  //       callback(null, true);
+  //     },
+  //     limits: {
+  //       fileSize: 1024 * 1024 * 10, // 10MB
+  //     },
+  //   })
+  // )
   @ApiBearerAuth()
   @ApiConsumes("multipart/form-data")
   @ApiBody({
@@ -101,7 +102,7 @@ export class SpeciesController {
   @UseInterceptors(ClassSerializerInterceptor)
   @UseInterceptors(
     LocalFilesInterceptor({
-      fieldName: "exampleImg",
+      files: [{ name: "exampleImg" }, { name: "foliageImg" }],
       path: "/temp",
       fileFilter: (request, file, callback) => {
         if (!file.mimetype.includes("image")) {
@@ -143,10 +144,19 @@ export class SpeciesController {
   update(
     @Req() request: RequestWithUser,
     @Res({ passthrough: true }) response: Response,
-    @Body() updateSpeciesDto: UpdateSpeciesDto
+    @Body() updateSpeciesDto: UpdateSpeciesDto,
+    @UploadedFile("exampleImg") exampleImg: Express.Multer.File
+    // files: Express.Multer.File[]
+    // @UploadedFile()
+    // files?: {
+    //   exampleImg?: Express.Multer.File;
+    //   foliageImg?: Express.Multer.File;
+    // }
   ) {
     this._logger.debug("PATCH: /api/species");
     const userId: number = getUserIdFromRequest(request);
+    console.log(updateSpeciesDto);
+    console.log(exampleImg);
     return this._speciesService.update(updateSpeciesDto, userId);
   }
 
