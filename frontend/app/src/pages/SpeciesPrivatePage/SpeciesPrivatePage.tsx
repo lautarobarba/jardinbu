@@ -11,7 +11,7 @@ import {
 } from '@tanstack/react-table';
 import { fuzzyFilter } from '../../utils/ColumnFilter';
 import { CustomTable } from '../../utils/CustomTable';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Dialog } from '@mui/material';
 import { Species } from '../../interfaces/SpeciesInterface';
 import { columns } from './columns';
 import { CreateSpeciesForm } from '../../forms/CrudSpeciesForm';
@@ -21,8 +21,9 @@ export const SpeciesPrivatePage = () => {
     pageIndex: 0,
     pageSize: 10,
   });
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'scientificName', desc: false },
+  ]);
 
   const pagination = useMemo(
     () => ({
@@ -38,13 +39,15 @@ export const SpeciesPrivatePage = () => {
     isSuccess: getSpeciesIsSuccess,
     data: getSpeciesData,
     isError: getSpeciesIsError,
-    // error: getSpeciesError
+    error: getSpeciesError,
   } = useGetSpecies(
     {
       pagination: {
-        paginationState: pagination,
-        sortingState: sorting,
-        columnFiltersState: columnFilters,
+        page: pagination.pageIndex + 1,
+        limit: pagination.pageSize,
+        orderBy: sorting.length === 1 ? sorting[0].id : undefined,
+        orderDirection:
+          sorting.length === 1 ? (sorting[0].desc ? 'DESC' : 'ASC') : undefined,
       },
     },
     { keepPreviousData: true }
@@ -57,28 +60,26 @@ export const SpeciesPrivatePage = () => {
   };
 
   const table = useReactTable<Species>({
-    data: getSpeciesData?.rows ?? [],
+    data: getSpeciesData?.items ?? [],
     columns: columns,
-    state: { pagination, sorting, columnFilters },
+    state: { pagination, sorting },
     manualPagination: true,
-    pageCount: getSpeciesData?.pageCount ?? -1,
+    pageCount: getSpeciesData?.meta?.totalPages ?? 1,
     onPaginationChange: setPagination,
     manualSorting: true,
-    enableMultiSort: true,
+    enableMultiSort: false,
     onSortingChange: setSorting,
     enableSorting: true,
-    onColumnFiltersChange: setColumnFilters,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
     getCoreRowModel: getCoreRowModel(),
   });
 
   useEffect(() => {
     if (getSpeciesIsSuccess) {
       console.log({ getSpeciesData });
+    } else if (getSpeciesIsError) {
+      console.log({ getSpeciesError });
     }
-  }, [getSpeciesIsSuccess, getSpeciesData]);
+  }, [getSpeciesIsSuccess, getSpeciesData, getSpeciesIsError, getSpeciesError]);
 
   return (
     <div className='bg-white p-3'>
@@ -100,11 +101,24 @@ export const SpeciesPrivatePage = () => {
 
       <br />
 
-      {openCreate && <CreateSpeciesForm toggleVisibility={setOpenCreate} />}
+      <Dialog
+        onClose={() => setOpenCreate(false)}
+        open={openCreate}
+        maxWidth={'md'}
+        fullWidth
+      >
+        <div className='p-5'>
+          <CreateSpeciesForm toggleVisibility={setOpenCreate} />
+        </div>
+      </Dialog>
 
       {getSpeciesIsError && <p className='text-danger'>Error...</p>}
 
-      {getSpeciesIsLoading && <CircularProgress />}
+      {getSpeciesIsLoading && (
+        <div className='text-center'>
+          <CircularProgress />
+        </div>
+      )}
 
       {getSpeciesIsSuccess && (
         <section id='species' className='species'>

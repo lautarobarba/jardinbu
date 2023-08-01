@@ -14,9 +14,16 @@ import {
   Logger,
   UseGuards,
   Query,
+  BadRequestException,
 } from "@nestjs/common";
 import { Response, Express } from "express";
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiResponse,
+  ApiTags,
+} from "@nestjs/swagger";
 import { IsEmailConfirmedGuard } from "modules/auth/guards/is-email-confirmed.guard";
 import { RoleGuard } from "modules/auth/guards/role.guard";
 import { Role } from "modules/auth/role.enum";
@@ -26,6 +33,9 @@ import { SpeciesService } from "./species.service";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
 import { RequestWithUser } from "modules/auth/request-with-user.interface";
 import { getUserIdFromRequest } from "modules/utils/user.request";
+import { PaginationDto } from "modules/utils/pagination.dto";
+import { Pagination } from "nestjs-typeorm-paginate";
+import { LocalFilesInterceptor } from "modules/utils/localFiles.interceptor";
 // import { PaginatedList, PaginationDto } from "modules/utils/pagination.dto";
 
 @ApiTags("Especies")
@@ -35,10 +45,26 @@ export class SpeciesController {
   private readonly _logger = new Logger(SpeciesController.name);
 
   @Post()
-  @UseGuards(RoleGuard([Role.ADMIN]))
+  @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(
+    LocalFilesInterceptor({
+      fieldName: "exampleImg",
+      path: "/temp",
+      fileFilter: (request, file, callback) => {
+        if (!file.mimetype.includes("image")) {
+          return callback(new BadRequestException("Invalid image file"), false);
+        }
+        callback(null, true);
+      },
+      limits: {
+        fileSize: 1024 * 1024 * 10, // 10MB
+      },
+    })
+  )
   @ApiBearerAuth()
+  @ApiConsumes("multipart/form-data")
   @ApiBody({
     description: "Atributos de la especie",
     type: CreateSpeciesDto,
@@ -108,19 +134,29 @@ export class SpeciesController {
     return this._speciesService.update(updateSpeciesDto, userId);
   }
 
-  // @Get()
-  // @UseInterceptors(ClassSerializerInterceptor)
-  // @ApiResponse({
-  //   status: HttpStatus.OK,
-  //   type: Species,
-  //   isArray: true,
-  // })
-  // async findAll(
-  //   @Query() paginationDto: PaginationDto
-  // ): Promise<PaginatedList<Species>> {
-  //   this._logger.debug("GET: /api/species");
-  //   return this._speciesService.findAll(paginationDto);
-  // }
+  @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: Species,
+    isArray: true,
+  })
+  async findAll(
+    @Query() paginationDto: PaginationDto
+  ): Promise<Pagination<Species> | Species[]> {
+    this._logger.debug("GET: /api/species");
+    if (paginationDto.page && paginationDto.limit) {
+      return this._speciesService.findPaginated({
+        page: paginationDto.page,
+        limit: paginationDto.limit,
+        orderBy: paginationDto.orderBy,
+        orderDirection: paginationDto.orderDirection,
+        route: `${process.env.API_URL}/api/species`,
+      });
+    } else {
+      return this._speciesService.findAll();
+    }
+  }
 
   @Get(":id")
   @UseInterceptors(ClassSerializerInterceptor)
@@ -142,7 +178,7 @@ export class SpeciesController {
   }
 
   @Delete(":id")
-  @UseGuards(RoleGuard([Role.ADMIN]))
+  @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @ApiBearerAuth()
   @ApiResponse({
@@ -152,6 +188,10 @@ export class SpeciesController {
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
     description: ERROR_MESSAGE.NO_ENCONTRADO,
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: ERROR_MESSAGE.OBJETO_REFERENCIADO,
   })
   async delete(
     @Req() request: RequestWithUser,

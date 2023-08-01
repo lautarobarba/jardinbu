@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Express } from "express";
-import { FoliageType, Status } from "./species.entity";
+import { FoliageType, OrganismType, Presence, Status } from "./species.entity";
 
 export class CreateSpeciesDto {
   @ApiProperty()
@@ -10,67 +10,40 @@ export class CreateSpeciesDto {
   commonName?: string;
 
   @ApiPropertyOptional()
+  englishName?: string;
+
+  @ApiPropertyOptional()
   description?: string;
 
   @ApiProperty()
   genusId: number;
 
-  @ApiPropertyOptional()
-  status?: Status;
+  @ApiProperty()
+  organismType: OrganismType;
 
-  // @ApiPropertyOptional()
-  // origin?: Origin;
+  @ApiProperty()
+  status: Status;
 
-  @ApiPropertyOptional({
-    type: "string",
-    format: "binary",
-  })
-  exampleImg?: Express.Multer.File;
+  @ApiProperty()
+  foliageType: FoliageType;
 
-  @ApiPropertyOptional()
-  foliageType?: FoliageType;
+  @ApiProperty()
+  presence: Presence;
 
-  @ApiPropertyOptional({
-    type: "string",
-    format: "binary",
-  })
-  foliageImg?: Express.Multer.File;
+  // @ApiPropertyOptional({
+  //   type: "string",
+  //   format: "binary",
+  // })
+  // exampleImg?: Express.Multer.File;
+
+  // @ApiPropertyOptional({
+  //   type: "string",
+  //   format: "binary",
+  // })
+  // foliageImg?: Express.Multer.File;
 }
 
-export class UpdateSpeciesDto {
+export class UpdateSpeciesDto extends CreateSpeciesDto {
   @ApiProperty()
   id: number;
-
-  @ApiPropertyOptional()
-  scientificName?: string;
-
-  @ApiPropertyOptional()
-  commonName?: string;
-
-  @ApiPropertyOptional()
-  description?: string;
-
-  @ApiPropertyOptional()
-  genusId?: number;
-
-  @ApiPropertyOptional()
-  status?: Status;
-
-  // @ApiPropertyOptional()
-  // origin?: Origin;
-
-  @ApiPropertyOptional({
-    type: "string",
-    format: "binary",
-  })
-  exampleImg?: Express.Multer.File;
-
-  @ApiPropertyOptional()
-  foliageType?: FoliageType;
-
-  @ApiPropertyOptional({
-    type: "string",
-    format: "binary",
-  })
-  foliageImg?: Express.Multer.File;
 }

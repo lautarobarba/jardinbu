@@ -27,7 +27,7 @@ import { Genus } from '../interfaces/GenusInterface';
 import {
   CreateSpeciesDto,
   FoliageType,
-  Origin,
+  // Origin,
   Species,
   Status,
 } from '../interfaces/SpeciesInterface';
@@ -151,27 +151,28 @@ export const CreateSpecimenForm = (props: Props) => {
   // Formateo para select
   const getSpeciesForSelect = () => {
     if (getSpeciesData) {
-      return getSpeciesData?.rows.map((species: Species) => {
-        return {
-          value: species.id,
-          label: `${species.scientificName} (${species.commonName})`,
-        };
-      });
+      // return getSpeciesData?.rows.map((species: Species) => {
+      //   return {
+      //     value: species.id,
+      //     label: `${species.scientificName} (${species.commonName})`,
+      //   };
+      // });
+      return [];
     } else {
       return [];
     }
   };
 
-  // Actualizo el género y la familia al cambiar de especie
-  useEffect(() => {
-    if (formik.values.speciesId) {
-      const speciesSelected: Species | undefined = getSpeciesData?.rows.filter(
-        (species) => species.id === formik.values.speciesId
-      )[0];
-      setGenero(speciesSelected?.genus.name ?? '');
-      setFamilia(speciesSelected?.genus.family.name ?? '');
-    }
-  }, [formik.values.speciesId]);
+  // // Actualizo el género y la familia al cambiar de especie
+  // useEffect(() => {
+  //   if (formik.values.speciesId) {
+  //     const speciesSelected: Species | undefined = getSpeciesData?.rows.filter(
+  //       (species) => species.id === formik.values.speciesId
+  //     )[0];
+  //     setGenero(speciesSelected?.genus.name ?? '');
+  //     setFamilia(speciesSelected?.genus.family.name ?? '');
+  //   }
+  // }, [formik.values.speciesId]);
 
   return (
     <form onSubmit={formik.handleSubmit}>

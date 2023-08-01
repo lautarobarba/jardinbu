@@ -302,7 +302,7 @@ export const useGetGenus = (params: { id: number }, config?: any) => {
 // ## Species
 export const useGetSpecies = (
   params: {
-    pagination?: Pagination;
+    pagination?: PaginationNew;
   },
   config?: any
 ) => {

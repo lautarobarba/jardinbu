@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ILike, Repository } from "typeorm";
+import { ILike, Not, Repository } from "typeorm";
 import * as moment from "moment";
 import { validate } from "class-validator";
 import { CreateSpeciesDto, UpdateSpeciesDto } from "./species.dto";
@@ -35,46 +35,51 @@ export class SpeciesService {
     createSpeciesDto: CreateSpeciesDto,
     userId: number
   ): Promise<Species> {
-    // TODO: falta guardar imagenes
     this._logger.debug("create()");
     const {
       scientificName,
       commonName,
+      englishName,
       description,
       genusId,
+      organismType,
       status,
-      // origin,
-      exampleImg,
       foliageType,
-      foliageImg,
+      presence,
+      // exampleImg,
+      // foliageImg,
     } = createSpeciesDto;
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
+    // console.log({ createSpeciesDto });
+    // Sólo voy a permitir que se repita la clave: name = "SIN DEFINIR"
+    if (scientificName.toLowerCase() != "sin definir") {
+      // Controlo que las claves no estén en uso
+      const exists: Species = await this._speciesRepository.findOne({
+        where: { scientificName: scientificName.toLowerCase(), deleted: false },
+      });
 
-    // Controlo que la nueva especie no exista
-    const exists: Species = await this._speciesRepository.findOne({
-      where: { scientificName: scientificName.toLowerCase() },
-    });
-
-    // Si existe y no esta borrado lógico entonces hay conflictos
-    if (exists && !exists.deleted) {
-      this._logger.debug(ERROR_MESSAGE.CLAVE_PRIMARIA_EN_USO);
-      throw new ConflictException(ERROR_MESSAGE.CLAVE_PRIMARIA_EN_USO);
+      // Si existe y no esta borrado lógico entonces hay conflictos
+      if (exists) {
+        this._logger.debug(ERROR_MESSAGE.CLAVE_PRIMARIA_EN_USO);
+        throw new ConflictException(ERROR_MESSAGE.CLAVE_PRIMARIA_EN_USO);
+      }
     }
 
     // Si no existe entonces creo uno nuevo
     const species: Species = this._speciesRepository.create();
     species.scientificName = scientificName.toLowerCase();
-    species.commonName = commonName.toLowerCase();
-    species.description = description.toLowerCase();
-    if (genusId && genusId !== 0)
-      species.genus = await this._genusService.findOne(genusId);
-    else species.genus = null;
-    species.status = status;
-    // species.origin = origin;
-    species.foliageType = foliageType;
+    species.commonName = commonName ? commonName.toLowerCase() : null;
+    species.englishName = englishName ? englishName.toLowerCase() : null;
+    species.description = description ? description.toLowerCase() : null;
+    species.genus = await this._genusService.findOne(genusId);
+    species.organismType = organismType ? organismType : null;
+    species.status = status ? status : null;
+    species.foliageType = foliageType ? foliageType : null;
+    species.presence = presence ? presence : null;
     species.createdAt = timestamp;
     species.updatedAt = timestamp;
     species.deleted = false;
+    species.userMod = await this._userService.findOne(userId);
 
     // Controlo que el modelo no tenga errores antes de guardar
     const errors = await validate(species);
@@ -95,13 +100,15 @@ export class SpeciesService {
       id,
       scientificName,
       commonName,
+      englishName,
       description,
       genusId,
+      organismType,
       status,
-      // origin,
-      exampleImg,
       foliageType,
-      foliageImg,
+      presence,
+      // exampleImg,
+      // foliageImg,
     } = updateSpeciesDto;
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -114,30 +121,37 @@ export class SpeciesService {
       throw new NotFoundException(ERROR_MESSAGE.NO_ENCONTRADO);
     }
 
-    // Controlo que las claves no estén en uso
-    if (scientificName) {
+    // Sólo voy a permitir que se repita la clave: name = "SIN DEFINIR"
+    if (scientificName.toLowerCase() != "sin definir") {
+      // Controlo que las claves no estén en uso
       const exists: Species = await this._speciesRepository.findOne({
-        where: { scientificName: scientificName.toLowerCase() },
+        where: {
+          scientificName: scientificName.toLowerCase(),
+          deleted: false,
+          id: Not(id),
+        },
       });
 
       // Si existe y no esta borrado lógico entonces hay conflictos
-      if (exists && !exists.deleted && exists.id !== id) {
+      if (exists) {
         this._logger.debug(ERROR_MESSAGE.CLAVE_PRIMARIA_EN_USO);
         throw new ConflictException(ERROR_MESSAGE.CLAVE_PRIMARIA_EN_USO);
       }
     }
 
-    // Si no hay problemas actualizo los atributos
-    if (scientificName) species.scientificName = scientificName.toLowerCase();
-    if (commonName) species.commonName = commonName.toLowerCase();
-    if (description) species.description = description.toLowerCase();
-    if (genusId && genusId !== 0)
-      species.genus = await this._genusService.findOne(genusId);
-    else species.genus = null;
-    if (status) species.status = status;
-    // if (origin) species.origin = origin;
-    if (foliageType) species.foliageType = foliageType;
+    species.scientificName = scientificName.toLowerCase();
+    species.commonName = commonName ? commonName.toLowerCase() : null;
+    species.englishName = englishName ? englishName.toLowerCase() : null;
+    species.description = description ? description.toLowerCase() : null;
+    species.genus = await this._genusService.findOne(genusId);
+    species.organismType = organismType ? organismType : null;
+    species.status = status ? status : null;
+    species.foliageType = foliageType ? foliageType : null;
+    species.presence = presence ? presence : null;
+    species.createdAt = timestamp;
     species.updatedAt = timestamp;
+    species.deleted = false;
+    species.userMod = await this._userService.findOne(userId);
 
     // Controlo que el modelo no tenga errores antes de guardar
     const errors = await validate(species);

@@ -32,58 +32,58 @@ export const SpeciesPublicPage = () => {
     [pageIndex, pageSize]
   );
 
-  // Queries
-  const {
-    isLoading: getSpeciesIsLoading,
-    isSuccess: getSpeciesIsSuccess,
-    data: getSpeciesData,
-    isError: getSpeciesIsError,
-    // error: getSpeciesError
-  } = useGetSpecies(
-    {
-      pagination: {
-        paginationState: pagination,
-        sortingState: sorting,
-        columnFiltersState: columnFilters,
-      },
-    },
-    { keepPreviousData: true }
-  );
+  // // Queries
+  // const {
+  //   isLoading: getSpeciesIsLoading,
+  //   isSuccess: getSpeciesIsSuccess,
+  //   data: getSpeciesData,
+  //   isError: getSpeciesIsError,
+  //   // error: getSpeciesError
+  // } = useGetSpecies(
+  //   {
+  //     pagination: {
+  //       paginationState: pagination,
+  //       sortingState: sorting,
+  //       columnFiltersState: columnFilters,
+  //     },
+  //   },
+  //   { keepPreviousData: true }
+  // );
 
-  const [openCreate, setOpenCreate] = useState<boolean>(false);
+  // const [openCreate, setOpenCreate] = useState<boolean>(false);
 
-  const toggleCreateForm = () => {
-    setOpenCreate(!openCreate);
-  };
+  // const toggleCreateForm = () => {
+  //   setOpenCreate(!openCreate);
+  // };
 
-  const table = useReactTable<Species>({
-    data: getSpeciesData?.rows ?? [],
-    columns: columns,
-    state: { pagination, sorting, columnFilters },
-    manualPagination: true,
-    pageCount: getSpeciesData?.pageCount ?? -1,
-    onPaginationChange: setPagination,
-    manualSorting: true,
-    enableMultiSort: true,
-    onSortingChange: setSorting,
-    enableSorting: true,
-    onColumnFiltersChange: setColumnFilters,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
-    getCoreRowModel: getCoreRowModel(),
-  });
+  // const table = useReactTable<Species>({
+  //   data: getSpeciesData?.rows ?? [],
+  //   columns: columns,
+  //   state: { pagination, sorting, columnFilters },
+  //   manualPagination: true,
+  //   pageCount: getSpeciesData?.pageCount ?? -1,
+  //   onPaginationChange: setPagination,
+  //   manualSorting: true,
+  //   enableMultiSort: true,
+  //   onSortingChange: setSorting,
+  //   enableSorting: true,
+  //   onColumnFiltersChange: setColumnFilters,
+  //   filterFns: {
+  //     fuzzy: fuzzyFilter,
+  //   },
+  //   getCoreRowModel: getCoreRowModel(),
+  // });
 
-  useEffect(() => {
-    if (getSpeciesIsSuccess) {
-      console.log({ getSpeciesData });
-    }
-  }, [getSpeciesIsSuccess, getSpeciesData]);
+  // useEffect(() => {
+  //   if (getSpeciesIsSuccess) {
+  //     console.log({ getSpeciesData });
+  //   }
+  // }, [getSpeciesIsSuccess, getSpeciesData]);
 
   return (
     <div className='bg-white p-3'>
       <PageTitle title='Especies' />
-
+      {/* 
       <div className='d-flex justify-content-between'>
         <PageSubTitle title='Listado de especies' />
         <button
@@ -110,7 +110,7 @@ export const SpeciesPublicPage = () => {
         <section id='species' className='species'>
           <CustomTable table={table} />
         </section>
-      )}
+      )} */}
     </div>
   );
 };

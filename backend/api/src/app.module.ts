@@ -19,6 +19,7 @@ import { AdministrationModule } from "modules/administration/administration.modu
 import { PhylumModule } from "modules/phylum/phylum.module";
 import { ClassTaxModule } from "modules/class-tax/class-tax.module";
 import { OrderTaxModule } from "modules/order-tax/order-tax.module";
+import { ImageModule } from "modules/image/image.module";
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { OrderTaxModule } from "modules/order-tax/order-tax.module";
     AuthModule,
     UserModule,
     // Utils
+    ImageModule,
     UtilsModule,
     MailerModule,
     CronModule,

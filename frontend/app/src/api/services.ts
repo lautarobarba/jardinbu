@@ -355,7 +355,10 @@ export const createSpecies = async (params: {
   const { token, createSpeciesDto } = params;
   return axiosClient
     .post('species', createSpeciesDto, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
     })
     .then((response) => response.data);
 };
@@ -367,7 +370,10 @@ export const updateSpecies = async (params: {
   const { token, updateSpeciesDto } = params;
   return axiosClient
     .patch('species', updateSpeciesDto, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
     })
     .then((response) => response.data);
 };
@@ -538,8 +544,8 @@ export const getGenus = async (params: { id: number }): Promise<Genus> => {
 
 // ## Species
 export const getSpecies = async (params: {
-  pagination?: Pagination;
-}): Promise<PaginatedList<Species>> => {
+  pagination?: PaginationNew;
+}): Promise<PaginatedListNew<Species>> => {
   const { pagination } = params;
   return axiosClient
     .get(`species`, {
