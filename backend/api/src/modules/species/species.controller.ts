@@ -96,10 +96,26 @@ export class SpeciesController {
   }
 
   @Patch()
-  @UseGuards(RoleGuard([Role.ADMIN]))
+  @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(
+    LocalFilesInterceptor({
+      fieldName: "exampleImg",
+      path: "/temp",
+      fileFilter: (request, file, callback) => {
+        if (!file.mimetype.includes("image")) {
+          return callback(new BadRequestException("Invalid image file"), false);
+        }
+        callback(null, true);
+      },
+      limits: {
+        fileSize: 1024 * 1024 * 10, // 10MB
+      },
+    })
+  )
   @ApiBearerAuth()
+  @ApiConsumes("multipart/form-data")
   @ApiBody({
     description: "Atributos de la especie",
     type: UpdateSpeciesDto,

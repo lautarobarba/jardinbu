@@ -50,7 +50,7 @@ export class SpeciesService {
       // foliageImg,
     } = createSpeciesDto;
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
-    // console.log({ createSpeciesDto });
+
     // Sólo voy a permitir que se repita la clave: name = "SIN DEFINIR"
     if (scientificName.toLowerCase() != "sin definir") {
       // Controlo que las claves no estén en uso

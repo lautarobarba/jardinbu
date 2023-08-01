@@ -7,6 +7,7 @@ import { orderTaxToString } from '../../interfaces/OrderTaxInterface';
 import { classTaxToString } from '../../interfaces/ClassTaxInterface';
 import { phylumToString } from '../../interfaces/PhylumInterface';
 import { kingdomToString } from '../../interfaces/KingdomInterface';
+import { ModalCrudSpecies } from '../../forms/CrudSpeciesForm';
 
 const columnHelper = createColumnHelper<Species>();
 
@@ -100,6 +101,6 @@ export const columns: any = [
   columnHelper.display({
     id: 'actions',
     header: 'Acciones',
-    // cell: (props) => <ModalCrudSpecies id={Number(props.row.original.id)} />,
+    cell: (props) => <ModalCrudSpecies id={Number(props.row.original.id)} />,
   }),
 ];
