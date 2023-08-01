@@ -6,6 +6,8 @@ import { KingdomPrivateList } from './Kingdom/KingdomPrivateList';
 import { PhylumPrivateList } from './Phylum/PhylumPrivateList';
 import { ClassesTaxPrivateList } from './ClassesTax/ClassesTaxPrivateList';
 import { OrdersTaxPrivateList } from './OrderTax/OrdersTaxPrivateList';
+import { FamiliesPrivateList } from './Families/FamiliesPrivateList';
+import { GeneraPrivateList } from './Genera/GeneraPrivateList';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -68,7 +70,10 @@ export const TaxonomyPage = () => {
         <OrdersTaxPrivateList />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={4}>
-        <OrdersTaxPrivateList />
+        <FamiliesPrivateList />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={5}>
+        <GeneraPrivateList />
       </CustomTabPanel>
     </Box>
   );

@@ -12,31 +12,19 @@ import {
 import { Add as AddIcon } from '@mui/icons-material';
 import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
 import {
-  useCreateClassTax,
   useCreateOrderTax,
-  useDeleteClassTax,
   useDeleteOrderTax,
-  useGetClassTax,
   useGetClassesTax,
   useGetOrderTax,
-  useGetPhylums,
-  useUpdateClassTax,
   useUpdateOrderTax,
 } from '../api/hooks';
-import {
-  ClassTax,
-  CreateClassTaxDto,
-  UpdateClassTaxDto,
-  classTaxToString,
-} from '../interfaces/ClassTaxInterface';
+import { ClassTax, classTaxToString } from '../interfaces/ClassTaxInterface';
 import { useJwtToken } from '../features/auth/authHooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
-import { Phylum, phylumToString } from '../interfaces/PhylumInterface';
 import { PageSubTitle } from '../components/PageSubTitle';
 import { FormEvent, useEffect, useState } from 'react';
 import { CreatePhylumForm } from './CrudPhylumForm';
-import { Kingdom } from '../interfaces/KingdomInterface';
 import {
   CreateOrderTaxDto,
   OrderTax,
@@ -47,7 +35,7 @@ const ValidationSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, 'Demasiado corto')
     .max(100, 'Demasiado largo')
-    .required('La clase necesita un nombre'),
+    .required('El orden necesita un nombre'),
   description: Yup.string(),
   classTax: Yup.object().required('Por favor seleccione una clase'),
 });

@@ -1,28 +1,27 @@
 import { PageSubTitle } from '../../components/PageSubTitle';
 import { PageTitle } from '../../components/PageTitle';
-import { Family } from '../../interfaces/FamilyInterface';
 import { useGetFamilies } from '../../api/hooks';
 import { useEffect, useMemo, useState } from 'react';
-import { CreateFamilyForm } from '../../forms/CrudFamilyForm';
+import { CircularProgress, Dialog } from '@mui/material';
+import { CustomTable } from '../../utils/CustomTable';
 import {
-  ColumnFiltersState,
   PaginationState,
   SortingState,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
 import { columns } from './columns';
-import { fuzzyFilter } from '../../utils/ColumnFilter';
-import { CustomTable } from '../../utils/CustomTable';
-import { CircularProgress } from '@mui/material';
+import { Family } from '../../interfaces/FamilyInterface';
+import { CreateFamilyForm } from '../../forms/CrudFamilyForm';
 
-export const FamiliesPrivatePage = () => {
+export const FamiliesPrivateList = () => {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'name', desc: false },
+  ]);
 
   const pagination = useMemo(
     () => ({
@@ -38,13 +37,15 @@ export const FamiliesPrivatePage = () => {
     isSuccess: getFamiliesIsSuccess,
     data: getFamiliesData,
     isError: getFamiliesIsError,
-    // error: getFamiliesError
+    error: getFamiliesError,
   } = useGetFamilies(
     {
       pagination: {
-        paginationState: pagination,
-        sortingState: sorting,
-        columnFiltersState: columnFilters,
+        page: pagination.pageIndex + 1,
+        limit: pagination.pageSize,
+        orderBy: sorting.length === 1 ? sorting[0].id : undefined,
+        orderDirection:
+          sorting.length === 1 ? (sorting[0].desc ? 'DESC' : 'ASC') : undefined,
       },
     },
     { keepPreviousData: true }
@@ -57,28 +58,31 @@ export const FamiliesPrivatePage = () => {
   };
 
   const table = useReactTable<Family>({
-    data: getFamiliesData?.rows ?? [],
+    data: getFamiliesData?.items ?? [],
     columns: columns,
-    state: { pagination, sorting, columnFilters },
+    state: { pagination, sorting },
     manualPagination: true,
-    pageCount: getFamiliesData?.pageCount ?? -1,
+    pageCount: getFamiliesData?.meta?.totalPages ?? 1,
     onPaginationChange: setPagination,
     manualSorting: true,
-    enableMultiSort: true,
+    enableMultiSort: false,
     onSortingChange: setSorting,
     enableSorting: true,
-    onColumnFiltersChange: setColumnFilters,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
     getCoreRowModel: getCoreRowModel(),
   });
 
   useEffect(() => {
     if (getFamiliesIsSuccess) {
       console.log({ getFamiliesData });
+    } else if (getFamiliesIsError) {
+      console.log({ getFamiliesError });
     }
-  }, [getFamiliesIsSuccess, getFamiliesData]);
+  }, [
+    getFamiliesIsSuccess,
+    getFamiliesData,
+    getFamiliesIsError,
+    getFamiliesError,
+  ]);
 
   return (
     <div className='bg-white p-3'>
@@ -100,11 +104,24 @@ export const FamiliesPrivatePage = () => {
 
       <br />
 
-      {openCreate && <CreateFamilyForm toggleVisibility={setOpenCreate} />}
+      <Dialog
+        onClose={() => setOpenCreate(false)}
+        open={openCreate}
+        maxWidth={'md'}
+        fullWidth
+      >
+        <div className='p-5'>
+          <CreateFamilyForm toggleVisibility={setOpenCreate} />
+        </div>
+      </Dialog>
 
       {getFamiliesIsError && <p className='text-danger'>Error...</p>}
 
-      {getFamiliesIsLoading && <CircularProgress />}
+      {getFamiliesIsLoading && (
+        <div className='text-center'>
+          <CircularProgress />
+        </div>
+      )}
 
       {getFamiliesIsSuccess && (
         <section id='families' className='families'>

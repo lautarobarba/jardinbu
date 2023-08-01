@@ -22,8 +22,8 @@ export interface UpdateKingdomDto extends CreateKingdomDto {
 
 export const kingdomToString = (kingdom: Kingdom) => {
   if (kingdom.description)
-    return formatTitleCase(
-      `${kingdom.id}. ${kingdom.name} (${kingdom.description})`
-    );
-  return formatTitleCase(`${kingdom.id}. ${kingdom.name}`);
+    return `${kingdom.id}. ${formatTitleCase(kingdom.name)} (${
+      kingdom.description
+    })`;
+  return `${kingdom.id}. ${formatTitleCase(kingdom.name)}`;
 };

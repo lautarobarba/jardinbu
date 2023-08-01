@@ -272,7 +272,7 @@ export const useGetOrderTax = (params: { id: number }, config?: any) => {
 // ## Families
 export const useGetFamilies = (
   params: {
-    pagination?: Pagination;
+    pagination?: PaginationNew;
   },
   config?: any
 ) => {
@@ -287,7 +287,7 @@ export const useGetFamily = (params: { id: number }, config?: any) => {
 // ## Genera
 export const useGetGenera = (
   params: {
-    pagination?: Pagination;
+    pagination?: PaginationNew;
   },
   config?: any
 ) => {

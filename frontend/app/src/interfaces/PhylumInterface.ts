@@ -25,8 +25,8 @@ export interface UpdatePhylumDto extends CreatePhylumDto {
 
 export const phylumToString = (phylum: Phylum) => {
   if (phylum.description)
-    return formatTitleCase(
-      `${phylum.id}. ${phylum.name} (${phylum.description})`
-    );
-  return formatTitleCase(`${phylum.id}. ${phylum.name}`);
+    return `${phylum.id}. ${formatTitleCase(phylum.name)} (${
+      phylum.description
+    })`;
+  return `${phylum.id}. ${formatTitleCase(phylum.name)}`;
 };

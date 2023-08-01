@@ -504,8 +504,8 @@ export const getOrderTax = async (params: {
 
 // ## Families
 export const getFamilies = async (params: {
-  pagination?: Pagination;
-}): Promise<PaginatedList<Family>> => {
+  pagination?: PaginationNew;
+}): Promise<PaginatedListNew<Family>> => {
   const { pagination } = params;
   return axiosClient
     .get(`family`, {
@@ -521,8 +521,8 @@ export const getFamily = async (params: { id: number }): Promise<Family> => {
 
 // ## Genera
 export const getGenera = async (params: {
-  pagination?: Pagination;
-}): Promise<PaginatedList<Genus>> => {
+  pagination?: PaginationNew;
+}): Promise<PaginatedListNew<Genus>> => {
   const { pagination } = params;
   return axiosClient
     .get(`genus`, {

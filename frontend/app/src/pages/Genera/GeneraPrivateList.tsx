@@ -2,27 +2,26 @@ import { PageSubTitle } from '../../components/PageSubTitle';
 import { PageTitle } from '../../components/PageTitle';
 import { useGetGenera } from '../../api/hooks';
 import { useEffect, useMemo, useState } from 'react';
-import { Genus } from '../../interfaces/GenusInterface';
-import { CreateGenusForm } from '../../forms/CrudGenusForm';
+import { CircularProgress, Dialog } from '@mui/material';
+import { CustomTable } from '../../utils/CustomTable';
 import {
-  ColumnFiltersState,
   PaginationState,
   SortingState,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { fuzzyFilter } from '../../utils/ColumnFilter';
 import { columns } from './columns';
-import { CircularProgress } from '@mui/material';
-import { CustomTable } from '../../utils/CustomTable';
+import { Genus } from '../../interfaces/GenusInterface';
+import { CreateGenusForm } from '../../forms/CrudGenusForm';
 
-export const GeneraPrivatePage = () => {
+export const GeneraPrivateList = () => {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'name', desc: false },
+  ]);
 
   const pagination = useMemo(
     () => ({
@@ -38,13 +37,15 @@ export const GeneraPrivatePage = () => {
     isSuccess: getGeneraIsSuccess,
     data: getGeneraData,
     isError: getGeneraIsError,
-    // error: getGeneraError
+    error: getGeneraError,
   } = useGetGenera(
     {
       pagination: {
-        paginationState: pagination,
-        sortingState: sorting,
-        columnFiltersState: columnFilters,
+        page: pagination.pageIndex + 1,
+        limit: pagination.pageSize,
+        orderBy: sorting.length === 1 ? sorting[0].id : undefined,
+        orderDirection:
+          sorting.length === 1 ? (sorting[0].desc ? 'DESC' : 'ASC') : undefined,
       },
     },
     { keepPreviousData: true }
@@ -57,28 +58,26 @@ export const GeneraPrivatePage = () => {
   };
 
   const table = useReactTable<Genus>({
-    data: getGeneraData?.rows ?? [],
+    data: getGeneraData?.items ?? [],
     columns: columns,
-    state: { pagination, sorting, columnFilters },
+    state: { pagination, sorting },
     manualPagination: true,
-    pageCount: getGeneraData?.pageCount ?? -1,
+    pageCount: getGeneraData?.meta?.totalPages ?? 1,
     onPaginationChange: setPagination,
     manualSorting: true,
-    enableMultiSort: true,
+    enableMultiSort: false,
     onSortingChange: setSorting,
     enableSorting: true,
-    onColumnFiltersChange: setColumnFilters,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
     getCoreRowModel: getCoreRowModel(),
   });
 
   useEffect(() => {
-    if (getGeneraData) {
+    if (getGeneraIsSuccess) {
       console.log({ getGeneraData });
+    } else if (getGeneraIsError) {
+      console.log({ getGeneraError });
     }
-  }, [getGeneraIsSuccess, getGeneraData]);
+  }, [getGeneraIsSuccess, getGeneraData, getGeneraIsError, getGeneraError]);
 
   return (
     <div className='bg-white p-3'>
@@ -100,11 +99,24 @@ export const GeneraPrivatePage = () => {
 
       <br />
 
-      {openCreate && <CreateGenusForm toggleVisibility={setOpenCreate} />}
+      <Dialog
+        onClose={() => setOpenCreate(false)}
+        open={openCreate}
+        maxWidth={'md'}
+        fullWidth
+      >
+        <div className='p-5'>
+          <CreateGenusForm toggleVisibility={setOpenCreate} />
+        </div>
+      </Dialog>
 
       {getGeneraIsError && <p className='text-danger'>Error...</p>}
 
-      {getGeneraIsLoading && <CircularProgress />}
+      {getGeneraIsLoading && (
+        <div className='text-center'>
+          <CircularProgress />
+        </div>
+      )}
 
       {getGeneraIsSuccess && (
         <section id='genera' className='genera'>

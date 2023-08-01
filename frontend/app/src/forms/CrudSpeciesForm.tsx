@@ -153,26 +153,27 @@ export const CreateSpeciesForm = (props: Props) => {
   // Formateo para select
   const getGeneraForSelect = () => {
     if (getGeneraData) {
-      return getGeneraData?.rows.map((genus: Genus) => {
-        return {
-          value: genus.id,
-          label: `${genus.name}`,
-        };
-      });
+      // return getGeneraData?.rows.map((genus: Genus) => {
+      //   return {
+      //     value: genus.id,
+      //     label: `${genus.name}`,
+      //   };
+      // });
+      return [];
     } else {
       return [];
     }
   };
 
-  // Actualizo la familia al cambiar el genero
-  useEffect(() => {
-    if (formik.values.genusId) {
-      const generoSelected: Genus | undefined = getGeneraData?.rows.filter(
-        (genus) => genus.id === formik.values.genusId
-      )[0];
-      setFamilia(generoSelected?.family.name ?? '');
-    }
-  }, [formik.values.genusId]);
+  // // Actualizo la familia al cambiar el genero
+  // useEffect(() => {
+  //   if (formik.values.genusId) {
+  //     const generoSelected: Genus | undefined = getGeneraData?.rows.filter(
+  //       (genus) => genus.id === formik.values.genusId
+  //     )[0];
+  //     setFamilia(generoSelected?.family.name ?? '');
+  //   }
+  // }, [formik.values.genusId]);
 
   return (
     <form onSubmit={formik.handleSubmit}>

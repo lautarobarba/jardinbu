@@ -1,4 +1,6 @@
+import { formatTitleCase } from '../utils/tools';
 import { Family } from './FamilyInterface';
+import { User } from './User';
 
 export interface Genus {
   id: number;
@@ -8,6 +10,7 @@ export interface Genus {
   createdAt: Date;
   updatedAt: Date;
   deleted: boolean;
+  userMod: User;
 }
 
 export interface CreateGenusDto {
@@ -16,9 +19,12 @@ export interface CreateGenusDto {
   familyId: number;
 }
 
-export interface UpdateGenusDto {
+export interface UpdateGenusDto extends CreateGenusDto {
   id: number;
-  name?: string;
-  description?: string;
-  familyId?: number;
 }
+
+export const genusToString = (genus: Genus) => {
+  if (genus.description)
+    return `${genus.id}. ${formatTitleCase(genus.name)} (${genus.description})`;
+  return `${genus.id}. ${formatTitleCase(genus.name)}`;
+};
