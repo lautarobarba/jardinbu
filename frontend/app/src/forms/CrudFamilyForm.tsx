@@ -107,7 +107,7 @@ export const CreateFamilyForm = (props: CreateFamilyFormProps) => {
           onSuccess: (family: Family) => {
             console.log('Familia creada correctamente');
             console.log(family);
-            queryClient.invalidateQueries(['families-tax']);
+            queryClient.invalidateQueries(['families']);
             toggleVisibility(false);
             enqueueSnackbar('Familia creada correctamente', {
               anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
@@ -347,8 +347,8 @@ export const UpdateFamilyForm = (props: UpdateFamilyFormProps) => {
           onSuccess: (family: Family) => {
             console.log('Familia actualizada correctamente');
             console.log(family);
-            queryClient.invalidateQueries(['families-tax']);
-            queryClient.invalidateQueries([`family-tax-${id}`]);
+            queryClient.invalidateQueries(['families']);
+            queryClient.invalidateQueries([`family-${id}`]);
             toggleVisibility(false);
             enqueueSnackbar('Familia actualizada correctamente', {
               anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
@@ -572,8 +572,8 @@ export const DeleteFamilyForm = (props: DeleteFamilyFormProps) => {
         },
         onSuccess: () => {
           console.log('Familia eliminada correctamente');
-          queryClient.invalidateQueries(['families-tax']);
-          queryClient.invalidateQueries([`family-tax-${id}`]);
+          queryClient.invalidateQueries(['families']);
+          queryClient.invalidateQueries([`family-${id}`]);
           toggleVisibility(false);
           enqueueSnackbar('Familia eliminada correctamente', {
             anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
