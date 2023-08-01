@@ -6,13 +6,19 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { ILike, Repository } from "typeorm";
 import * as moment from "moment";
 import { validate } from "class-validator";
 import { CreateSpeciesDto, UpdateSpeciesDto } from "./species.dto";
 import { Species } from "./species.entity";
 import { GenusService } from "../genus/genus.service";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
+import {
+  IPaginationOptions,
+  Pagination,
+  paginate,
+} from "nestjs-typeorm-paginate";
+import { UserService } from "modules/user/user.service";
 // import { PaginatedList, PaginationDto } from "modules/utils/pagination.dto";
 
 @Injectable()
@@ -20,7 +26,8 @@ export class SpeciesService {
   constructor(
     @InjectRepository(Species)
     private readonly _speciesRepository: Repository<Species>,
-    private readonly _genusService: GenusService
+    private readonly _genusService: GenusService,
+    private readonly _userService: UserService
   ) {}
   private readonly _logger = new Logger(SpeciesService.name);
 
@@ -142,93 +149,44 @@ export class SpeciesService {
     return this._speciesRepository.save(species);
   }
 
-  // async findAll(paginationDto: PaginationDto): Promise<PaginatedList<Species>> {
-  //   this._logger.debug("findAll()");
-  //   const { paginationState, sortingState, columnFiltersState } = paginationDto;
+  async findPaginated(
+    options: IPaginationOptions & { orderBy?: string; orderDirection?: string }
+  ): Promise<Pagination<Species>> {
+    this._logger.debug("findPaginated()");
 
-  //   const tieneFiltros: boolean =
-  //     columnFiltersState && columnFiltersState.length > 0 ? true : false;
-  //   const tienePaginado: boolean =
-  //     paginationState && paginationState.pageSize && paginationState.pageIndex
-  //       ? true
-  //       : false;
-  //   const tieneOrdenamiento: boolean =
-  //     sortingState && sortingState.length > 0 ? true : false;
+    return paginate<Species>(this._speciesRepository, options, {
+      where: { deleted: false },
+      order: { [options.orderBy]: options.orderDirection },
+    });
+  }
 
-  //   // Preparo filtros
-  //   let where: any = {};
+  async findAll(): Promise<Species[]> {
+    this._logger.debug("findAll()");
 
-  //   // Preparo paginado
-  //   const count: number = await this._speciesRepository.count({
-  //     where: where,
-  //   }); // COUNT(*)
-  //   let skip: number = 0;
-  //   let take: number = count;
-  //   let pageCount: number = 1;
-  //   if (tienePaginado) {
-  //     skip = paginationState.pageIndex * paginationState.pageSize;
-  //     take = paginationState.pageSize;
-  //     pageCount = Math.ceil(count / paginationState.pageSize);
-  //   }
-
-  //   // Preparo ordenamiento
-  //   let order: any = {};
-  //   if (tieneOrdenamiento) {
-  //     sortingState.map((field: any) => {
-  //       if (field.id.split(".").length === 1) {
-  //         // console.log('Es una prop de la entidad');
-  //         order = {
-  //           ...order,
-  //           [field.id]: field.desc === "true" ? "DESC" : "ASC",
-  //         };
-  //         // console.log({[field.id]: field.desc ? 'DESC' : 'ASC' });
-  //       } else if (field.id.split(".").length === 2) {
-  //         // console.log('Es una prop de relacion');
-  //         const [relacion, attributo] = field.id.split(".");
-  //         order = {
-  //           ...order,
-  //           [relacion]: { [attributo]: field.desc === "true" ? "DESC" : "ASC" },
-  //         };
-  //         // console.log({ ...order, [relacion]: { [attributo]: field.desc === 'true' ? 'DESC' : 'ASC' } });
-  //       } else if (field.id.split(".").length === 3) {
-  //         console.log("Es una prop de relacion de relacion");
-  //         const [relacion1, relacion2, attributo] = field.id.split(".");
-  //         order = {
-  //           ...order,
-  //           [relacion1]: {
-  //             [relacion2]: {
-  //               [attributo]: field.desc === "true" ? "DESC" : "ASC",
-  //             },
-  //           },
-  //         };
-  //         // console.log({ ...order, [relacion1]: { [relacion2]: { [attributo]: field.desc === 'true' ? 'DESC' : 'ASC' } } });
-  //       }
-  //     });
-  //   }
-  //   // Si no tiene la prop id entonces agrego id: 'DESC' por default
-  //   if (order.id === undefined) order = { ...order, id: "DESC" };
-  //   // console.log(order);
-
-  //   // Busco las especies utilizando todos los filtros
-  //   const species: Species[] = await this._speciesRepository.find({
-  //     where: where,
-  //     order: order,
-  //     skip: skip,
-  //     take: take,
-  //   });
-
-  //   const paginatedList: PaginatedList<Species> = {
-  //     pageCount: pageCount,
-  //     rows: species,
-  //   };
-
-  //   return paginatedList;
-  // }
+    return this._speciesRepository.find({
+      where: { deleted: false },
+      order: { scientificName: "ASC" },
+    });
+  }
 
   async findOne(id: number): Promise<Species> {
     this._logger.debug("findOne()");
+
     return this._speciesRepository.findOne({
       where: { id },
+    });
+  }
+
+  async search(value: string): Promise<Species[]> {
+    this._logger.debug("search()");
+
+    return this._speciesRepository.find({
+      where: [
+        { scientificName: ILike(`%${value}%`) },
+        { commonName: ILike(`%${value}%`) },
+        { englishName: ILike(`%${value}%`) },
+        { description: ILike(`%${value}%`) },
+      ],
     });
   }
 
@@ -238,6 +196,7 @@ export class SpeciesService {
 
     const species: Species = await this._speciesRepository.findOne({
       where: { id },
+      relations: ["specimens"],
     });
 
     if (!species) {
@@ -245,12 +204,19 @@ export class SpeciesService {
       throw new NotFoundException(ERROR_MESSAGE.NO_ENCONTRADO);
     }
 
+    // Controlo referencias
+    if (species.specimens.length > 0) {
+      this._logger.debug(ERROR_MESSAGE.OBJETO_REFERENCIADO);
+      throw new NotFoundException(ERROR_MESSAGE.OBJETO_REFERENCIADO);
+    }
+
     // Soft Delete
-    // species.deleted = true;
-    // species.updatedAt = timestamp;
-    // await this._speciesRepository.save(species);
+    species.deleted = true;
+    species.updatedAt = timestamp;
+    species.userMod = await this._userService.findOne(userId);
+    await this._speciesRepository.save(species);
 
     // Hard Delete
-    await this._speciesRepository.remove(species);
+    // await this._speciesRepository.remove(species);
   }
 }

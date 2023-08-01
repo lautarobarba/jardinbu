@@ -182,6 +182,7 @@ export class ClassTaxService {
     // Soft Delete
     classTax.deleted = true;
     classTax.updatedAt = timestamp;
+    classTax.userMod = await this._userService.findOne(userId);
     await this._classTaxRepository.save(classTax);
 
     // Hard Delete

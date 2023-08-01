@@ -178,6 +178,7 @@ export class KingdomService {
     // Soft Delete
     kingdom.deleted = true;
     kingdom.updatedAt = timestamp;
+    kingdom.userMod = await this._userService.findOne(userId);
     await this._kingdomRepository.save(kingdom);
 
     // Hard Delete

@@ -167,7 +167,7 @@ export class FamilyService {
 
     const family: Family = await this._familyRepository.findOne({
       where: { id },
-      relations: ["families"],
+      relations: ["genera"],
     });
 
     if (!family) {
@@ -184,6 +184,7 @@ export class FamilyService {
     // Soft Delete
     family.deleted = true;
     family.updatedAt = timestamp;
+    family.userMod = await this._userService.findOne(userId);
     await this._familyRepository.save(family);
 
     // Hard Delete

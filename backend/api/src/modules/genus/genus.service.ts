@@ -176,6 +176,7 @@ export class GenusService {
     // Soft Delete
     genus.deleted = true;
     genus.updatedAt = timestamp;
+    genus.userMod = await this._userService.findOne(userId);
     await this._genusRepository.save(genus);
 
     // Hard Delete

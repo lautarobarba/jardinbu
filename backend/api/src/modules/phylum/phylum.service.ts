@@ -182,6 +182,7 @@ export class PhylumService {
     // Soft Delete
     phylum.deleted = true;
     phylum.updatedAt = timestamp;
+    phylum.userMod = await this._userService.findOne(userId);
     await this._phylumRepository.save(phylum);
 
     // Hard Delete
