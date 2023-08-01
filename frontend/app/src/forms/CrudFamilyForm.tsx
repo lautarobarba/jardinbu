@@ -23,13 +23,13 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { PageSubTitle } from '../components/PageSubTitle';
 import { FormEvent, useEffect, useState } from 'react';
-import { CreatePhylumForm } from './CrudPhylumForm';
 import { OrderTax, orderTaxToString } from '../interfaces/OrderTaxInterface';
 import {
   CreateFamilyDto,
   Family,
   UpdateFamilyDto,
 } from '../interfaces/FamilyInterface';
+import { CreateOrderTaxForm } from './CrudOrderTaxForm';
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -184,7 +184,7 @@ export const CreateFamilyForm = (props: CreateFamilyFormProps) => {
             }
             onChange={(e, selection: OrderTax) => {
               formik.setFieldValue('orderTax', selection);
-              setClassTax(selection?.classTax.phylum.name ?? '');
+              setClassTax(selection?.classTax.name ?? '');
               setPhylum(selection?.classTax.phylum.name ?? '');
               setKingdom(selection?.classTax.phylum.kingdom.name ?? '');
             }}
@@ -216,13 +216,13 @@ export const CreateFamilyForm = (props: CreateFamilyFormProps) => {
             fullWidth
           >
             <div className='p-5'>
-              <CreatePhylumForm
+              <CreateOrderTaxForm
                 toggleVisibility={toggleOpenCreateOrderTaxModal}
               />
             </div>
           </Dialog>
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12}>
           <TextField
             name='Clase'
             label='Clase'
@@ -231,7 +231,7 @@ export const CreateFamilyForm = (props: CreateFamilyFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12}>
           <TextField
             name='Filo'
             label='Filo'
@@ -240,7 +240,7 @@ export const CreateFamilyForm = (props: CreateFamilyFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12}>
           <TextField
             name='Reino'
             label='Reino'
@@ -467,13 +467,13 @@ export const UpdateFamilyForm = (props: UpdateFamilyFormProps) => {
             fullWidth
           >
             <div className='p-5'>
-              <CreatePhylumForm
+              <CreateOrderTaxForm
                 toggleVisibility={toggleOpenCreateOrderTaxModal}
               />
             </div>
           </Dialog>
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12}>
           <TextField
             name='Clase'
             label='Clase'
@@ -482,7 +482,7 @@ export const UpdateFamilyForm = (props: UpdateFamilyFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12}>
           <TextField
             name='Filo'
             label='Filo'
@@ -491,7 +491,7 @@ export const UpdateFamilyForm = (props: UpdateFamilyFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12}>
           <TextField
             name='Reino'
             label='Reino'
@@ -643,7 +643,7 @@ export const DeleteFamilyForm = (props: DeleteFamilyFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12}>
           <TextField
             name='Clase'
             label='Clase'
@@ -652,7 +652,7 @@ export const DeleteFamilyForm = (props: DeleteFamilyFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12}>
           <TextField
             name='Filo'
             label='Filo'
@@ -661,7 +661,7 @@ export const DeleteFamilyForm = (props: DeleteFamilyFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12}>
           <TextField
             name='Reino'
             label='Reino'

@@ -24,12 +24,12 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { PageSubTitle } from '../components/PageSubTitle';
 import { FormEvent, useEffect, useState } from 'react';
-import { CreatePhylumForm } from './CrudPhylumForm';
 import {
   CreateOrderTaxDto,
   OrderTax,
   UpdateOrderTaxDto,
 } from '../interfaces/OrderTaxInterface';
+import { CreateClassTaxForm } from './CrudClassTaxForm';
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -214,13 +214,13 @@ export const CreateOrderTaxForm = (props: CreateOrderTaxFormProps) => {
             fullWidth
           >
             <div className='p-5'>
-              <CreatePhylumForm
+              <CreateClassTaxForm
                 toggleVisibility={toggleOpenCreateClassTaxModal}
               />
             </div>
           </Dialog>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Filo'
             label='Filo'
@@ -229,7 +229,7 @@ export const CreateOrderTaxForm = (props: CreateOrderTaxFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Reino'
             label='Reino'
@@ -453,13 +453,13 @@ export const UpdateOrderTaxForm = (props: UpdateOrderTaxFormProps) => {
             fullWidth
           >
             <div className='p-5'>
-              <CreatePhylumForm
+              <CreateClassTaxForm
                 toggleVisibility={toggleOpenCreateClassTaxModal}
               />
             </div>
           </Dialog>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Filo'
             label='Filo'
@@ -468,7 +468,7 @@ export const UpdateOrderTaxForm = (props: UpdateOrderTaxFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Reino'
             label='Reino'
@@ -618,7 +618,7 @@ export const DeleteOrderTaxForm = (props: DeleteOrderTaxFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Filo'
             label='Filo'
@@ -627,7 +627,7 @@ export const DeleteOrderTaxForm = (props: DeleteOrderTaxFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Reino'
             label='Reino'

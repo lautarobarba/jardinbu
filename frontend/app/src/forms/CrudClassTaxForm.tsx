@@ -30,7 +30,6 @@ import { Phylum, phylumToString } from '../interfaces/PhylumInterface';
 import { PageSubTitle } from '../components/PageSubTitle';
 import { FormEvent, useEffect, useState } from 'react';
 import { CreatePhylumForm } from './CrudPhylumForm';
-import { Kingdom } from '../interfaces/KingdomInterface';
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()

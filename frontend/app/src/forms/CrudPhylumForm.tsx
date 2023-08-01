@@ -27,7 +27,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { Phylum } from '../interfaces/PhylumInterface';
 import { PageSubTitle } from '../components/PageSubTitle';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { Kingdom, kingdomToString } from '../interfaces/KingdomInterface';
 import { CreateKingdomForm } from './CrudKingdomForm';
 

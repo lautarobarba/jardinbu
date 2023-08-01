@@ -12,15 +12,10 @@ import {
 import { Add as AddIcon } from '@mui/icons-material';
 import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
 import {
-  useCreateFamily,
   useCreateGenus,
-  useDeleteFamily,
   useDeleteGenus,
   useGetFamilies,
-  useGetFamily,
   useGetGenus,
-  useGetOrdersTax,
-  useUpdateFamily,
   useUpdateGenus,
 } from '../api/hooks';
 import { useJwtToken } from '../features/auth/authHooks';
@@ -28,19 +23,13 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { PageSubTitle } from '../components/PageSubTitle';
 import { FormEvent, useEffect, useState } from 'react';
-import { CreatePhylumForm } from './CrudPhylumForm';
-import { OrderTax, orderTaxToString } from '../interfaces/OrderTaxInterface';
-import {
-  CreateFamilyDto,
-  Family,
-  UpdateFamilyDto,
-  familyToString,
-} from '../interfaces/FamilyInterface';
+import { Family, familyToString } from '../interfaces/FamilyInterface';
 import {
   CreateGenusDto,
   Genus,
   UpdateGenusDto,
 } from '../interfaces/GenusInterface';
+import { CreateFamilyForm } from './CrudFamilyForm';
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -229,13 +218,13 @@ export const CreateGenusForm = (props: CreateGenusFormProps) => {
             fullWidth
           >
             <div className='p-5'>
-              <CreatePhylumForm
+              <CreateFamilyForm
                 toggleVisibility={toggleOpenCreateFamilyModal}
               />
             </div>
           </Dialog>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Orden'
             label='Orden'
@@ -244,7 +233,7 @@ export const CreateGenusForm = (props: CreateGenusFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Clase'
             label='Clase'
@@ -253,7 +242,7 @@ export const CreateGenusForm = (props: CreateGenusFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Filo'
             label='Filo'
@@ -262,7 +251,7 @@ export const CreateGenusForm = (props: CreateGenusFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Reino'
             label='Reino'
@@ -495,13 +484,13 @@ export const UpdateGenusForm = (props: UpdateGenusFormProps) => {
             fullWidth
           >
             <div className='p-5'>
-              <CreatePhylumForm
+              <CreateFamilyForm
                 toggleVisibility={toggleOpenCreateFamilyModal}
               />
             </div>
           </Dialog>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Orden'
             label='Orden'
@@ -510,7 +499,7 @@ export const UpdateGenusForm = (props: UpdateGenusFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Clase'
             label='Clase'
@@ -519,7 +508,7 @@ export const UpdateGenusForm = (props: UpdateGenusFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Filo'
             label='Filo'
@@ -528,7 +517,7 @@ export const UpdateGenusForm = (props: UpdateGenusFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Reino'
             label='Reino'
@@ -683,7 +672,7 @@ export const DeleteGenusForm = (props: DeleteGenusFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Orden'
             label='Orden'
@@ -692,7 +681,7 @@ export const DeleteGenusForm = (props: DeleteGenusFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Clase'
             label='Clase'
@@ -701,7 +690,7 @@ export const DeleteGenusForm = (props: DeleteGenusFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Filo'
             label='Filo'
@@ -710,7 +699,7 @@ export const DeleteGenusForm = (props: DeleteGenusFormProps) => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TextField
             name='Reino'
             label='Reino'
