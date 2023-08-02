@@ -58,13 +58,13 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
 
-  jbu_front:
-    container_name: jbu_front
-    image: jbu_front:1.0.0
+  jbu_react:
+    container_name: jbu_react
+    image: jbu_react:1.0.0
     build:
       context: .
       target: base
-      dockerfile: ./frontend/Dockerfile
+      dockerfile: ./react/Dockerfile
     command: bash /start.sh
     depends_on:
       - jbu_back
@@ -75,8 +75,8 @@ services:
     ports:
       - ${FRONT_PORT}:${FRONT_PORT}
     volumes:
-      - ./frontend/app:/app
-      - ./frontend/start.sh:/start.sh
+      - ./react/app:/app
+      - ./react/start.sh:/start.sh
     extra_hosts:
       - host.docker.internal:host-gateway
 
@@ -110,7 +110,7 @@ services:
     command: bash /start.sh
     depends_on:
       - jbu_back
-      - jbu_front
+      - jbu_react
       - jbu_landingpage
     env_file: .env
     restart: always
