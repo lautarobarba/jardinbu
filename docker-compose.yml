@@ -58,16 +58,14 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
 
-  jbu_react:
-    container_name: jbu_react
-    image: jbu_react:1.0.0
+  jbu_front:
+    container_name: jbu_front
+    image: jbu_front:1.0.0
     build:
       context: .
       target: base
-      dockerfile: ./react/Dockerfile
+      dockerfile: ./frontend/Dockerfile
     command: bash /start.sh
-    depends_on:
-      - jbu_back
     restart: always
     env_file: .env
     environment:
@@ -75,30 +73,52 @@ services:
     ports:
       - ${FRONT_PORT}:${FRONT_PORT}
     volumes:
-      - ./react/app:/app
-      - ./react/start.sh:/start.sh
+      - ./frontend/frontend:/app
+      - ./frontend/start.sh:/start.sh
     extra_hosts:
       - host.docker.internal:host-gateway
 
-  jbu_landingpage:
-    container_name: jbu_landingpage
-    image: jbu_landingpage:1.0.0
-    build:
-      context: .
-      target: base
-      dockerfile: ./landingpage/Dockerfile
-    command: bash /start.sh
-    restart: always
-    env_file: .env
-    environment:
-      - PORT=80
-    ports:
-      - ${LAND_PORT}:80
-    volumes:
-      - ./landingpage/landingpage:/app
-      - ./landingpage/start.sh:/start.sh
-    extra_hosts:
-      - host.docker.internal:host-gateway
+  # jbu_react:
+  #   container_name: jbu_react
+  #   image: jbu_react:1.0.0
+  #   build:
+  #     context: .
+  #     target: base
+  #     dockerfile: ./react/Dockerfile
+  #   command: bash /start.sh
+  #   depends_on:
+  #     - jbu_back
+  #   restart: always
+  #   env_file: .env
+  #   environment:
+  #     - PORT=${FRONT_PORT}
+  #   ports:
+  #     - ${FRONT_PORT}:${FRONT_PORT}
+  #   volumes:
+  #     - ./react/app:/app
+  #     - ./react/start.sh:/start.sh
+  #   extra_hosts:
+  #     - host.docker.internal:host-gateway
+
+  # jbu_landingpage:
+  #   container_name: jbu_landingpage
+  #   image: jbu_landingpage:1.0.0
+  #   build:
+  #     context: .
+  #     target: base
+  #     dockerfile: ./landingpage/Dockerfile
+  #   command: bash /start.sh
+  #   restart: always
+  #   env_file: .env
+  #   environment:
+  #     - PORT=80
+  #   ports:
+  #     - ${LAND_PORT}:80
+  #   volumes:
+  #     - ./landingpage/landingpage:/app
+  #     - ./landingpage/start.sh:/start.sh
+  #   extra_hosts:
+  #     - host.docker.internal:host-gateway
 
   jbu_rproxy:
     container_name: jbu_rproxy
@@ -108,10 +128,10 @@ services:
       target: base
       dockerfile: ./rproxy/Dockerfile
     command: bash /start.sh
-    depends_on:
-      - jbu_back
-      - jbu_react
-      - jbu_landingpage
+    # depends_on:
+    #   - jbu_back
+    #   - jbu_front
+    #   - jbu_landingpage
     env_file: .env
     restart: always
     ports:

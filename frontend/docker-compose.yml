@@ -1,0 +1,22 @@
+version: "3.8"
+name: next_front
+services:
+  next_template:
+    container_name: next_front
+    image: next_front:1.0.0
+    build:
+      context: .
+      target: base
+      dockerfile: ./Dockerfile
+    command: bash /start.sh
+    restart: always
+    env_file: .env
+    environment:
+      - PORT=${FRONT_PORT}
+    ports:
+      - ${FRONT_PORT}:${FRONT_PORT}
+    volumes:
+      - ./frontend:/app
+      - ./start.sh:/start.sh
+    extra_hosts:
+      - host.docker.internal:host-gateway
