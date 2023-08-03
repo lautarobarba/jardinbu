@@ -1,6 +1,6 @@
-import { Request } from 'express';
-import { IJWTPayload } from './jwt-payload.interface';
+import { Request } from "express";
+import { User } from "modules/user/user.entity";
 
 export interface RequestWithUser extends Request {
-  user: IJWTPayload;
+  user: User;
 }

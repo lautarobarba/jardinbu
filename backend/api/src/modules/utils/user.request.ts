@@ -1,7 +1,7 @@
-import { IJWTPayload } from "modules/auth/jwt-payload.interface";
 import { RequestWithUser } from "modules/auth/request-with-user.interface";
+import { User } from "modules/user/user.entity";
 
 export const getUserIdFromRequest = (request: RequestWithUser): number => {
-  const session: IJWTPayload = request.user as IJWTPayload;
-  return session.sub;
+  const user: User = request.user as User;
+  return user.id;
 };

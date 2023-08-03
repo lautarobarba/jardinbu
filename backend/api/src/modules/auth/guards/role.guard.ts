@@ -10,7 +10,7 @@ import {
 import { RequestWithUser } from "../request-with-user.interface";
 import { JwtAuthenticationGuard } from "modules/auth/guards/jwt-authentication.guard";
 import { User } from "modules/user/user.entity";
-import { IJWTPayload } from "modules/auth/jwt-payload.interface";
+// import { IJWTPayload } from "modules/auth/jwt-payload.interface";
 import { UserService } from "modules/user/user.service";
 
 export const RoleGuard = (roles: Role[]): Type<CanActivate> => {
@@ -28,9 +28,9 @@ export const RoleGuard = (roles: Role[]): Type<CanActivate> => {
       const request: RequestWithUser = context
         .switchToHttp()
         .getRequest<RequestWithUser>();
-      const payload: IJWTPayload = request.user;
+      const payload: User = request.user;
       // console.log(payload);
-      const user: User = await this._userService.findOne(payload.sub);
+      const user: User = await this._userService.findOne(payload.id);
       // console.log(user);
 
       if (!roles.includes(user.role)) {
