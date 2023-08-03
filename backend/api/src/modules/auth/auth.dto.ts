@@ -11,9 +11,6 @@ export class LoginDto {
 export class SessionDto {
   @ApiProperty()
   accessToken: string;
-
-  // @ApiProperty()
-  // refreshToken: string;
 }
 
 export class ChangePasswordDto {

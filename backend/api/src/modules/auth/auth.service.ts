@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   ForbiddenException,
+  HttpException,
   Injectable,
   Logger,
   NotFoundException,
@@ -31,36 +32,38 @@ export class AuthService {
   ) {}
   private readonly _logger = new Logger(AuthService.name);
 
-  // async register(
-  // 	ulrToImportCssInEmail: string,
-  // 	ulrToImportImagesInEmail: string,
-  // 	createUserDto: CreateUserDto
-  // ): Promise<SessionDto> {
-  // 	this._logger.debug('register()');
+  async register(
+    ulrToImportCssInEmail: string,
+    ulrToImportImagesInEmail: string,
+    createUserDto: CreateUserDto
+  ): Promise<string> {
+    this._logger.debug("register()");
 
-  // 	// Hash password
-  // 	const salt = await genSalt(10);
-  // 	const hashedPassword: string = await hash(createUserDto.password, salt);
+    // Hash password
+    const salt = await genSalt(10);
+    const hashedPassword: string = await hash(createUserDto.password, salt);
 
-  // 	// Creo el usuario
-  // 	const user: User = await this._userService.create({
-  // 		...createUserDto,
-  // 		password: hashedPassword,
-  // 	});
+    // Creo el usuario
+    const user: User = await this._userService.create({
+      ...createUserDto,
+      password: hashedPassword,
+    });
 
-  // 	const tokens: SessionDto = await this.getTokens(user.id, user.email);
-  // 	await this.updateRefreshToken(user.id, tokens.refreshToken);
+    // const tokens: SessionDto = await this.getTokens(user.id, user.email);
+    // await this.updateRefreshToken(user.id, tokens.refreshToken);
+    const tokenPayload: TokenPayload = { userId: user.id };
+    const token: string = this._jwtService.sign(tokenPayload);
 
-  // 	// Envío correo de registro a su email
-  // 	await this._mailerService.sendRegistrationEmail(
-  // 		ulrToImportCssInEmail,
-  // 		ulrToImportImagesInEmail,
-  // 		user.email,
-  // 		tokens.accessToken
-  // 	);
+    // Envío correo de registro a su email
+    await this._mailerService.sendRegistrationEmail(
+      ulrToImportCssInEmail,
+      ulrToImportImagesInEmail,
+      user.email,
+      token
+    );
 
-  // 	return tokens;
-  // }
+    return token;
+  }
 
   async login(loginDto: LoginDto): Promise<string> {
     this._logger.debug("login()");
@@ -87,9 +90,30 @@ export class AuthService {
     return token;
   }
 
-  async getAuthUser(user: User): Promise<User> {
-    this._logger.debug("getAuthUser()");
-    return this._userService.findOne(user.id);
+  async getAuthenticatedUser(
+    email: string,
+    plainTextPassword: string
+  ): Promise<User> {
+    this._logger.debug("getAuthenticatedUser()");
+    try {
+      const user = await this._userService.findOneByEmail(email);
+      await this.verifyPassword(plainTextPassword, user.password);
+      return user;
+    } catch (error) {
+      this._logger.debug(ERROR_MESSAGE.CONTRASENA_INCORRECTA);
+      throw new UnauthorizedException(ERROR_MESSAGE.CONTRASENA_INCORRECTA);
+    }
+  }
+
+  private async verifyPassword(
+    plainTextPassword: string,
+    hashedPassword: string
+  ) {
+    const isPasswordMatching = await compare(plainTextPassword, hashedPassword);
+    if (!isPasswordMatching) {
+      this._logger.debug(ERROR_MESSAGE.CONTRASENA_INCORRECTA);
+      throw new UnauthorizedException(ERROR_MESSAGE.CONTRASENA_INCORRECTA);
+    }
   }
 
   // async refreshTokens(id: number, refreshToken: string) {
@@ -157,10 +181,10 @@ export class AuthService {
   // 	);
   // }
 
-  // async logout(id: number) {
-  // 	this._logger.debug('logout()');
-  // 	return this._userService.logout(id);
-  // }
+  async logout(user: User) {
+    this._logger.debug("logout()");
+    return this._userService.logout(user);
+  }
 
   // async testPrivateRoute(id: number): Promise<string> {
   // 	this._logger.debug('testPrivateRoute()');

@@ -1,4 +1,5 @@
 export enum ERROR_MESSAGE {
+  EMAIL_EN_USO = "Error: El email ya está en uso",
   CUENTA_ELIMINADA = "Error: El email pertenece a una cuenta eliminada",
   CONTRASENA_INCORRECTA = "Error: Contraseña incorrecta",
   CLAVE_PRIMARIA_EN_USO = "Error: La clave primaria está en uso",

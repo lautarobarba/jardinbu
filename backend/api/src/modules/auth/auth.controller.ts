@@ -33,14 +33,14 @@ import {
   SessionDto,
 } from "./auth.dto";
 import { AuthService } from "./auth.service";
+import { LocalAuthenticationGuard } from "./guards/local-authentication.guard";
 import { JwtAuthenticationGuard } from "./guards/jwt-authentication.guard";
-// import { IJWTPayload } from "./token-payload.interface";
-import { RefreshTokenGuard } from "./guards/refresh-token.guard";
 import { IsEmailConfirmedGuard } from "./guards/is-email-confirmed.guard";
 import { RoleGuard } from "modules/auth/guards/role.guard";
 import { Role } from "../auth/role.enum";
 import { LocalFilesInterceptor } from "modules/utils/localFiles.interceptor";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
+import { RequestWithUser } from "./request-with-user.interface";
 
 @ApiTags("Autenticación")
 @Controller("auth")
@@ -51,41 +51,51 @@ export class AuthController {
   ) {}
   private readonly _logger = new Logger(AuthController.name);
 
-  //   @Post("register")
-  //   @UseInterceptors(ClassSerializerInterceptor)
-  //   @ApiResponse({
-  //     status: HttpStatus.CREATED,
-  //     type: SessionDto,
-  //   })
-  //   @ApiResponse({
-  //     status: HttpStatus.CONFLICT,
-  //     description: "Error: Email already in use",
-  //   })
-  //   @ApiResponse({
-  //     status: HttpStatus.NOT_ACCEPTABLE,
-  //     description: "Error: Not Acceptable",
-  //   })
-  //   async register(
-  //     @Req() request: Request,
-  //     @Res({ passthrough: true }) response: Response,
-  //     @Body() createUserDto: CreateUserDto
-  //   ): Promise<SessionDto> {
-  //     this._logger.debug("POST: /api/auth/register");
-  //     // Urls que necesito para los correos
-  //     const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
-  //     const ulrToImportImagesInEmail: string = `${
-  //       request.protocol
-  //     }://${request.get("Host")}`;
+  @Post("register")
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: "Se ha registrado la cuenta correctamente",
+    type: SessionDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: ERROR_MESSAGE.EMAIL_EN_USO,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_ACCEPTABLE,
+    description: ERROR_MESSAGE.NO_ACEPTABLE,
+  })
+  async register(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    @Body() createUserDto: CreateUserDto
+  ): Promise<SessionDto> {
+    this._logger.debug("POST: /api/auth/register");
+    // Urls que necesito para los correos
+    const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
+    const ulrToImportImagesInEmail: string = `${
+      request.protocol
+    }://${request.get("Host")}`;
 
-  //     response.status(HttpStatus.CREATED);
-  //     return this._authService.register(
-  //       ulrToImportCssInEmail,
-  //       ulrToImportImagesInEmail,
-  //       createUserDto
-  //     );
-  //   }
+    response.status(HttpStatus.CREATED);
+    const token = await this._authService.register(
+      ulrToImportCssInEmail,
+      ulrToImportImagesInEmail,
+      createUserDto
+    );
+
+    // Guardo la cookie en el browser para autenticación
+    const cookie: string = `accessToken=${token}; HttpOnly; Path=/; Max-Age=${
+      process.env.JWT_EXPIRATION_TIME ?? "1d"
+    }`;
+    response.setHeader("Set-Cookie", cookie);
+
+    return { accessToken: token };
+  }
 
   @Post("login")
+  @UseGuards(LocalAuthenticationGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiResponse({
     status: HttpStatus.OK,
@@ -107,8 +117,8 @@ export class AuthController {
     this._logger.debug("POST: /api/auth/login");
     response.status(HttpStatus.OK);
     const token = await this._authService.login(loginDto);
-    console.log({ token });
 
+    // Guardo la cookie en el browser para autenticación
     const cookie: string = `accessToken=${token}; HttpOnly; Path=/; Max-Age=${
       process.env.JWT_EXPIRATION_TIME ?? "1d"
     }`;
@@ -127,46 +137,48 @@ export class AuthController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: "Error: Not Found",
+    description: ERROR_MESSAGE.NO_ENCONTRADO,
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
-    description: "Error: Unauthorized",
+    description: ERROR_MESSAGE.FALTAN_PERMISOS,
   })
   async getAuthUser(
-    @Req() request: Request,
+    @Req() request: RequestWithUser,
     @Res({ passthrough: true }) response: Response
   ): Promise<User> {
     this._logger.debug("GET: /api/auth/me");
-    const user: User = await this._userService.getUserFromRequest(request);
     response.status(HttpStatus.OK);
-    return this._authService.getAuthUser(user);
+    return this._userService.getUserFromRequest(request);
   }
 
-  //   @Post("logout")
-  //   @UseGuards(JwtAuthenticationGuard)
-  //   @ApiBearerAuth()
-  //   @ApiResponse({
-  //     status: HttpStatus.OK,
-  //   })
-  //   @ApiResponse({
-  //     status: HttpStatus.NOT_FOUND,
-  //     description: "Error: Not Found",
-  //   })
-  //   @ApiResponse({
-  //     status: HttpStatus.UNAUTHORIZED,
-  //     description: "Error: Unauthorized",
-  //   })
-  //   async logout(
-  //     @Req() request: Request,
-  //     @Res({ passthrough: true }) response: Response
-  //   ) {
-  //     this._logger.debug("POST: /api/auth/logout");
-  //     const session: IJWTPayload = request.user as IJWTPayload;
-  //     const user: User = await this._userService.findOne(session.sub);
-  //     response.status(HttpStatus.OK);
-  //     await this._authService.logout(user.id);
-  //   }
+  @Post("logout")
+  @UseGuards(JwtAuthenticationGuard)
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: ERROR_MESSAGE.NO_ENCONTRADO,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: ERROR_MESSAGE.FALTAN_PERMISOS,
+  })
+  async logout(
+    @Req() request: RequestWithUser,
+    @Res({ passthrough: true }) response: Response
+  ): Promise<void> {
+    this._logger.debug("POST: /api/auth/logout");
+    const user: User = await this._userService.getUserFromRequest(request);
+    response.status(HttpStatus.OK);
+    await this._authService.logout(user);
+
+    // Borro la cookie del browser
+    const cookie: string = `accessToken=; HttpOnly; Path=/; Max-Age=0`;
+    response.setHeader("Set-Cookie", cookie);
+  }
 
   //   @Post("refresh")
   //   @UseGuards(RefreshTokenGuard)

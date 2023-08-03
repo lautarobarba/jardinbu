@@ -3,9 +3,9 @@ import { JwtModule } from "@nestjs/jwt";
 import { UserModule } from "modules/user/user.module";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
-// import { AccessTokenStrategy } from "./strategies/accessToken.strategy";
-// import { RefreshTokenStrategy } from "./strategies/refreshToken.strategy";
 import { MailerModule } from "modules/mailer/mailer.module";
+import { LocalStrategy } from "./strategies/local.strategy";
+import { JwtStrategy } from "./strategies/jwt.strategy";
 
 @Module({
   imports: [
@@ -21,6 +21,6 @@ import { MailerModule } from "modules/mailer/mailer.module";
     MailerModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
 })
 export class AuthModule {}

@@ -18,6 +18,7 @@ import { Role } from "../auth/role.enum";
 // import { IJWTPayload } from 'modules/auth/jwt-payload.interface';
 import { Picture } from "modules/utils/picture.entity";
 import { UtilsService } from "modules/utils/utils.service";
+import { ERROR_MESSAGE } from "modules/utils/error-message";
 
 @Injectable()
 export class UserService {
@@ -40,24 +41,26 @@ export class UserService {
 
     // Si existe y no esta borrado lógico entonces hay conflictos
     if (exists && !exists.deleted) {
-      this._logger.debug("Error: Email already in use");
-      throw new ConflictException("Error: Email already in use");
+      this._logger.debug(ERROR_MESSAGE.EMAIL_EN_USO);
+      throw new ConflictException(ERROR_MESSAGE.EMAIL_EN_USO);
     }
 
     // Si existe pero estaba borrado lógico entonces lo recupero
     if (exists && exists.deleted) {
-      exists.firstname = firstname;
-      exists.lastname = lastname;
+      exists.isEmailConfirmed = false;
+      exists.firstname = firstname.toLowerCase();
+      exists.lastname = lastname.toLowerCase();
       exists.password = password;
-      exists.profilePicture = null;
-      exists.deleted = false;
+      exists.status = Status.ACTIVE;
+      exists.role = Role.USER;
       exists.updatedAt = timestamp;
+      exists.deleted = false;
 
       // Controlo que el modelo no tenga errores antes de guardar
       const errors = await validate(exists);
       if (errors && errors.length > 0) {
-        this._logger.debug("Error: Not Acceptable");
-        throw new NotAcceptableException("Error: Not Acceptable");
+        this._logger.debug(ERROR_MESSAGE.NO_ACEPTABLE);
+        throw new NotAcceptableException(ERROR_MESSAGE.NO_ACEPTABLE);
       }
 
       return this._userRepository.save(exists);
@@ -72,14 +75,14 @@ export class UserService {
     user.password = password;
     user.status = Status.ACTIVE;
     user.role = Role.USER;
-    user.updatedAt = timestamp;
     user.createdAt = timestamp;
+    user.updatedAt = timestamp;
 
     // Controlo que el modelo no tenga errores antes de guardar
     const errors = await validate(user);
     if (errors && errors.length > 0) {
-      this._logger.debug("Error: Not Acceptable");
-      throw new NotAcceptableException("Error: Not Acceptable");
+      this._logger.debug(ERROR_MESSAGE.NO_ACEPTABLE);
+      throw new NotAcceptableException(ERROR_MESSAGE.NO_ACEPTABLE);
     }
 
     return this._userRepository.save(user);
@@ -221,10 +224,7 @@ export class UserService {
     this._userRepository.save(user);
   }
 
-  async logout(id: number): Promise<void> {
-    const user: User = await this._userRepository.findOne({
-      where: { id },
-    });
+  async logout(user: User): Promise<void> {
     user.refreshToken = null;
     this._userRepository.save(user);
   }
@@ -237,8 +237,8 @@ export class UserService {
     });
 
     if (!user) {
-      this._logger.debug("Error: Not Found");
-      throw new NotFoundException("Error: Not Found");
+      this._logger.debug(ERROR_MESSAGE.NO_ENCONTRADO);
+      throw new NotFoundException(ERROR_MESSAGE.NO_ENCONTRADO);
     }
 
     return user;
