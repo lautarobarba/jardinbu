@@ -1,6 +1,6 @@
 import { formatTitleCase } from "../utils/tools";
-import { Kingdom } from "./KingdomInterface";
-import { User } from "./UserInterface";
+import { Kingdom } from "./kingdom.interface";
+import { User } from "./user.interface";
 
 export interface Phylum {
   id: number;

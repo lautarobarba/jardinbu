@@ -1,6 +1,6 @@
 import { formatTitleCase } from "../utils/tools";
-import { Phylum } from "./PhylumInterface";
-import { User } from "./UserInterface";
+import { Phylum } from "./phylum.interface";
+import { User } from "./user.interface";
 
 export interface ClassTax {
   id: number;

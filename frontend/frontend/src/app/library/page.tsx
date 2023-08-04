@@ -8,7 +8,7 @@ import {
     getCoreRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-import { Kingdom } from "@/interfaces/KingdomInterface";
+import { Kingdom } from "@/interfaces/kingdom.interface";
 
 const Biblioteca = () => {
     const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({

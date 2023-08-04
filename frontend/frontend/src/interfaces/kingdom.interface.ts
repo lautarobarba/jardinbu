@@ -1,5 +1,5 @@
 import { formatTitleCase } from "../utils/tools";
-import { User } from "./UserInterface";
+import { User } from "./user.interface";
 
 export interface Kingdom {
   id: number;

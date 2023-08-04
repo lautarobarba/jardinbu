@@ -1,6 +1,6 @@
 import { formatTitleCase } from "../utils/tools";
-import { Family } from "./FamilyInterface";
-import { User } from "./UserInterface";
+import { Family } from "./family.interface";
+import { User } from "./user.interface";
 
 export interface Genus {
   id: number;

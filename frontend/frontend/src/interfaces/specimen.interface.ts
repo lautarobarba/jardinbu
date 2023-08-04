@@ -1,4 +1,4 @@
-import { Species } from './SpeciesInterface';
+import { Species } from "./species.interface";
 
 export interface Specimen {
   id: number;

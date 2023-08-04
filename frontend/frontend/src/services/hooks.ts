@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import {
   registerUser,
-  login,
+  // login,
   // logout,
   // getAuthUser,
   // getFamilies,
@@ -49,7 +49,7 @@ import {
   // getOrdersTax,
   // getOrderTax,
 } from "./fetchers";
-import { Pagination } from "../interfaces/PaginationInterface";
+import { Pagination } from "../interfaces/pagination.interface";
 
 // Mutations hooks ------------------------------------------------------------
 // ## Users
@@ -57,9 +57,9 @@ import { Pagination } from "../interfaces/PaginationInterface";
 //   return useMutation(registerUser);
 // };
 
-export const useLogin = () => {
-  return useSWR("user", login);
-};
+// export const useLogin = () => {
+//   return useSWR("user", login);
+// };
 
 // export const useUpdateUser = () => {
 //   return useMutation(updateUser);

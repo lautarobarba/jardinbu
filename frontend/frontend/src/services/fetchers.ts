@@ -1,60 +1,64 @@
 import Axios from "axios";
-import { CreateUserDto } from "../interfaces/CreateUserDto";
-import { LoginUserDto } from "../interfaces/LoginUserDto";
-import { SessionDto } from "../interfaces/SessionDto";
+import { LoginUserDto, SessionDto } from "../interfaces/auth.interface";
+import {
+  User,
+  CreateUserDto,
+  UpdateUserDto,
+} from "../interfaces/user.interface";
 import {
   CreateSpeciesDto,
   Species,
   UpdateSpeciesDto,
-} from "../interfaces/SpeciesInterface";
+} from "../interfaces/species.interface";
 import {
   CreateSpecimenDto,
   Specimen,
   UpdateSpecimenDto,
-} from "../interfaces/SpecimenInterface";
-import { UpdateUserDto } from "../interfaces/UpdateUserDto";
-import { User } from "../interfaces/UserInterface";
-import { Pagination, PaginatedList } from "../interfaces/PaginationInterface";
+} from "../interfaces/specimen.interface";
+import { Pagination, PaginatedList } from "../interfaces/pagination.interface";
 import {
   Family,
   CreateFamilyDto,
   UpdateFamilyDto,
-} from "../interfaces/FamilyInterface";
+} from "../interfaces/family.interface";
 import {
   CreateGenusDto,
   Genus,
   UpdateGenusDto,
-} from "../interfaces/GenusInterface";
+} from "../interfaces/genus.interface";
 import {
   CreateKingdomDto,
   Kingdom,
   UpdateKingdomDto,
-} from "../interfaces/KingdomInterface";
+} from "../interfaces/kingdom.interface";
 import {
   CreatePhylumDto,
   Phylum,
   UpdatePhylumDto,
-} from "../interfaces/PhylumInterface";
+} from "../interfaces/phylum.interface";
 import {
   ClassTax,
   CreateClassTaxDto,
   UpdateClassTaxDto,
-} from "../interfaces/ClassTaxInterface";
+} from "../interfaces/class-tax.interface";
 import {
   CreateOrderTaxDto,
   OrderTax,
   UpdateOrderTaxDto,
-} from "../interfaces/OrderTaxInterface";
+} from "../interfaces/order-tax.interface";
 
 // Api Url
 // // Api Url
 const apiBaseUrl: string =
   process.env.NEXT_PUBLIC_API_ROUTE ?? "http://ERROR/api";
 
+console.log({ API_ROUTE: `${apiBaseUrl}/api/` });
+
 // Client to fetch
 const axiosClient = Axios.create({
   baseURL: `${apiBaseUrl}/api/`,
   timeout: 10 * 1000, // 10 sec
+  withCredentials: true, // Cookies
 });
 
 // # Mutations ----------------------------------------------------------------

@@ -11,8 +11,8 @@ type ThemeContextType = {
 export const ThemeContext = createContext<ThemeContextType>({
   theme: "light",
   loading: false,
-  setTheme: () => {},
-  toggleTheme: () => {},
+  setTheme: () => { },
+  toggleTheme: () => { },
 });
 
 type ThemeProviderProps = {

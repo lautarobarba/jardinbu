@@ -1,16 +1,17 @@
 'use client';
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
-import { AuthContext, LoginParams } from "@/providers/AuthProvider";
+import { AuthContext } from "@/providers/AuthProvider";
+import { LoginUserDto } from "@/interfaces/auth.interface";
 
 // // Api Url
 const apiBaseUrl: string = process.env.NEXT_PUBLIC_API_ROUTE ?? 'http://ERROR/api';
 
 const Login = () => {
 
-    const { login } = useContext(AuthContext);
+    const { user, status, login, logout } = useContext(AuthContext);
 
-    const [loginData, setLoginData] = useState<LoginParams>({
+    const [loginData, setLoginData] = useState<LoginUserDto>({
         email: 'usuarioprueba@gmail.com',
         password: 'usuarioprueba',
     })
@@ -22,6 +23,9 @@ const Login = () => {
     // }, []);
 
     const handleLogin = () => {
+        console.log('asd');
+        console.log({ user });
+        console.log({ status });
         login(loginData);
     }
 

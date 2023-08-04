@@ -1,7 +1,7 @@
 import { formatTitleCase } from "../utils/tools";
-import { Genus } from "./GenusInterface";
-import { Picture } from "./Picture";
-import { User } from "./UserInterface";
+import { Genus } from "./genus.interface";
+import { Picture } from "./picture.interface";
+import { User } from "./user.interface";
 
 export enum OrganismType {
   TREE = "TREE", // ARBOL = "ARBOL",

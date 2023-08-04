@@ -1,6 +1,6 @@
 import { formatTitleCase } from "../utils/tools";
-import { OrderTax } from "./OrderTaxInterface";
-import { User } from "./UserInterface";
+import { OrderTax } from "./order-tax.interface";
+import { User } from "./user.interface";
 
 export interface Family {
   id: number;

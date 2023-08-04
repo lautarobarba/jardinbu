@@ -1,9 +1,9 @@
 "use client";
-import { User } from "@/interfaces/UserInterface";
+import { User } from "@/interfaces/user.interface";
 import { ReactNode, createContext, useEffect, useState } from "react";
 import Axios from 'axios';
-import { useLogin } from "@/services/hooks";
-import { LoginUserDto } from "@/interfaces/LoginUserDto";
+import { login } from "@/services/fetchers";
+import { LoginUserDto } from "@/interfaces/auth.interface";
 
 // Api Url
 // const apiBaseUrl: string =
@@ -21,16 +21,11 @@ export type RegisterParams = {
     password: string;
 }
 
-export type LoginParams = {
-    email: string;
-    password: string;
-}
-
 type AuthContextType = {
     status: "authenticated" | "unauthenticated" | "loading";
     user: User | null;
     token: string | null;
-    login: (data: LoginParams) => void;
+    login: (data: LoginUserDto) => void;
     logout: () => void;
     refreshToken: () => void;
 };
@@ -51,18 +46,19 @@ type AuthProviderProps = {
 export const AuthProvider = (props: AuthProviderProps) => {
     const { children } = props;
 
-    const {
-        data, mutate
-    } = useLogin()
     // const [theme, setTheme] = useState<"light" | "dark">("light");
     // const [loading, setLoading] = useState<boolean>(true);
 
-    const login = async (data: LoginParams) => {
+    const handleLogin = async (data: LoginUserDto) => {
         console.log('INICIANDO session..', { data });
-        // TODO: falta agregar try/catch
-        // const response = await axiosClient.post('auth/login', data);
 
-        // mutate(data as LoginUserDto);
+        try {
+            const response = await login(data);
+            console.log({ response });
+            console.log('Sesion iniciada correctamente');
+        } catch (e) {
+            console.log('ERROR al iniciar sesion');
+        }
 
         // console.log({ response });
         // const newValue: "light" | "dark" = theme === "light" ? "dark" : "light";
@@ -88,8 +84,8 @@ export const AuthProvider = (props: AuthProviderProps) => {
                 status: "unauthenticated",
                 user: null,
                 token: null,
-                login: login,
-                logout: () => { },
+                login: handleLogin,
+                logout: () => { console.log('saliendo...') },
                 refreshToken: () => { },
             }}
         >
