@@ -23,9 +23,9 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <LanguageProvider>
-            <AuthProvider>
-              <LoadingPageWrapper>{children}</LoadingPageWrapper>
-            </AuthProvider>
+            {/* <AuthProvider> */}
+            <LoadingPageWrapper>{children}</LoadingPageWrapper>
+            {/* </AuthProvider> */}
           </LanguageProvider>
         </ThemeProvider>
       </body>

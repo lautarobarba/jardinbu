@@ -1,7 +1,9 @@
 "use client";
-import { User } from "@/interfaces/User";
+import { User } from "@/interfaces/UserInterface";
 import { ReactNode, createContext, useEffect, useState } from "react";
 import Axios from 'axios';
+import { useLogin } from "@/services/hooks";
+import { LoginUserDto } from "@/interfaces/LoginUserDto";
 
 // Api Url
 // const apiBaseUrl: string =
@@ -48,14 +50,21 @@ type AuthProviderProps = {
 
 export const AuthProvider = (props: AuthProviderProps) => {
     const { children } = props;
+
+    const {
+        data, mutate
+    } = useLogin()
     // const [theme, setTheme] = useState<"light" | "dark">("light");
     // const [loading, setLoading] = useState<boolean>(true);
 
     const login = async (data: LoginParams) => {
         console.log('INICIANDO session..', { data });
         // TODO: falta agregar try/catch
-        const response = await axiosClient.post('auth/login', data);
-        console.log({ response });
+        // const response = await axiosClient.post('auth/login', data);
+
+        // mutate(data as LoginUserDto);
+
+        // console.log({ response });
         // const newValue: "light" | "dark" = theme === "light" ? "dark" : "light";
         // setTheme(newValue);
         // localStorage.setItem("theme", newValue);
