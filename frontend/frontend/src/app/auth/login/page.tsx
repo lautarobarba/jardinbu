@@ -23,11 +23,9 @@ const Login = () => {
     // }, []);
 
     const handleLogin = () => {
-        console.log('asd');
-        console.log({ user });
-        console.log({ status });
         login(loginData);
     }
+
 
     return (
         <>
@@ -43,6 +41,9 @@ const Login = () => {
             <p>FORMULARIO....CON DATA</p>
 
             <button className="bg-blue-500 p-4 rounded-md text-white shadow-md" onClick={() => handleLogin()}>INGRESAR</button>
+            <hr />
+            {status === 'unauthenticated' && <p>USUARIO SIN IDENTIFICAR</p>}
+            {status === 'authenticated' && user && <p>USUARIO: {user.email}</p>}
         </>
     );
 };

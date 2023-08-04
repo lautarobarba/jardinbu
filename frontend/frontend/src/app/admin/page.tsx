@@ -4,19 +4,11 @@ import Link from "next/link";
 import { AuthContext } from "@/providers/AuthProvider";
 
 const AdminDashboard = () => {
-  const { status } = useContext(AuthContext);
+  const { logout } = useContext(AuthContext);
 
-  const redirectToLogin = () => {
-    console.log('Usuario no loggeado. Redireccionando...');
-    window.location.href = "/auth/login"
+  const handleLogout = () => {
+    logout();
   }
-
-  useEffect(() => {
-    console.log({ status });
-    if (status) {
-      redirectToLogin();
-    }
-  }, [status]);
 
   return (
     <>
@@ -28,6 +20,8 @@ const AdminDashboard = () => {
       <Link href="/" className="ml-5 text-blue-500">
         {">>"} Volver ◀️
       </Link>
+      <hr />
+      <button className="bg-blue-500 p-4 rounded-md text-white shadow-md" onClick={() => handleLogout()}>SALIR</button>
 
       <hr />
 

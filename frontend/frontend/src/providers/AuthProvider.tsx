@@ -1,42 +1,26 @@
 "use client";
 import { User } from "@/interfaces/user.interface";
 import { ReactNode, createContext, useEffect, useState } from "react";
-import Axios from 'axios';
-import { login } from "@/services/fetchers";
+import { getAuthUser, login, logout } from "@/services/fetchers";
 import { LoginUserDto } from "@/interfaces/auth.interface";
+import { useRouter, useSearchParams } from 'next/navigation';
 
-// Api Url
-// const apiBaseUrl: string =
-//     process.env.REACT_APP_APIURL ?? 'http://localhost:7000';
-const apiBaseUrl: string = 'http://localhost';
-
-// Client to fetch
-const axiosClient = Axios.create({
-    baseURL: `${apiBaseUrl}/api/`,
-    timeout: 10 * 1000, // 10 sec
-});
-
-export type RegisterParams = {
-    email: string;
-    password: string;
-}
 
 type AuthContextType = {
     status: "authenticated" | "unauthenticated" | "loading";
     user: User | null;
-    token: string | null;
     login: (data: LoginUserDto) => void;
     logout: () => void;
-    refreshToken: () => void;
+    hasRole: (roles: string[]) => boolean;
 };
 
+
 export const AuthContext = createContext<AuthContextType>({
-    status: "unauthenticated",
+    status: "loading",
     user: null,
-    token: null,
     login: () => { },
     logout: () => { },
-    refreshToken: () => { },
+    hasRole: ([]) => false,
 });
 
 type AuthProviderProps = {
@@ -45,48 +29,78 @@ type AuthProviderProps = {
 
 export const AuthProvider = (props: AuthProviderProps) => {
     const { children } = props;
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
-    // const [theme, setTheme] = useState<"light" | "dark">("light");
-    // const [loading, setLoading] = useState<boolean>(true);
+    const [status, setStatus] = useState<"authenticated" | "unauthenticated" | "loading">("loading");
+    const [user, setUser] = useState<User | null>(null);
 
     const handleLogin = async (data: LoginUserDto) => {
-        console.log('INICIANDO session..', { data });
+        console.log('Iniciando sesión..', { data });
 
         try {
-            const response = await login(data);
-            console.log({ response });
+            await login(data);
             console.log('Sesion iniciada correctamente');
+            const user: User = await getAuthUser();
+            console.log({ user });
+            setUser(user);
+            setStatus("authenticated");
+            console.log(searchParams.get('next'));
+            const nextRoute: string | null = searchParams.get('next');
+            if (nextRoute) router.push(nextRoute);
         } catch (e) {
+            setStatus("unauthenticated");
             console.log('ERROR al iniciar sesion');
         }
-
-        // console.log({ response });
-        // const newValue: "light" | "dark" = theme === "light" ? "dark" : "light";
-        // setTheme(newValue);
-        // localStorage.setItem("theme", newValue);
     };
 
-    // const changeTheme = (newValue: "light" | "dark") => {
-    //     setTheme(newValue);
-    //     localStorage.setItem("theme", newValue);
-    // };
+    const handleLogout = async () => {
+        console.log('Cerrando sessión...');
 
-    // useEffect(() => {
-    //     const lastTheme = localStorage.getItem("theme");
-    //     if (lastTheme && (lastTheme === "light" || lastTheme === "dark"))
-    //         setTheme(lastTheme);
-    //     setLoading(false);
-    // }, []);
+        try {
+            const response = await logout();
+            setStatus("unauthenticated");
+            setUser(null);
+            console.log('Sesion cerrada correctamente');
+            const nextRoute: string | null = searchParams.get('next');
+            if (nextRoute) router.push(nextRoute);
+            else router.push("/library")
+        } catch (e) {
+            setStatus("unauthenticated");
+            console.log('ERROR al cerrar sesión');
+        }
+    };
+
+    const hasRole = (rolesPermitidos: string[]): boolean => {
+        return user ? rolesPermitidos.indexOf(String(user.role)) > -1 : false;
+    };
+
+    const validateSession = async () => {
+        console.log("Validando ultimo token...");
+
+        try {
+            const user: User = await getAuthUser();
+            setStatus("authenticated");
+            setUser(user);
+            console.log("Sesion válida");
+        } catch (e) {
+            setStatus("unauthenticated");
+            console.log('Sesion expirada...');
+        }
+    }
+
+    useEffect(() => {
+        validateSession()
+    }, []);
 
     return (
         <AuthContext.Provider
             value={{
-                status: "unauthenticated",
-                user: null,
-                token: null,
+                status: status,
+                user: user,
                 login: handleLogin,
-                logout: () => { console.log('saliendo...') },
-                refreshToken: () => { },
+                logout: handleLogout,
+                hasRole: hasRole,
             }}
         >
             {children}

@@ -1,4 +1,6 @@
 import Axios from "axios";
+import Cookies from "js-cookie";
+import { Pagination, PaginatedList } from "../interfaces/pagination.interface";
 import { LoginUserDto, SessionDto } from "../interfaces/auth.interface";
 import {
   User,
@@ -15,7 +17,6 @@ import {
   Specimen,
   UpdateSpecimenDto,
 } from "../interfaces/specimen.interface";
-import { Pagination, PaginatedList } from "../interfaces/pagination.interface";
 import {
   Family,
   CreateFamilyDto,
@@ -48,11 +49,8 @@ import {
 } from "../interfaces/order-tax.interface";
 
 // Api Url
-// // Api Url
 const apiBaseUrl: string =
   process.env.NEXT_PUBLIC_API_ROUTE ?? "http://ERROR/api";
-
-console.log({ API_ROUTE: `${apiBaseUrl}/api/` });
 
 // Client to fetch
 const axiosClient = Axios.create({
@@ -99,13 +97,14 @@ export const login = async (
 //     .then((response) => response.data);
 // };
 
-// export const logout = async (token: string): Promise<void> => {
-//   return axiosClient
-//     .post("auth/logout", null, {
-//       headers: { Authorization: `Bearer ${token}` },
-//     })
-//     .then((response) => response.data);
-// };
+export const logout = async (): Promise<void> => {
+  const token = Cookies.get("accessToken");
+  return axiosClient
+    .post("auth/logout", null, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
 
 // export const sendEmailConfirmationEmail = async (
 //   token: string
@@ -430,12 +429,13 @@ export const login = async (
 
 // # Queries ------------------------------------------------------------------
 
-// // ## Users
-// export const getAuthUser = async (token: string): Promise<User> => {
-//   return axiosClient
-//     .get("auth/user", { headers: { Authorization: `Bearer ${token}` } })
-//     .then((response) => response.data);
-// };
+// ## Users
+export const getAuthUser = async (): Promise<User> => {
+  const token = Cookies.get("accessToken");
+  return axiosClient
+    .get("auth/me", { headers: { Authorization: `Bearer ${token}` } })
+    .then((response) => response.data);
+};
 
 // ## Kingdoms
 export const getKingdoms = async (params: {
