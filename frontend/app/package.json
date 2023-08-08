@@ -1,7 +1,7 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
-  "description": "Frontend Template - NextJS",
+  "name": "app",
+  "version": "1.0.0",
+  "description": "Frontend para el Jardín Botánico",
   "author": "Lautaro Barba",
   "private": true,
   "engines": {
@@ -26,6 +26,7 @@
     "clsx": "^2.0.0",
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.6",
+    "flowbite": "^1.8.1",
     "iron-session": "^6.3.1",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.263.1",
