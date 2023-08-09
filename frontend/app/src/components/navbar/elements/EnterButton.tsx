@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/generic/ui/Button";
+import { Button } from "@/components/generic/Button";
 import { useContext } from "react";
 import { LangContext } from "@/providers/LanguageProvider";
 

@@ -5,7 +5,7 @@ import { Brand } from "./elements/Brand";
 import { EnterButton } from "./elements/EnterButton";
 import { LangContext } from "@/providers/LanguageProvider";
 import { getDictionary } from "@/dictionaries";
-import { BarsIcon } from "../flowbite-icons/BarsIcon";
+import { BarsIcon } from "../icons/BarsIcon";
 
 export const PublicNavbar = () => {
   const [expandNavbar, setExpandNavbar] = useState<boolean>(false);

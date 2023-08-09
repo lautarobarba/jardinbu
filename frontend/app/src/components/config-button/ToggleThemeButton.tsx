@@ -1,8 +1,8 @@
 "use client";
 import { useContext } from "react";
 import { ThemeContext } from "@/providers/ThemeProvider";
-import { MoonIcon } from "@/components/flowbite-icons/MoonIcon";
-import { SunIcon } from "@/components/flowbite-icons/SunIcon";
+import { MoonIcon } from "@/components/icons/MoonIcon";
+import { SunIcon } from "@/components/icons/SunIcon";
 
 export const ToggleThemeButton = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
