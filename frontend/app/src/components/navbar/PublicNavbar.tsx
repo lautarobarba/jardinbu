@@ -17,7 +17,7 @@ export const PublicNavbar = () => {
   }
 
   return (
-    <nav className="bg-light dark:bg-dark fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
+    <nav className="bg-navbar-bg fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Brand />
         <div className="flex md:hidden md:order-2">
@@ -37,7 +37,7 @@ export const PublicNavbar = () => {
             <li className="flex items-center w-full">
               <Link
                 href="/#home"
-                className="block py-2 pl-3 pr-4 text-accent dark:text-accent-dark md:p-0 w-full text-center"
+                className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
                 onClick={() => setExpandNavbar(false)}
               >
                 {dictionary.publicNavBarContent.home}
@@ -46,7 +46,7 @@ export const PublicNavbar = () => {
             <li className="flex items-center w-full">
               <Link
                 href="/#inst"
-                className="block py-2 pl-3 pr-4 text-dark dark:text-light hover:text-accent dark:hover:text-accent-dark md:p-0 w-full text-center"
+                className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
                 onClick={() => setExpandNavbar(false)}
               >
                 {dictionary.publicNavBarContent.inst}
@@ -55,7 +55,7 @@ export const PublicNavbar = () => {
             <li className="flex items-center w-full">
               <Link
                 href="/#team"
-                className="block py-2 pl-3 pr-4 text-dark dark:text-light hover:text-accent dark:hover:text-accent-dark md:p-0 w-full text-center"
+                className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
                 onClick={() => setExpandNavbar(false)}
               >
                 {dictionary.publicNavBarContent.team}
@@ -64,7 +64,7 @@ export const PublicNavbar = () => {
             <li className="flex items-center w-full">
               <Link
                 href="/#map"
-                className="block py-2 pl-3 pr-4 text-dark dark:text-light hover:text-accent dark:hover:text-accent-dark md:p-0 w-full text-center"
+                className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
                 onClick={() => setExpandNavbar(false)}
               >
                 {dictionary.publicNavBarContent.map}

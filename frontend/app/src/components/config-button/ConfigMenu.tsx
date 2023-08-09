@@ -24,20 +24,20 @@ export const ConfigMenu = () => {
                 {/* ToggleThemeButton */}
                 <MenubarMenu>
                     <MenubarTrigger onClick={toggleTheme}>
-                        <span className="mx-1">{theme === "light" ? <MoonIcon /> : <SunIcon />}</span>
+                        <span className="mx-1 text-dark dark:text-light">{theme === "light" ? <MoonIcon /> : <SunIcon />}</span>
                     </MenubarTrigger>
                 </MenubarMenu>
                 {/* ChangeLanguageButton */}
                 <MenubarMenu>
                     <MenubarTrigger>
-                        <span className="mx-1">{lang.toLocaleUpperCase()}</span>
+                        <span className="mx-1 text-dark dark:text-light">{lang.toLocaleUpperCase()}</span>
                     </MenubarTrigger>
                     <MenubarContent>
-                        <MenubarItem onClick={() => setLang("es")}>
-                            ES
+                        <MenubarItem onClick={() => setLang("es")} className={`${theme === 'dark' ? 'focus:bg-gray-700' : ''}`}>
+                            <span className={`${theme === 'dark' ? 'text-light' : 'text-dark'}`}>ES</span>
                         </MenubarItem>
-                        <MenubarItem onClick={() => setLang("en")}>
-                            EN
+                        <MenubarItem onClick={() => setLang("en")} className={`${theme === 'dark' ? 'focus:bg-gray-700' : ''}`}>
+                            <span className={`${theme === 'dark' ? 'text-light' : 'text-dark'}`}>EN</span>
                         </MenubarItem>
                     </MenubarContent>
                 </MenubarMenu>
