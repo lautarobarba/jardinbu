@@ -19,7 +19,7 @@ export const ConfigMenu = () => {
     const { lang, setLang } = useContext(LangContext);
 
     return (
-        <div id="config-menu" className="absolute right-5 bottom-5">
+        <div id="config-menu" className="fixed right-5 bottom-5">
             <Menubar>
                 {/* ToggleThemeButton */}
                 <MenubarMenu>
