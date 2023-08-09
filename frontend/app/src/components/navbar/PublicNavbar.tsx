@@ -4,30 +4,12 @@ import Link from "next/link";
 import { Brand } from "./elements/Brand";
 import { EnterButton } from "./elements/EnterButton";
 import { LangContext } from "@/providers/LanguageProvider";
-import { Dictionary } from "@/utils/Dictionary";
+import { getDictionary } from "@/dictionaries";
 
 export const PublicNavbar = () => {
   const [expandNavbar, setExpandNavbar] = useState<boolean>(false);
-
   const { lang } = useContext(LangContext);
-  const getDictionary = (lang: keyof Dictionary) => {
-    const dictionaries: Dictionary = {
-      es: {
-        home: "Inicio",
-        inst: "Institucional",
-        team: "Equipo",
-        map: "Mapa",
-      },
-      en: {
-        home: "Home",
-        inst: "Institucional",
-        team: "Team",
-        map: "Map",
-      },
-    };
-    return dictionaries[lang];
-  };
-  const dict = getDictionary(lang);
+  const dictionary = getDictionary(lang);
 
   return (
     <nav className="bg-light dark:bg-dark fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
@@ -67,7 +49,7 @@ export const PublicNavbar = () => {
                 href="/#home"
                 className="block py-2 pl-3 pr-4 text-accent dark:text-accent-dark md:p-0"
               >
-                {dict.home}
+                {dictionary.publicNavBarContent.home}
               </Link>
             </li>
             <li className="flex items-center">
@@ -75,7 +57,7 @@ export const PublicNavbar = () => {
                 href="/#inst"
                 className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
               >
-                {dict.inst}
+                {dictionary.publicNavBarContent.inst}
               </Link>
             </li>
             <li className="flex items-center">
@@ -83,7 +65,7 @@ export const PublicNavbar = () => {
                 href="/#team"
                 className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
               >
-                {dict.team}
+                {dictionary.publicNavBarContent.team}
               </Link>
             </li>
             <li className="flex items-center">
@@ -91,7 +73,7 @@ export const PublicNavbar = () => {
                 href="/#map"
                 className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
               >
-                {dict.map}
+                {dictionary.publicNavBarContent.map}
               </Link>
             </li>
             <li className="flex items-center">

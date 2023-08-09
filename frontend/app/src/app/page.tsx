@@ -1,8 +1,7 @@
 import { ChangeLanguageButton } from "@/components/ChangeLanguageButton";
 import { ToggleThemeButton } from "@/components/ToggleThemeButton";
-import { PrivateNavbar } from "@/components/navbar/PrivateNavbar";
 import { PublicNavbar } from "@/components/navbar/PublicNavbar";
-import Link from "next/link";
+import { PrivateNavbar } from "@/components/navbar/PrivateNavbar";
 
 const Home = () => {
   return (
