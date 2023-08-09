@@ -1,15 +1,20 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { Brand } from "./elements/Brand";
 import { EnterButton } from "./elements/EnterButton";
 import { LangContext } from "@/providers/LanguageProvider";
 import { getDictionary } from "@/dictionaries";
+import { BarsIcon } from "../flowbite-icons/BarsIcon";
 
 export const PublicNavbar = () => {
   const [expandNavbar, setExpandNavbar] = useState<boolean>(false);
   const { lang } = useContext(LangContext);
   const dictionary = getDictionary(lang);
+
+  const toggleMenu = () => {
+    setExpandNavbar(!expandNavbar);
+  }
 
   return (
     <nav className="bg-light dark:bg-dark fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
@@ -17,66 +22,55 @@ export const PublicNavbar = () => {
         <Brand />
         <div className="flex md:hidden md:order-2">
           <button
-            data-collapse-toggle="navbar-sticky"
             type="button"
             className="inline-flex items-center p-2 text-sm text-dark rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-light dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-            aria-controls="navbar-sticky"
-            aria-expanded="false"
+            onClick={toggleMenu}
           >
             <span className="sr-only">Open menu</span>
-            <svg
-              className="w-6 h-6"
-              aria-hidden="true"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
+            <BarsIcon />
           </button>
         </div>
         <div
-          className="items-center justify-between w-full md:flex md:w-auto md:order-1"
-          id="navbar-sticky"
+          className={`${expandNavbar ? 'flex' : 'hidden'} md:flex items-center justify-center md:justify-between w-full md:w-auto md:order-1`}
         >
-          <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium md:flex-row md:space-x-8 md:mt-0 md:border-0 text-light dark:text-dark">
-            <li className="flex items-center">
+          <ul className="w-full flex flex-col p-4 md:p-0 mt-4 font-medium md:flex-row md:space-x-8 md:mt-0 md:border-0 text-light dark:text-dark">
+            <li className="flex items-center w-full">
               <Link
                 href="/#home"
-                className="block py-2 pl-3 pr-4 text-accent dark:text-accent-dark md:p-0"
+                className="block py-2 pl-3 pr-4 text-accent dark:text-accent-dark md:p-0 w-full text-center"
+                onClick={() => setExpandNavbar(false)}
               >
                 {dictionary.publicNavBarContent.home}
               </Link>
             </li>
-            <li className="flex items-center">
+            <li className="flex items-center w-full">
               <Link
                 href="/#inst"
-                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className="block py-2 pl-3 pr-4 text-dark dark:text-light hover:text-accent dark:hover:text-accent-dark md:p-0 w-full text-center"
+                onClick={() => setExpandNavbar(false)}
               >
                 {dictionary.publicNavBarContent.inst}
               </Link>
             </li>
-            <li className="flex items-center">
+            <li className="flex items-center w-full">
               <Link
                 href="/#team"
-                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className="block py-2 pl-3 pr-4 text-dark dark:text-light hover:text-accent dark:hover:text-accent-dark md:p-0 w-full text-center"
+                onClick={() => setExpandNavbar(false)}
               >
                 {dictionary.publicNavBarContent.team}
               </Link>
             </li>
-            <li className="flex items-center">
+            <li className="flex items-center w-full">
               <Link
                 href="/#map"
-                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className="block py-2 pl-3 pr-4 text-dark dark:text-light hover:text-accent dark:hover:text-accent-dark md:p-0 w-full text-center"
+                onClick={() => setExpandNavbar(false)}
               >
                 {dictionary.publicNavBarContent.map}
               </Link>
             </li>
-            <li className="flex items-center">
+            <li className="flex items-center w-full">
               <EnterButton />
             </li>
           </ul>

@@ -11,12 +11,12 @@ type DictionaryContent = {
 };
 
 type DictionaryType = {
-  // Un diccionario por cada lenguaje
   en: DictionaryContent;
   es: DictionaryContent;
 };
 
 export const getDictionary = (lang: LangOptions): DictionaryContent => {
+  // Un diccionario por cada lenguaje
   const diccionario: DictionaryType = {
     en: {
       publicNavBarContent: {

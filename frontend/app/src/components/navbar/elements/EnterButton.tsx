@@ -5,9 +5,10 @@ import { LangContext } from "@/providers/LanguageProvider";
 
 export const EnterButton = () => {
   const { lang } = useContext(LangContext);
+
   return (
-    <Link href="/library">
-      <Button>
+    <Link href="/library" className="w-full">
+      <Button className="w-full">
         {lang == "es" && "Biblioteca"}
         {lang == "en" && "Library"}
       </Button>
