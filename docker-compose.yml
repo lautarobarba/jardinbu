@@ -73,7 +73,7 @@ services:
     ports:
       - ${FRONT_PORT}:${FRONT_PORT}
     volumes:
-      - ./frontend/frontend:/app
+      - ./frontend/app:/app
       - ./frontend/start.sh:/start.sh
     extra_hosts:
       - host.docker.internal:host-gateway
