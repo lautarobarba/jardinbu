@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/providers/ThemeProvider";
 import { LanguageProvider } from "@/providers/LanguageProvider";
 import { LoadingPageWrapper } from "@/wrappers/LoadingPageWrapper";
 import { AuthProvider } from "@/providers/AuthProvider";
+import { NextUIProvider } from "@/providers/NextUIProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,11 +23,13 @@ export default function RootLayout({
     <html lang="es">
       <body>
         <ThemeProvider>
-          <LanguageProvider>
-            <AuthProvider>
-              <LoadingPageWrapper>{children}</LoadingPageWrapper>
-            </AuthProvider>
-          </LanguageProvider>
+          <NextUIProvider>
+            <LanguageProvider>
+              <AuthProvider>
+                <LoadingPageWrapper>{children}</LoadingPageWrapper>
+              </AuthProvider>
+            </LanguageProvider>
+          </NextUIProvider>
         </ThemeProvider>
       </body>
     </html>

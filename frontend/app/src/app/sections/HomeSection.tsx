@@ -11,11 +11,11 @@ export const HomeSection = () => {
                     src="/assets/images/logo-circulo.png"
                     alt="Logo JBU"
                     title="Logo JBU"
-                    width="350"
+                    className="w-60 md:w-80 lg:w-96 mb-6"
                 />
                 <h1
-                    className="text-white"
-                    style={{ textShadow: "5px 5px 5px black", fontSize: "3rem" }} data-aos="zoom-in-up"
+                    className="text-white text-2xl md:text-4xl lg:text-6xl"
+                    style={{ textShadow: "5px 5px 5px black" }}
                 >
                     Jardín Botánico de Ushuaia
                 </h1>
