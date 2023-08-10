@@ -1,5 +1,4 @@
 "use client";
-
 import { getDictionary } from "@/dictionaries";
 import { LangContext } from "@/providers/LanguageProvider";
 import { useContext } from "react";

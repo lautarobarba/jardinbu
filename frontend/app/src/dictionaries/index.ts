@@ -15,6 +15,16 @@ type DictionaryContent = {
     contentParagraph3: string;
     objective: string;
   };
+  teamSection: {
+    title: string;
+    subtitle1: string;
+    content1: string;
+    subtitle2: string;
+    mission1: string;
+    mission2: string;
+    mission3: string;
+    mission4: string;
+  };
 };
 
 type DictionaryType = {
@@ -39,6 +49,16 @@ export const getDictionary = (lang: LangOptions): DictionaryContent => {
         contentParagraph3: "FALTA TRADUCCIÓN....",
         objective: "FALTA TRADUCCIÓN....",
       },
+      teamSection: {
+        title: "Our Team",
+        subtitle1: "Vision",
+        content1: "FALTA TRADUCCIÓN....",
+        subtitle2: "Mission",
+        mission1: "FALTA TRADUCCIÓN....",
+        mission2: "FALTA TRADUCCIÓN....",
+        mission3: "FALTA TRADUCCIÓN....",
+        mission4: "FALTA TRADUCCIÓN....",
+      },
     },
     es: {
       publicNavBarContent: {
@@ -56,6 +76,21 @@ export const getDictionary = (lang: LangOptions): DictionaryContent => {
         contentParagraph3: "Su objeto social es",
         objective:
           "Propiciar la interacción armónica del hombre con su medio natural y cultural.",
+      },
+      teamSection: {
+        title: "Nuestro equipo",
+        subtitle1: "Visión",
+        content1:
+          "Inspirar a la comunidad local y a los visitantes de todo el mundo para la preservación, apreciación y disfrute del patrimonio natural de nuestra región, manteniendo la biodiversidad y compartiendo valores culturales.",
+        subtitle2: "Misión",
+        mission1:
+          "Proteger, cultivar y exponer la diversidad vegetal de nuestra región, a través de la conservación de especies endémicas y amenazadas.",
+        mission2:
+          "Crear lazos con la comunidad local y los visitantes de todo el mundo.",
+        mission3:
+          "Generar intercambio con la comunidad científica local, nacional e internacional.",
+        mission4:
+          "Desarrollar actividades de interpretación, de investigación, educativas, recreativas, turísticas y de interés social, en un marco de sustentabilidad ambiental.",
       },
     },
   } as DictionaryType;
