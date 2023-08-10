@@ -5,7 +5,7 @@ import { Brand } from "./elements/Brand";
 import { EnterButton } from "./elements/EnterButton";
 import { LangContext } from "@/providers/LanguageProvider";
 import { getDictionary } from "@/dictionaries";
-import { BarsIcon } from "../icons/BarsIcon";
+import { MenuIcon } from "lucide-react";
 
 export const PublicNavbar = () => {
   const [expandNavbar, setExpandNavbar] = useState<boolean>(false);
@@ -27,7 +27,7 @@ export const PublicNavbar = () => {
             onClick={toggleMenu}
           >
             <span className="sr-only">Open menu</span>
-            <BarsIcon />
+            <MenuIcon />
           </button>
         </div>
         <div

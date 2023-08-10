@@ -1,10 +1,7 @@
 "use client";
 import { useContext, useState } from "react";
 import { ThemeContext } from "@/providers/ThemeProvider";
-import { MoonIcon } from "@/components/icons/MoonIcon";
-import { SunIcon } from "@/components/icons/SunIcon";
 import { LangContext } from "@/providers/LanguageProvider";
-
 import {
     Dropdown,
     DropdownTrigger,
@@ -13,6 +10,7 @@ import {
     DropdownItem,
     Button
 } from "@nextui-org/react";
+import { MoonIcon, SunIcon } from "lucide-react";
 
 export const ConfigMenu = () => {
     const { theme, toggleTheme } = useContext(ThemeContext);
