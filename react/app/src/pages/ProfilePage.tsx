@@ -149,6 +149,7 @@ export const ProfilePage = () => {
           <div className='m-5'>
             {getAuthUserData.profilePicture ? (
               <img
+                loading='lazy'
                 src={`http://localhost:7001/api/user/profile-picture/${getAuthUserData.profilePicture?.id}`}
                 width='100'
               />
@@ -218,8 +219,8 @@ export const ProfilePage = () => {
                         event.target.files[0]
                       );
                     }}
-                    // error={formik.touched.lastname && Boolean(formik.errors.lastname)}
-                    // helperText={formik.touched.lastname && formik.errors.lastname}
+                  // error={formik.touched.lastname && Boolean(formik.errors.lastname)}
+                  // helperText={formik.touched.lastname && formik.errors.lastname}
                   />
 
                   {/* <input type="file" name="profilePicture"></input> */}

@@ -33,6 +33,7 @@ type DictionaryContent = {
   };
   mapSection: {
     title: string;
+    navigateButton: string;
   };
 };
 
@@ -76,6 +77,7 @@ export const getDictionary = (lang: LangOptions): DictionaryContent => {
       },
       mapSection: {
         title: "Map",
+        navigateButton: "FALTA TRADUCCIÓN....",
       },
     },
     es: {
@@ -119,6 +121,7 @@ export const getDictionary = (lang: LangOptions): DictionaryContent => {
       },
       mapSection: {
         title: "Mapa",
+        navigateButton: "Iniciar navegación",
       },
     },
   } as DictionaryType;

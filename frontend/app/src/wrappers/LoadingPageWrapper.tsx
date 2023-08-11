@@ -18,6 +18,7 @@ const LoadingPage = () => {
           <br />
           <div className="text-center">
             <img
+              loading='lazy'
               alt="logo-jbu"
               title="logo-jbu"
               src="/assets/images/logo-circulo.png"

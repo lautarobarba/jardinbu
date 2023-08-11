@@ -8,6 +8,7 @@ export const HomeSection = () => {
         >
             <div className='flex flex-col items-center'>
                 <img
+                    loading='lazy'
                     src="/assets/images/logo-circulo.png"
                     alt="Logo JBU"
                     title="Logo JBU"

@@ -40,7 +40,7 @@ const BlogPost = (props: BlogPostProps) => {
                 <span className="bg-light/[0.5] dark:bg-dark/[0.5] px-3 rounded-lg text-dark dark:text-light drop-shadow-[0_1.4px_1.4px_rgba(0,0,0,0.8)] flex flex-wrap">{content}</span></p>
             <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-4">
-                    <img className="w-7 h-7 rounded-full" src={authorImgSrc} alt={authorName} />
+                    <img loading='lazy' className="w-7 h-7 rounded-full" src={authorImgSrc} alt={authorName} />
                     <span className="hidden md:block font-medium text-dark drop-shadow-[0_1.4px_1.4px_rgba(255,255,255,0.8)]">
                         {authorName}
                     </span>

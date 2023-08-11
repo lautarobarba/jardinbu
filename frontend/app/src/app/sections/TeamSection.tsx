@@ -19,6 +19,7 @@ const ProfileCard = (props: ProfileCardProps) => {
     return (
         <div className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
             <img
+                loading='lazy'
                 className="w-full rounded-lg sm:rounded-none sm:rounded-l-lg"
                 src={imageSrc}
                 alt={name}
