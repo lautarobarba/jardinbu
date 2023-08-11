@@ -1,9 +1,10 @@
 import { PublicNavbar } from "@/components/navbar/PublicNavbar";
-import { PrivateNavbar } from "@/components/navbar/PrivateNavbar";
 import { ConfigMenu } from "@/components/config-button/ConfigMenu";
 import { HomeSection } from "./sections/HomeSection";
 import { InstSection } from "./sections/InstSection";
 import { TeamSection } from "./sections/TeamSection";
+import { BlogSection } from "./sections/BlogSection";
+import { MapSection } from "./sections/MapSection";
 
 const Home = () => {
   return (
@@ -15,6 +16,10 @@ const Home = () => {
       <HomeSection />
       <InstSection />
       <TeamSection />
+      <BlogSection />
+      <MapSection />
+      {/* <BlogSection /> */}
+      {/* <BigFooter /> */}
     </main>
   );
 };

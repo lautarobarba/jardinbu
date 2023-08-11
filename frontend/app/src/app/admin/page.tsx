@@ -34,6 +34,7 @@ const AdminDashboard = () => {
           <pre>{JSON.stringify(session)}</pre>
         </>
       )} */}
+      {/* <SmallFooter /> */}
     </>
   );
 };

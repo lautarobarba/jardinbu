@@ -25,6 +25,15 @@ type DictionaryContent = {
     mission3: string;
     mission4: string;
   };
+  blogSection: {
+    content: string;
+    article: string;
+    readMore: string;
+    visitBlog: string;
+  };
+  mapSection: {
+    title: string;
+  };
 };
 
 type DictionaryType = {
@@ -59,6 +68,15 @@ export const getDictionary = (lang: LangOptions): DictionaryContent => {
         mission3: "FALTA TRADUCCIÓN....",
         mission4: "FALTA TRADUCCIÓN....",
       },
+      blogSection: {
+        content: "FALTA TRADUCCIÓN....",
+        article: "Article",
+        readMore: "Read more",
+        visitBlog: "Visit our BLOG",
+      },
+      mapSection: {
+        title: "Map",
+      },
     },
     es: {
       publicNavBarContent: {
@@ -91,6 +109,16 @@ export const getDictionary = (lang: LangOptions): DictionaryContent => {
           "Generar intercambio con la comunidad científica local, nacional e internacional.",
         mission4:
           "Desarrollar actividades de interpretación, de investigación, educativas, recreativas, turísticas y de interés social, en un marco de sustentabilidad ambiental.",
+      },
+      blogSection: {
+        content:
+          "Te invitamos cordialmente a explorar nuestro blog de noticias, donde te mantendrás informado sobre todas las novedades y acontecimientos emocionantes del Jardín Botánico. Sumérgete en historias cautivadoras sobre la diversidad de plantas, eventos especiales, consejos de jardinería y más. Únete a nosotros en esta emocionante aventura botánica y descubre el apasionante mundo que compartimos contigo. ¡Bienvenido a nuestra comunidad verde!",
+        article: "Artículo",
+        readMore: "Continuar leyendo",
+        visitBlog: "Visitá nuestro BLOG",
+      },
+      mapSection: {
+        title: "Mapa",
       },
     },
   } as DictionaryType;

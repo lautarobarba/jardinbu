@@ -63,6 +63,15 @@ export const PublicNavbar = () => {
             </li>
             <li className="flex items-center w-full">
               <Link
+                href="/#blog"
+                className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
+                onClick={() => setExpandNavbar(false)}
+              >
+                {"Blog"}
+              </Link>
+            </li>
+            <li className="flex items-center w-full">
+              <Link
                 href="/#map"
                 className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
                 onClick={() => setExpandNavbar(false)}
