@@ -1,62 +1,62 @@
 version: "3.8"
 name: jardinbu
 services:
-  jbu_db:
-    container_name: jbu_db
-    image: jbu_db:1.0.0
-    build:
-      context: .
-      target: base
-      dockerfile: ./database/Dockerfile
-    env_file: .env
-    environment:
-      - TZ=America/Argentina/Buenos_Aires
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
-    restart: always
-    ports:
-      - ${DB_PORT}:5432
-    volumes:
-      - ./database/database/data:/var/lib/postgresql/data
-      - ./database/backups:/backups
-    extra_hosts:
-      - host.docker.internal:host-gateway
+  # jbu_db:
+  #   container_name: jbu_db
+  #   image: jbu_db:1.0.0
+  #   build:
+  #     context: .
+  #     target: base
+  #     dockerfile: ./database/Dockerfile
+  #   env_file: .env
+  #   environment:
+  #     - TZ=America/Argentina/Buenos_Aires
+  #     - POSTGRES_USER=${DB_USER}
+  #     - POSTGRES_PASSWORD=${DB_PASSWORD}
+  #     - POSTGRES_DB=${DB_NAME}
+  #   restart: always
+  #   ports:
+  #     - ${DB_PORT}:5432
+  #   volumes:
+  #     - ./database/database/data:/var/lib/postgresql/data
+  #     - ./database/backups:/backups
+  #   extra_hosts:
+  #     - host.docker.internal:host-gateway
 
-  jbu_redis:
-    container_name: jbu_redis
-    image: "redis:alpine"
-    restart: always
+  # jbu_redis:
+  #   container_name: jbu_redis
+  #   image: "redis:alpine"
+  #   restart: always
 
-  jbu_back:
-    container_name: jbu_back
-    image: jbu_back:1.0.0
-    build:
-      context: .
-      target: base
-      dockerfile: ./backend/Dockerfile
-    command: bash /start.sh
-    depends_on:
-      - jbu_db
-      - jbu_redis
-    restart: always
-    env_file: .env
-    environment:
-      # Configuracion DB
-      - DB_HOST=host.docker.internal
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_PORT=${DB_PORT}
-    ports:
-      - ${BACK_PORT}:3000
-    volumes:
-      - ./backend/api:/app
-      - ./backend/start.sh:/start.sh
-    links:
-      - jbu_redis
-    extra_hosts:
-      - host.docker.internal:host-gateway
+  # jbu_back:
+  #   container_name: jbu_back
+  #   image: jbu_back:1.0.0
+  #   build:
+  #     context: .
+  #     target: base
+  #     dockerfile: ./backend/Dockerfile
+  #   command: bash /start.sh
+  #   depends_on:
+  #     - jbu_db
+  #     - jbu_redis
+  #   restart: always
+  #   env_file: .env
+  #   environment:
+  #     # Configuracion DB
+  #     - DB_HOST=host.docker.internal
+  #     - DB_USER=${DB_USER}
+  #     - DB_PASSWORD=${DB_PASSWORD}
+  #     - DB_NAME=${DB_NAME}
+  #     - DB_PORT=${DB_PORT}
+  #   ports:
+  #     - ${BACK_PORT}:3000
+  #   volumes:
+  #     - ./backend/api:/app
+  #     - ./backend/start.sh:/start.sh
+  #   links:
+  #     - jbu_redis
+  #   extra_hosts:
+  #     - host.docker.internal:host-gateway
 
   jbu_front:
     container_name: jbu_front
@@ -120,28 +120,28 @@ services:
   #   extra_hosts:
   #     - host.docker.internal:host-gateway
 
-  jbu_rproxy:
-    container_name: jbu_rproxy
-    image: jbu_rproxy:1.0.0
-    build:
-      context: .
-      target: base
-      dockerfile: ./rproxy/Dockerfile
-    command: bash /start.sh
-    # depends_on:
-    #   - jbu_back
-    #   - jbu_front
-    #   - jbu_landingpage
-    env_file: .env
-    restart: always
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./rproxy/start.sh:/start.sh
-      - ./rproxy/nginx.conf:/etc/nginx/sites-available/default
-      - ./rproxy/nginx/letsencrypt:/etc/letsencrypt
-      # Descomentar para guardar el log en el host
-      # - ./rproxy/nginx/log:/var/log/nginx
-    extra_hosts:
-      - host.docker.internal:host-gateway
+  # jbu_rproxy:
+  #   container_name: jbu_rproxy
+  #   image: jbu_rproxy:1.0.0
+  #   build:
+  #     context: .
+  #     target: base
+  #     dockerfile: ./rproxy/Dockerfile
+  #   command: bash /start.sh
+  #   # depends_on:
+  #   #   - jbu_back
+  #   #   - jbu_front
+  #   #   - jbu_landingpage
+  #   env_file: .env
+  #   restart: always
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   volumes:
+  #     - ./rproxy/start.sh:/start.sh
+  #     - ./rproxy/nginx.conf:/etc/nginx/sites-available/default
+  #     - ./rproxy/nginx/letsencrypt:/etc/letsencrypt
+  #     # Descomentar para guardar el log en el host
+  #     # - ./rproxy/nginx/log:/var/log/nginx
+  #   extra_hosts:
+  #     - host.docker.internal:host-gateway
