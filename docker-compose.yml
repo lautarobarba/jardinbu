@@ -8,6 +8,7 @@ services:
   #     context: .
   #     target: base
   #     dockerfile: ./database/Dockerfile
+  #   mem_limit: 500m
   #   env_file: .env
   #   environment:
   #     - TZ=America/Argentina/Buenos_Aires
@@ -36,6 +37,7 @@ services:
   #     target: base
   #     dockerfile: ./backend/Dockerfile
   #   command: bash /start.sh
+  #   mem_limit: 600m
   #   depends_on:
   #     - jbu_db
   #     - jbu_redis
@@ -66,6 +68,7 @@ services:
       target: base
       dockerfile: ./frontend/Dockerfile
     command: bash /start.sh
+    mem_limit: 600m
     restart: always
     env_file: .env
     environment:
