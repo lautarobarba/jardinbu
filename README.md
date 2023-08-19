@@ -2,30 +2,41 @@
 
 - Apps:
 
-  - static: landingpage
-  - reactJS: frontend
-  - nestJS: backend
+  - NextJS: frontend
+  - NestJS: backend
 
 - DBs:
 
-  - db_wordpress: mysql
-  - db_django: mysql
+  - PostgreSQL
 
 - Reverse proxy:
   - Nginx
 
 ## Dependencias
 
-- Docker (Apéndice)
+- Desarrollo
+  - Docker (instalación en Apéndice)
+- Producción
+  - PostgreSQL (instalación en Apéndice)
+  - Node v18 (instalación en Apéndice)
+  - NPM v9 (instalación en Apéndice)
+  - Nginx (instalación en Apéndice)
 
 ## Configuración
 
 ```bash
-$ cp .env.example .env
+$ # Se copian los ejemplos de config para cada módulo
+$ cd database && cp .env.example .env && cd .. && \
+   cd frontend && cp .env.example .env && cd .. && \
+   cd backend && cp .env.example .env && cd ..
+$ nano database/.env
+$ nano frontend/.env
+$ nano backend/.env
+$ # Por último hay un archivo .env en la raiz del proyecto en el cual se configura el entorno
 $ nano .env
 ```
 
-## Iniciar
+## Iniciar compose para desarrollo
 
 ```bash
 $ docker compose up -d
@@ -41,20 +52,39 @@ $ #     detener con Ctr+C
 $ docker compose down
 ```
 
-## Database (PostgreSQL)
+## Iniciar node para producción
+
+```bash
+$ # Backend: Dejar una terminal corriendo con el servidor node
+$ cd backend && \
+   npm install && \
+   npm run build && \
+   npm run migration:run && \
+   npm run start:prod
+$ # Frontend: Dejar una terminal corriendo con el servidor node
+$ cd frontend && \
+   npm install && \
+   npm build && \
+   npm run start:prod
+```
+
+## Database - PostgreSQL (Docker)
 
 Toda la base de datos queda guardada en **/database/database/data**
 
 Para conectarse a una terminal del contenedor (sólo para debug).
-Usar los datos configurados previamente en **.env**.
+Usar los datos configurados previamente en **database/.env**.
 
-**POSTGRES_USER**: está en el archivo _.env_
+**DB_NAME**: está en el archivo _.env_
 
-**POSTGRES_DB**: está en el archivo _.env_
+**DB_USER**: está en el archivo _.env_
+
+**DB_PASSWORD**: está en el archivo _.env_
 
 ```bash
 $ docker compose exec -it jbu_db bash
-root@container:$ psql -U ${POSTGRES_USER} ${POSTGRES_DB}
+root@container:$ psql -U ${DB_USER} ${DB_NAME}
+root@container:$ # DB_PASSWORD
 ```
 
 ### Backups
@@ -66,13 +96,13 @@ Se creó un volumen para guardar los _backups_ en **/database/backups**.
 Para hacer el backup tenemos que entrar a una shell del contenedor y generar el archivo de backup en la carpeta donde esta montado el volumen.
 Usar los datos configurados previamente en .env
 
-**POSTGRES_USER**: está en el archivo _.env_
+**DB_USER**: está en el archivo _.env_
 
-**POSTGRES_DB**: está en el archivo _.env_
+**DB_NAME**: está en el archivo _.env_
 
 ```bash
 $ docker compose exec -it jbu_db bash
-root@container:$ pg_dump -U ${POSTGRES_USER} ${POSTGRES_DB} > backups/${POSTGRES_DB}$(date "+%Y%m%d-%H_%M").sql
+root@container:$ pg_dump -U ${DB_USER} ${DB_NAME} > backups/${DB_NAME}$(date "+%Y%m%d-%H_%M").sql
 root@container:$ exit
 ```
 
@@ -82,14 +112,16 @@ Para restaurar el backup tenemos que entrar a una shell del contenedor y restaur
 
 1. Hay que asegurarse de tener el backup en la carpeta **/backups**.
 
-**CONTAINER_NAME**: está en el archivo _.env_
+**DB_USER**: está en el archivo _.env_
+
+**DB_NAME**: está en el archivo _.env_
 
 ```bash
 $ cd database/backups
 $ sudo unzip NOMBRE_BACKUP.zip
 $ cd ../..
 $ docker compose exec -it jbu_db bash
-root@container:$ psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f backups/NOMBRE_BACKUP.sql
+root@container:$ psql -U ${DB_USER} -d ${DB_NAME} -f backups/NOMBRE_BACKUP.sql
 root@container:$ exit
 ```
 
@@ -169,7 +201,7 @@ $ #   contraseña: admin
 
 ### Test endpoints
 
-Para testear los endpoints se puede usar Postman o dirigirse a la ruta **/api/docs** para testear con _Swagger_.
+Para testear los endpoints se puede usar _Postman_ o dirigirse a la ruta **/api/docs** para testear con _Swagger_.
 
 ## Frontend (NextJS)
 
@@ -261,4 +293,49 @@ $  echo \
 
 $ sudo apt-get update
 $ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+```
+
+## Instalación de PostgreSQL en ubuntu 18.04/20.04/22.04
+
+```bash
+$ sudo apt install curl gpg gnupg2 software-properties-common apt-transport-https lsb-release ca-certificates
+$ curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+$ echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
+$ sudo apt update
+$ sudo apt install postgresql-13 postgresql-client-13
+$ sudo passwd postgres # Para cambiar la contraseña del usuario postgres
+$ su postgres
+postgres$ psql # Abrir cliente por linea de comandos
+postgres (psql)$ # Cambiar la contraseña del usuario dentro del motor
+postgres (psql)$ ALTER USER postgres WITH PASSWORD 'jbu_db';
+postgres (psql)$ # Crear la base de datos para la aplicación
+postgres (psql)$ CREATE DATABASE jbu_db;
+postgres (psql)$ # Salir
+postgres (psql)$ \q
+postgres$ exit
+$ sudo systemctl status postgresql.service
+```
+
+## Instalación de Redis en ubuntu 18.04/20.04/22.04
+
+```bash
+$ cd /tmp
+```
+
+## Instalación de NodeV18 en ubuntu 18.04/20.04/22.04
+
+```bash
+$ cd /tmp
+$ curl -sL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh
+$ sudo bash nodesource_setup.sh
+$ sudo apt update
+$ sudo apt install nodejs
+$ node -v
+$ npm -v
+```
+
+## Instalación de Nginx + Certbot en ubuntu 18.04/20.04/22.04
+
+```bash
+$ sudo apt install nginx
 ```

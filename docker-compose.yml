@@ -1,28 +1,27 @@
 version: "3.8"
 name: jardinbu
 services:
-  # jbu_db:
-  #   container_name: jbu_db
-  #   image: jbu_db:1.0.0
-  #   build:
-  #     context: .
-  #     target: base
-  #     dockerfile: ./database/Dockerfile
-  #   mem_limit: 500m
-  #   env_file: .env
-  #   environment:
-  #     - TZ=America/Argentina/Buenos_Aires
-  #     - POSTGRES_USER=${DB_USER}
-  #     - POSTGRES_PASSWORD=${DB_PASSWORD}
-  #     - POSTGRES_DB=${DB_NAME}
-  #   restart: always
-  #   ports:
-  #     - ${DB_PORT}:5432
-  #   volumes:
-  #     - ./database/database/data:/var/lib/postgresql/data
-  #     - ./database/backups:/backups
-  #   extra_hosts:
-  #     - host.docker.internal:host-gateway
+  jbu_db:
+    container_name: jbu_db
+    image: jbu_db:1.0.0
+    build:
+      context: .
+      target: base
+      dockerfile: ./database/Dockerfile
+    mem_limit: 500m
+    env_file: .env
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    restart: always
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - ./database/database/data:/var/lib/postgresql/data
+      - ./database/backups:/backups
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   # jbu_redis:
   #   container_name: jbu_redis
@@ -45,7 +44,6 @@ services:
   #   env_file: .env
   #   environment:
   #     # Configuracion DB
-  #     - DB_HOST=host.docker.internal
   #     - DB_USER=${DB_USER}
   #     - DB_PASSWORD=${DB_PASSWORD}
   #     - DB_NAME=${DB_NAME}
@@ -60,26 +58,26 @@ services:
   #   extra_hosts:
   #     - host.docker.internal:host-gateway
 
-  jbu_front:
-    container_name: jbu_front
-    image: jbu_front:1.0.0
-    build:
-      context: .
-      target: base
-      dockerfile: ./frontend/Dockerfile
-    command: bash /start.sh
-    mem_limit: 600m
-    restart: always
-    env_file: .env
-    environment:
-      - PORT=${FRONT_PORT}
-    ports:
-      - ${FRONT_PORT}:${FRONT_PORT}
-    volumes:
-      - ./frontend/app:/app
-      - ./frontend/start.sh:/start.sh
-    extra_hosts:
-      - host.docker.internal:host-gateway
+  # jbu_front:
+  #   container_name: jbu_front
+  #   image: jbu_front:1.0.0
+  #   build:
+  #     context: .
+  #     target: base
+  #     dockerfile: ./frontend/Dockerfile
+  #   command: bash /start.sh
+  #   mem_limit: 600m
+  #   restart: always
+  #   env_file: .env
+  #   environment:
+  #     - PORT=${FRONT_PORT}
+  #   ports:
+  #     - ${FRONT_PORT}:${FRONT_PORT}
+  #   volumes:
+  #     - ./frontend/app:/app
+  #     - ./frontend/start.sh:/start.sh
+  #   extra_hosts:
+  #     - host.docker.internal:host-gateway
 
   # jbu_react:
   #   container_name: jbu_react

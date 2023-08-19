@@ -6,14 +6,15 @@ import { AuthService } from "./auth.service";
 import { MailerModule } from "modules/mailer/mailer.module";
 import { LocalStrategy } from "./strategies/local.strategy";
 import { JwtStrategy } from "./strategies/jwt.strategy";
+import { ENV_VAR } from "config";
 
 @Module({
   imports: [
     JwtModule.registerAsync({
       useFactory: async () => ({
-        secret: process.env.JWT_SECRET || "secret",
+        secret: ENV_VAR.JWT_SECRET,
         signOptions: {
-          expiresIn: process.env.JWT_EXPIRATION_TIME || "1d",
+          expiresIn: ENV_VAR.JWT_EXPIRATION_TIME,
         },
       }),
     }),

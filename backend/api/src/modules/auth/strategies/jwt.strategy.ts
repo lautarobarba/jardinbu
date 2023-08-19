@@ -4,6 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Request } from "express";
 import { UserService } from "modules/user/user.service";
+import { ENV_VAR } from "config";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -14,7 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
           return request?.cookies?.accessToken;
         },
       ]),
-      secretOrKey: process.env.JWT_SECRET || "secret",
+      secretOrKey: ENV_VAR.JWT_SECRET,
     });
   }
 

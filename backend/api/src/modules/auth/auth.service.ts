@@ -221,8 +221,8 @@ export class AuthService {
   //           email,
   //         },
   //         {
-  //           secret: process.env.JWT_SECRET,
-  //           expiresIn: process.env.JWT_EXPIRATION_TIME ?? "1d",
+  //           secret: ENV_VAR.JWT_SECRET,
+  //           expiresIn: ENV_VAR.JWT_EXPIRATION_TIME,
   //         }
   //       ),
   //       this._jwtService.signAsync(
@@ -231,8 +231,8 @@ export class AuthService {
   //           email,
   //         },
   //         {
-  //           secret: process.env.JWT_SECRET,
-  //           expiresIn: process.env.JWT_REFRESH_EXPIRATION_TIME ?? "7d",
+  //           secret: ENV_VAR.JWT_SECRET,
+  //           expiresIn: ENV_VAR.JWT_REFRESH_EXPIRATION_TIME,
   //         }
   //       ),
   //     ]);
