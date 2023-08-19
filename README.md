@@ -64,7 +64,7 @@ $ # Frontend: Dejar una terminal corriendo con el servidor node
 $ cd frontend && \
    npm install && \
    npm build && \
-   npm run start:prod
+   PORT=8000 npm run start:prod
 ```
 
 ## Database - PostgreSQL (Docker)

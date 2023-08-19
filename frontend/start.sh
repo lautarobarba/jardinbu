@@ -1,12 +1,12 @@
 #!/bin/bash
 if [ $ENVIRONMENT == "development" ]; then 
     echo "== DEVELOPMENT MODE ==" 
-    echo "RUNNING: \"npm install && npm run dev\". Please wait..."
-    npm install && npm run dev
+    echo "RUNNING: \"npm install && npm run start\". Please wait..."
+    npm install && npm run start
 elif [ $ENVIRONMENT == "production" ]; then 
     echo "==  PRODUCTION MODE ==" 
-    echo "RUNNING: \"npm install && npm run build && npm run start\". Please wait..."
-    npm install && npm run build && npm run start
+    echo "RUNNING: \"npm install && npm run build && npm run start:prod\". Please wait..."
+    npm install && npm run build && npm run start:prod
 else 
     while true
     do
