@@ -1,0 +1,51 @@
+upstream app {
+    server 127.0.0.1:8000;
+}
+upstream api {
+    server 127.0.0.1:7000;
+}
+
+server {
+    server_name jardin-botanico-ushuaia.org.ar;
+    # access_log /var/log/nginx/nginx.log;
+    # error_log /var/log/nginx/nginx.log debug;
+
+    location / {
+        include proxy_params;
+        client_max_body_size 200M;
+
+        # Direccion de proxy
+        proxy_pass http://app;
+        proxy_ssl_server_name on;
+        
+        # Fix socket error
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade"; 
+    }
+
+    location /api {
+        include proxy_params;
+        client_max_body_size 200M;
+
+        # Direccion de proxy
+        proxy_pass http://api;
+        proxy_ssl_server_name on;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/jardin-botanico-ushuaia.org.ar/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/jardin-botanico-ushuaia.org.ar/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+    if ($host = jardin-botanico-ushuaia.org.ar) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80 default_server;
+    server_name jardin-botanico-ushuaia.org.ar;
+    return 404; # managed by Certbot
+}

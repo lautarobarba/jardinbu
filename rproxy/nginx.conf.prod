@@ -1,0 +1,35 @@
+upstream app {
+    server 127.0.0.1:8000;
+}
+upstream api {
+    server 127.0.0.1:7000;
+}
+
+server {
+    listen 80 default_server;
+    server_name jardin-botanico-ushuaia.org.ar;
+    # access_log /var/log/nginx/nginx.log;
+    # error_log /var/log/nginx/nginx.log debug;
+
+    location / {
+        include proxy_params;
+        client_max_body_size 200M;
+
+        # Direccion de proxy
+        proxy_pass http://app;
+        proxy_ssl_server_name on;
+
+        # Fix socket error
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+
+    location /api {
+        include proxy_params;
+        client_max_body_size 200M;
+
+        # Direccion de proxy
+        proxy_pass http://api;
+        proxy_ssl_server_name on;
+    }
+}
