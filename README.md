@@ -26,12 +26,11 @@
 
 ```bash
 $ # Se copian los ejemplos de config para cada módulo
-$ cd database && cp .env.example .env && cd .. && \
-   cd frontend && cp .env.example .env && cd .. && \
-   cd backend && cp .env.example .env && cd ..
-$ nano database/.env
-$ nano frontend/.env
-$ nano backend/.env
+$ cd backend/api && cp .env.example .env && cd ../.. && \
+  cd frontend/app && cp .env.example .env && cd ../.. && \
+  cp .env.example .env
+$ nano backend/api/.env
+$ nano frontend/app/.env
 $ # Por último hay un archivo .env en la raiz del proyecto en el cual se configura el entorno
 $ nano .env
 ```

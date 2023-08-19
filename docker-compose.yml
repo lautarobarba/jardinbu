@@ -42,14 +42,8 @@ services:
   #     - jbu_redis
   #   restart: always
   #   env_file: .env
-  #   environment:
-  #     # Configuracion DB
-  #     - DB_USER=${DB_USER}
-  #     - DB_PASSWORD=${DB_PASSWORD}
-  #     - DB_NAME=${DB_NAME}
-  #     - DB_PORT=${DB_PORT}
   #   ports:
-  #     - ${BACK_PORT}:3000
+  #     - ${BACK_PORT}:${BACK_PORT}
   #   volumes:
   #     - ./backend/api:/app
   #     - ./backend/start.sh:/start.sh
