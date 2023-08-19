@@ -17,6 +17,17 @@ export const ENV_VAR: {
   // JWT Token
   JWT_SECRET: string;
   JWT_EXPIRATION_TIME: string;
+  // Servicio de correos
+  SMTP_HOST: string;
+  SMTP_PORT: number;
+  SMTP_SECURE: boolean;
+  SMTP_USER: string;
+  SMTP_PASSWORD: string;
+  // FRONTEND ROUTES
+  EMAIL_CONFIRMATION_URL: string;
+  EMAIL_RECOVERY_URL: string;
+  // Media
+  UPLOAD_FILE_DETINATION: string;
 } = {
   // APP
   BACK_PORT: Number(process.env.BACK_PORT ?? 3000),
@@ -37,4 +48,17 @@ export const ENV_VAR: {
   // JWT Token
   JWT_SECRET: process.env.JWT_SECRET ?? "secret",
   JWT_EXPIRATION_TIME: process.env.JWT_EXPIRATION_TIME ?? "1d",
+  // Servicio de correos
+  SMTP_HOST: process.env.SMTP_HOST ?? "smtp.host.com",
+  SMTP_PORT: Number(process.env.SMTP_PORT ?? 25),
+  SMTP_SECURE: Boolean(process.env.SMTP_SECURE ?? false),
+  SMTP_USER: process.env.SMTP_USER ?? "smpt_user",
+  SMTP_PASSWORD: process.env.SMTP_PASSWORD ?? "smpt_password",
+  // FRONTEND ROUTES
+  EMAIL_CONFIRMATION_URL:
+    process.env.EMAIL_CONFIRMATION_URL ?? "https://my-app.com/confirm-email",
+  EMAIL_RECOVERY_URL:
+    process.env.EMAIL_RECOVERY_URL ?? "https://my-app.com/recover-password",
+  // Media
+  UPLOAD_FILE_DETINATION: process.env.UPLOAD_FILE_DETINATION ?? "./uploads",
 };

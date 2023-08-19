@@ -319,7 +319,12 @@ $ sudo systemctl status postgresql.service
 ## Instalación de Redis en ubuntu 18.04/20.04/22.04
 
 ```bash
-$ cd /tmp
+$ sudo apt install lsb-release curl gpg
+$ curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+$ echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+$ sudo apt-get update
+$ sudo apt-get install redis
+$ sudo systemctl status redis-server.service
 ```
 
 ## Instalación de NodeV18 en ubuntu 18.04/20.04/22.04
