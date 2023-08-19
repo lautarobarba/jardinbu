@@ -342,4 +342,11 @@ $ npm -v
 
 ```bash
 $ sudo apt install nginx
+$ sudo snap install --classic certbot
+$ sudo ln -s /snap/bin/certbot /usr/bin/certbot
+$ sudo cp rproxy/nginx.conf /etc/nginx/sites-available/jbu_rproxy
+$ sudo ln -sf /etc/nginx/sites-available/jbu_rproxy /etc/nginx/sites-enabled/jbu_rproxy
+$ sudo nano /etc/nginx/sites-enabled/jbu_rproxy
+$ sudo systemctl restart nginx
+$ sudo certbot --nginx
 ```
