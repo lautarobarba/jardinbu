@@ -5,6 +5,7 @@ import { InstSection } from "./sections/InstSection";
 import { TeamSection } from "./sections/TeamSection";
 import { BlogSection } from "./sections/BlogSection";
 import { MapSection } from "./sections/MapSection";
+import { FooterSection } from "./sections/FooterSection";
 
 const Home = () => {
   return (
@@ -12,14 +13,12 @@ const Home = () => {
       <PublicNavbar />
       <ConfigMenu />
 
-
       <HomeSection />
       <InstSection />
       <TeamSection />
       <BlogSection />
       <MapSection />
-      {/* <BlogSection /> */}
-      {/* <BigFooter /> */}
+      <FooterSection />
     </main>
   );
 };

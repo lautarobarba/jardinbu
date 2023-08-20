@@ -1,0 +1,19 @@
+#map-container {
+    width: 20rem;
+    height: 20rem;
+    z-index: 0;
+}
+
+@media (min-width: 1024px) {
+    #map-container {
+        width: 60rem;
+        height: 35rem;
+    }
+}
+
+@media (min-width: 1368px) {
+    #map-container {
+        width: 80rem;
+        height: 40rem;
+    }
+}

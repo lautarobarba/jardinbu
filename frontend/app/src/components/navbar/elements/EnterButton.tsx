@@ -7,10 +7,10 @@ export const EnterButton = () => {
   const { lang } = useContext(LangContext);
 
   return (
-    <Link href="/#" className="w-full">
+    <Link href="/garden" className="w-full">
       <Button color="primary" radius="sm" className="w-full uppercase">
-        {lang == "es" && "Biblioteca"}
-        {lang == "en" && "Library"}
+        {lang == "es" && "Jardín"}
+        {lang == "en" && "Garden"}
       </Button>
     </Link>
   );

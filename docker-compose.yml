@@ -8,7 +8,6 @@ services:
       context: .
       target: base
       dockerfile: ./database/Dockerfile
-    mem_limit: 500m
     env_file: .env
     environment:
       - POSTGRES_USER=${DB_USER}
@@ -23,55 +22,53 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
 
-  # jbu_redis:
-  #   container_name: jbu_redis
-  #   image: "redis:alpine"
-  #   restart: always
+  jbu_redis:
+    container_name: jbu_redis
+    image: "redis:alpine"
+    restart: always
 
-  # jbu_back:
-  #   container_name: jbu_back
-  #   image: jbu_back:1.0.0
-  #   build:
-  #     context: .
-  #     target: base
-  #     dockerfile: ./backend/Dockerfile
-  #   command: bash /start.sh
-  #   mem_limit: 600m
-  #   depends_on:
-  #     - jbu_db
-  #     - jbu_redis
-  #   restart: always
-  #   env_file: .env
-  #   ports:
-  #     - ${BACK_PORT}:${BACK_PORT}
-  #   volumes:
-  #     - ./backend/api:/app
-  #     - ./backend/start.sh:/start.sh
-  #   links:
-  #     - jbu_redis
-  #   extra_hosts:
-  #     - host.docker.internal:host-gateway
+  jbu_back:
+    container_name: jbu_back
+    image: jbu_back:1.0.0
+    build:
+      context: .
+      target: base
+      dockerfile: ./backend/Dockerfile
+    command: bash /start.sh
+    depends_on:
+      - jbu_db
+      - jbu_redis
+    restart: always
+    env_file: .env
+    ports:
+      - ${BACK_PORT}:${BACK_PORT}
+    volumes:
+      - ./backend/api:/app
+      - ./backend/start.sh:/start.sh
+    links:
+      - jbu_redis
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
-  # jbu_front:
-  #   container_name: jbu_front
-  #   image: jbu_front:1.0.0
-  #   build:
-  #     context: .
-  #     target: base
-  #     dockerfile: ./frontend/Dockerfile
-  #   command: bash /start.sh
-  #   mem_limit: 600m
-  #   restart: always
-  #   env_file: .env
-  #   environment:
-  #     - PORT=${FRONT_PORT}
-  #   ports:
-  #     - ${FRONT_PORT}:${FRONT_PORT}
-  #   volumes:
-  #     - ./frontend/app:/app
-  #     - ./frontend/start.sh:/start.sh
-  #   extra_hosts:
-  #     - host.docker.internal:host-gateway
+  jbu_front:
+    container_name: jbu_front
+    image: jbu_front:1.0.0
+    build:
+      context: .
+      target: base
+      dockerfile: ./frontend/Dockerfile
+    command: bash /start.sh
+    restart: always
+    env_file: .env
+    environment:
+      - PORT=${FRONT_PORT}
+    ports:
+      - ${FRONT_PORT}:${FRONT_PORT}
+    volumes:
+      - ./frontend/app:/app
+      - ./frontend/start.sh:/start.sh
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   # jbu_react:
   #   container_name: jbu_react
@@ -115,28 +112,24 @@ services:
   #   extra_hosts:
   #     - host.docker.internal:host-gateway
 
-  # jbu_rproxy:
-  #   container_name: jbu_rproxy
-  #   image: jbu_rproxy:1.0.0
-  #   build:
-  #     context: .
-  #     target: base
-  #     dockerfile: ./rproxy/Dockerfile
-  #   command: bash /start.sh
-  #   # depends_on:
-  #   #   - jbu_back
-  #   #   - jbu_front
-  #   #   - jbu_landingpage
-  #   env_file: .env
-  #   restart: always
-  #   ports:
-  #     - 80:80
-  #     - 443:443
-  #   volumes:
-  #     - ./rproxy/start.sh:/start.sh
-  #     - ./rproxy/nginx.conf:/etc/nginx/sites-available/default
-  #     - ./rproxy/nginx/letsencrypt:/etc/letsencrypt
-  #     # Descomentar para guardar el log en el host
-  #     # - ./rproxy/nginx/log:/var/log/nginx
-  #   extra_hosts:
-  #     - host.docker.internal:host-gateway
+  jbu_rproxy:
+    container_name: jbu_rproxy
+    image: jbu_rproxy:1.0.0
+    build:
+      context: .
+      target: base
+      dockerfile: ./rproxy/Dockerfile
+    command: bash /start.sh
+    env_file: .env
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./rproxy/start.sh:/start.sh
+      - ./rproxy/nginx.conf:/etc/nginx/sites-available/default
+      - ./rproxy/nginx/letsencrypt:/etc/letsencrypt
+      # Descomentar para guardar el log en el host
+      # - ./rproxy/nginx/log:/var/log/nginx
+    extra_hosts:
+      - host.docker.internal:host-gateway

@@ -1,11 +1,12 @@
 "use client";
 import 'leaflet/dist/leaflet.css';
+import './MapSection.css';
 import { getDictionary } from "@/dictionaries";
 import { LangContext } from "@/providers/LanguageProvider";
 import { Button } from "@nextui-org/react";
 import { useContext } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import { MarkerPopup } from '@/components/LeafletMarker';
+import { LeafletMarkerIcon } from '@/components/LeafletMarkerIcon';
 
 export const MapSection = () => {
     const { lang } = useContext(LangContext);
@@ -20,19 +21,10 @@ export const MapSection = () => {
                 <div className="mx-auto max-w-screen-sm text-center">
                     <h2 className="mb-4 text-3xl lg:text-4xl tracking-tight font-extrabold text-dark dark:text-light">{dictionary.mapSection.title}</h2>
                 </div>
-                <div
-                    className="mx-auto text-center my-5"
-                // style={{ maxWidth: '20rem', maxHeight: '20rem' }}
-                >
-                    {/* <img
-                        loading='lazy'
-                        src="/assets/images/cartel.jpg"
-                        alt="dashboard image"
-                        className="w-auto h-60 md:h-full mx-auto rounded-lg border-2 border-primary"
-                    /> */}
+                <div className="mx-auto text-center my-5">
                     <MapContainer
-                        // className='w-3/6 h-3/6'
-                        style={{ width: '80rem', height: '40rem' }}
+                        id="map-container"
+                        className="rounded-lg border-2 border-primary"
                         center={[-54.781111, -68.292613]}
                         zoom={14}
                         scrollWheelZoom={true}
@@ -41,7 +33,11 @@ export const MapSection = () => {
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         />
-                        <Marker position={[-54.781111, -68.292613]}>
+                        <Marker
+                            position={[-54.781111, -68.292613]}
+                            icon={LeafletMarkerIcon}
+                            draggable={false}
+                        >
                             <Popup>
                                 Jardín Botánico de Ushuaia
                             </Popup>

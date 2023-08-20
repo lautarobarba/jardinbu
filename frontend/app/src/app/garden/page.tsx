@@ -48,6 +48,10 @@ const Biblioteca = () => {
             <div className="flex flex-col flex-nowrap justify-center">
                 <hr className="m-auto w-80" />
             </div>
+            <Link href="/blog" className="ml-5 text-blue-500">
+                {">>"} ENTERATE DE LAS ULTIMAS NOTICIAS. VISITA NUESTRO BLOG ◀️
+            </Link>
+            <p>CARRUSEL CON ULTIMAS NOTICIAS DEL BLOG</p>
             <Link href="/admin" className="ml-5 text-blue-500">
                 {">>"} ADMIN PANEL ◀️
             </Link>
