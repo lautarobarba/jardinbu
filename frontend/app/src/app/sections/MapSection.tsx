@@ -7,6 +7,7 @@ import { Button } from "@nextui-org/react";
 import { useContext } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { LeafletMarkerIcon } from '@/components/LeafletMarkerIcon';
+import Link from 'next/link';
 
 export const MapSection = () => {
     const { lang } = useContext(LangContext);
@@ -47,9 +48,9 @@ export const MapSection = () => {
                 <div className="mx-auto text-center">
                     {/* Instrucciones para google maps */}
                     {/* https://aiocollective.com/blog/how-to-add-a-link-to-google-maps-with-directions/ */}
-                    <a href="https://goo.gl/maps/d5uRfStrQBMdBMZM9" target="_blank">
+                    <Link href="https://goo.gl/maps/d5uRfStrQBMdBMZM9" target="_blank">
                         <Button color="primary" radius="sm" className="w-auto uppercase">¡{dictionary.mapSection.navigateButton}!</Button>
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>

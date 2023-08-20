@@ -3,6 +3,7 @@ import { getDictionary } from "@/dictionaries";
 import { LangContext } from "@/providers/LanguageProvider";
 import { Button } from "@nextui-org/react";
 import { ArrowRightIcon, CalendarClockIcon, ScrollTextIcon } from "lucide-react";
+import Link from "next/link";
 import { useContext } from "react";
 
 type BlogPostProps = {
@@ -34,7 +35,7 @@ const BlogPost = (props: BlogPostProps) => {
                 </span>
             </div>
             <h2 className="mb-2 text-2xl font-bold tracking-tight drop-shadow-[0_1.4px_1.4px_rgba(0,0,0,0.8)]">
-                <a href={postHref} className="bg-light/[0.5] dark:bg-dark/[0.5] px-3 rounded-lg text-dark dark:text-light flex flex-wrap">{title}</a>
+                <Link href={postHref} className="bg-light/[0.5] dark:bg-dark/[0.5] px-3 rounded-lg text-dark dark:text-light flex flex-wrap">{title}</Link>
             </h2>
             <p className="mb-5 font-light">
                 <span className="bg-light/[0.5] dark:bg-dark/[0.5] px-3 rounded-lg text-dark dark:text-light drop-shadow-[0_1.4px_1.4px_rgba(0,0,0,0.8)] flex flex-wrap">{content}</span></p>
@@ -45,9 +46,9 @@ const BlogPost = (props: BlogPostProps) => {
                         {authorName}
                     </span>
                 </div>
-                <a href={postHref} className="inline-flex items-center font-medium text-primary-800 bg-primary-100 px-2 rounded-lg hover:underline ">
+                <Link href={postHref} className="inline-flex items-center font-medium text-primary-800 bg-primary-100 px-2 rounded-lg hover:underline ">
                     {dictionary.blogSection.readMore}&nbsp;<ArrowRightIcon />
-                </a>
+                </Link>
             </div>
         </article>
     );
@@ -111,9 +112,9 @@ export const BlogSection = () => {
                     />
                 </div>
 
-                <div className="mx-auto text-center lg:mb-16 mb-8">
+                <Link href="/blog" className="mx-auto text-center lg:mb-16 mb-8">
                     <Button color="primary" radius="sm" className="w-auto uppercase">¡{dictionary.blogSection.visitBlog}!</Button>
-                </div>
+                </Link>
             </div>
         </section>
     );

@@ -2,6 +2,7 @@
 import { getDictionary } from "@/dictionaries";
 import { LangContext } from "@/providers/LanguageProvider";
 import { FacebookIcon, InstagramIcon, TwitterIcon } from "lucide-react";
+import Link from "next/link";
 import { useContext } from "react";
 
 type ProfileCardProps = {
@@ -32,19 +33,19 @@ const ProfileCard = (props: ProfileCardProps) => {
                 <p className="mt-3 mb-4 font-light text-dark dark:text-light">{description}</p>
                 <ul className="flex space-x-4 sm:mt-0">
                     <li>
-                        <a href={facebookHref} target="_blank" className="text-dark dark:text-light hover:text-primary dark:hover:text-white">
+                        <Link href={facebookHref} target="_blank" className="text-dark dark:text-light hover:text-primary dark:hover:text-white">
                             <FacebookIcon />
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a href={instagramHref} target="_blank" className="text-dark dark:text-light hover:text-primary dark:hover:text-white">
+                        <Link href={instagramHref} target="_blank" className="text-dark dark:text-light hover:text-primary dark:hover:text-white">
                             <InstagramIcon />
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a href={twitterHref} target="_blank" className="text-dark dark:text-light hover:text-primary dark:hover:text-white">
+                        <Link href={twitterHref} target="_blank" className="text-dark dark:text-light hover:text-primary dark:hover:text-white">
                             <TwitterIcon />
-                        </a>
+                        </Link>
                     </li>
                 </ul>
             </div>

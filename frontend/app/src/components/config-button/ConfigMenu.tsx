@@ -15,7 +15,7 @@ export const ConfigMenu = () => {
     }
 
     return (
-        <div id="config-menu" className="fixed right-5 bottom-5">
+        <div id="config-menu" className="fixed right-5 bottom-5 z-10">
             {/* Menu de lenguajes */}
             <div className={`ml-7 z-10 ${langMenuExpand ? 'block' : 'hidden'} bg-light dark:bg-dark  rounded-lg shadow w-10 text-center`}>
                 <Button
