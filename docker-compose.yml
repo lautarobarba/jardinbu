@@ -92,26 +92,6 @@ services:
   #   extra_hosts:
   #     - host.docker.internal:host-gateway
 
-  # jbu_landingpage:
-  #   container_name: jbu_landingpage
-  #   image: jbu_landingpage:1.0.0
-  #   build:
-  #     context: .
-  #     target: base
-  #     dockerfile: ./landingpage/Dockerfile
-  #   command: bash /start.sh
-  #   restart: always
-  #   env_file: .env
-  #   environment:
-  #     - PORT=80
-  #   ports:
-  #     - ${LAND_PORT}:80
-  #   volumes:
-  #     - ./landingpage/landingpage:/app
-  #     - ./landingpage/start.sh:/start.sh
-  #   extra_hosts:
-  #     - host.docker.internal:host-gateway
-
   jbu_rproxy:
     container_name: jbu_rproxy
     image: jbu_rproxy:1.0.0
