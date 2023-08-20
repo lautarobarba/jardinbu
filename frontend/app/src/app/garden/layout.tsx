@@ -9,7 +9,7 @@ export default function GardenLayout({
     return (
         <div className="antialiased bg-gray-50 dark:bg-gray-900">
             <GardenNavbar />
-            <ConfigMenu />
+            <ConfigMenu type="both" />
             <main>
                 {children}
             </main>

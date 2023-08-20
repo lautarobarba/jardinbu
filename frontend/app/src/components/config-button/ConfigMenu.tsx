@@ -5,7 +5,12 @@ import { LangContext } from "@/providers/LanguageProvider";
 import { Button } from "@nextui-org/react";
 import { LanguagesIcon, MoonIcon, SunIcon } from "lucide-react";
 
-export const ConfigMenu = () => {
+interface ConfigMenuProps {
+    type: 'theme' | 'both'
+}
+
+export const ConfigMenu = (props: ConfigMenuProps) => {
+    const { type } = props;
     const { theme, toggleTheme } = useContext(ThemeContext);
     const { lang, setLang } = useContext(LangContext);
     const [langMenuExpand, setLangMenuExpand] = useState<boolean>(false);
@@ -42,26 +47,29 @@ export const ConfigMenu = () => {
             </div>
             {/* Toggle Buttons */}
             <div className="flex flex-row items-center">
-                <Button
-                    isIconOnly
-                    type="button"
-                    size="sm"
-                    className="h-8 bg-light dark:bg-dark p-1"
-                    onClick={toggleTheme}
-                >
-                    <span className="mx-1 text-dark dark:text-light">{theme === "light" ? <MoonIcon /> : <SunIcon />}</span>
-                </Button>
-
-                <Button
-                    isIconOnly
-                    type="button"
-                    size="sm"
-                    className="h-8 bg-light dark:bg-dark p-1"
-                    onClick={toggleLangMenu}
-                >
-                    {!langMenuExpand && (<span className="mx-1 text-dark dark:text-light text-lg">{lang.toLocaleUpperCase()}</span>)}
-                    {langMenuExpand && (<span className="mx-1 text-dark dark:text-light"><LanguagesIcon /></span>)}
-                </Button>
+                {(type === 'theme' || type === 'both') && (
+                    <Button
+                        isIconOnly
+                        type="button"
+                        size="sm"
+                        className="h-8 bg-light dark:bg-dark p-1"
+                        onClick={toggleTheme}
+                    >
+                        <span className="mx-1 text-dark dark:text-light">{theme === "light" ? <MoonIcon /> : <SunIcon />}</span>
+                    </Button>
+                )}
+                {type === 'both' && (
+                    <Button
+                        isIconOnly
+                        type="button"
+                        size="sm"
+                        className="h-8 bg-light dark:bg-dark p-1"
+                        onClick={toggleLangMenu}
+                    >
+                        {!langMenuExpand && (<span className="mx-1 text-dark dark:text-light text-lg">{lang.toLocaleUpperCase()}</span>)}
+                        {langMenuExpand && (<span className="mx-1 text-dark dark:text-light"><LanguagesIcon /></span>)}
+                    </Button>
+                )}
             </div >
         </div >
     );
