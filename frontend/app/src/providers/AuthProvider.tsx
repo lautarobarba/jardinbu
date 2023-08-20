@@ -1,7 +1,7 @@
 "use client";
-import { User } from "@/interfaces/user.interface";
+import { CreateUserDto, User } from "@/interfaces/user.interface";
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { getAuthUser, login, logout } from "@/services/fetchers";
+import { getAuthUser, registerUser, login, logout } from "@/services/fetchers";
 import { LoginUserDto } from "@/interfaces/auth.interface";
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -9,6 +9,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 type AuthContextType = {
     status: "authenticated" | "unauthenticated" | "loading";
     user: User | null;
+    register: (data: CreateUserDto) => void;
     login: (data: LoginUserDto) => void;
     logout: () => void;
     hasRole: (roles: string[]) => boolean;
@@ -18,6 +19,7 @@ type AuthContextType = {
 export const AuthContext = createContext<AuthContextType>({
     status: "loading",
     user: null,
+    register: () => { },
     login: () => { },
     logout: () => { },
     hasRole: ([]) => false,
@@ -34,6 +36,25 @@ export const AuthProvider = (props: AuthProviderProps) => {
 
     const [status, setStatus] = useState<"authenticated" | "unauthenticated" | "loading">("loading");
     const [user, setUser] = useState<User | null>(null);
+
+    const handleRegister = async (data: CreateUserDto) => {
+        console.log('Registrando usuario...', { data });
+
+        try {
+            await registerUser(data);
+            console.log('Registro realizado correctamente');
+            const user: User = await getAuthUser();
+            console.log({ user });
+            setUser(user);
+            setStatus("authenticated");
+            console.log(searchParams.get('next'));
+            const nextRoute: string | null = searchParams.get('next');
+            if (nextRoute) router.push(nextRoute);
+        } catch (e) {
+            setStatus("unauthenticated");
+            console.log('ERROR al iniciar sesion');
+        }
+    };
 
     const handleLogin = async (data: LoginUserDto) => {
         console.log('Iniciando sesión..', { data });
@@ -98,6 +119,7 @@ export const AuthProvider = (props: AuthProviderProps) => {
             value={{
                 status: status,
                 user: user,
+                register: handleRegister,
                 login: handleLogin,
                 logout: handleLogout,
                 hasRole: hasRole,

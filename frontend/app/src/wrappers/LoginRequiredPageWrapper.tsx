@@ -3,11 +3,17 @@ import { ReactNode, useContext } from "react";
 import { AuthContext } from "@/providers/AuthProvider";
 import { usePathname } from 'next/navigation'
 
-type ProtectedRouteWrapperProps = {
+const ValidateEmailPage = () => {
+  return (
+    <><p>POR FAVOR FALTA VALIDAR EL EMAIL...</p></>
+  );
+}
+
+type LoginRequiredPageWrapperProps = {
   children?: ReactNode;
 };
 
-export const ProtectedRouteWrapper = (props: ProtectedRouteWrapperProps) => {
+export const LoginRequiredPageWrapper = (props: LoginRequiredPageWrapperProps) => {
   const { children } = props;
   const { status } = useContext(AuthContext);
   const pathname = usePathname()
@@ -18,6 +24,7 @@ export const ProtectedRouteWrapper = (props: ProtectedRouteWrapperProps) => {
   }
 
   if (status === 'loading') return <p>Recuperando sesión...</p>;
-  if (status === 'unauthenticated') redirectToLogin()
-  else return <>{children}</>
+  if (status === 'unauthenticated') redirectToLogin();
+  // TODO: CHECK IN USER IF EMAIL IS VALIDATED OTHERWISE PRINT VALIDATE EMAIL PAGE
+  else return (<>{children}</>);
 }

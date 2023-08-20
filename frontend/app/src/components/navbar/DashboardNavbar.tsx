@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { DashboardBrand } from "./elements/DashboardBrand";
 import { DoorOpenIcon, KeyIcon, MenuIcon, UserIcon, XIcon } from "lucide-react";
+import { AuthContext } from "@/providers/AuthProvider";
 
 interface DashboardNavbarProps {
   expandSidebar: boolean;
@@ -11,6 +12,12 @@ interface DashboardNavbarProps {
 export const DashboardNavbar = (props: DashboardNavbarProps) => {
   const { expandSidebar, toggleSidebar } = props;
   const [expandUserMenu, setExpandUserMenu] = useState<boolean>(false);
+
+  const { user, logout } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    logout();
+  }
 
   return (
     <nav className="bg-navbar-bg px-4 py-2.5 fixed left-0 right-0 top-0 z-50">
@@ -68,10 +75,12 @@ export const DashboardNavbar = (props: DashboardNavbarProps) => {
                 ><KeyIcon className="mr-2" />Cambiar contraseña</a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="flex flex-row py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
-                ><DoorOpenIcon className="mr-2" />Salir</a>
+                <button
+                  className="w-full flex flex-row py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
+                  onClick={handleLogout}
+                >
+                  <DoorOpenIcon className="mr-2" />Salir
+                </button>
               </li>
             </ul>
           </div>

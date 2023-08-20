@@ -1,6 +1,6 @@
 "use client";
 
-import { HelpCircleIcon, NetworkIcon, NewspaperIcon, PieChartIcon, QrCodeIcon, SearchCheckIcon, TreeDeciduousIcon, TreesIcon } from "lucide-react";
+import { HelpCircleIcon, NetworkIcon, NewspaperIcon, PieChartIcon, QrCodeIcon, SearchCheckIcon, TreeDeciduousIcon, TreesIcon, UsersIcon } from "lucide-react";
 
 interface DashboardSidebarProps {
     expandSidebar: boolean;
@@ -44,6 +44,15 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
                         >
                             <NewspaperIcon />
                             <span className="ml-3">Blog</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="#"
+                            className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                        >
+                            <UsersIcon />
+                            <span className="ml-3">Usuarios</span>
                         </a>
                     </li>
                     <li>

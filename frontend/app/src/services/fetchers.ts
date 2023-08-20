@@ -61,10 +61,9 @@ const axiosClient = Axios.create({
 
 // # Mutations ----------------------------------------------------------------
 // ## Users
-export const registerUser = async (params: {
-  createUserDto: CreateUserDto;
-}): Promise<SessionDto> => {
-  const { createUserDto } = params;
+export const registerUser = async (
+  createUserDto: CreateUserDto
+): Promise<SessionDto> => {
   return axiosClient
     .post("auth/register", createUserDto)
     .then((response) => response.data);

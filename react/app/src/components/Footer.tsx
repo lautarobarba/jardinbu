@@ -5,7 +5,7 @@ export const Footer = () => {
 
 	return (
 		<footer id='footer'>
-			<div className="container d-flex justify-content-center align-items-end my-2" style={{ minHeight: '100px'}}>
+			<div className="container d-flex justify-content-center align-items-end my-2" style={{ minHeight: '100px' }}>
 				<p className="text-center text-dark">{year} - Jardín Botánico Ushuaia</p>
 			</div>
 		</footer>

@@ -1,13 +1,11 @@
-'use client';
-import { useContext, useEffect, useState } from "react";
+"use client";
+import { useContext, useState } from "react";
 import Link from "next/link";
 import { AuthContext } from "@/providers/AuthProvider";
 import { LoginUserDto } from "@/interfaces/auth.interface";
+import { LogoutRequiredPageWrapper } from "@/wrappers/LogoutRequiredPageWrapper";
 
-// // Api Url
-const apiBaseUrl: string = process.env.NEXT_PUBLIC_API_ROUTE ?? 'http://ERROR/api';
-
-const Login = () => {
+const LoginPage = () => {
 
     const { user, status, login, logout } = useContext(AuthContext);
 
@@ -16,36 +14,20 @@ const Login = () => {
         password: 'usuarioprueba',
     })
 
-    // const session = await getSession();
-
-    // useEffect(() => {
-    //     console.log({ session });
-    // }, []);
-
     const handleLogin = () => {
         login(loginData);
     }
 
-
     return (
-        <>
-            <br />
-            <h1 className="text-center">{"[[ LoginPAGE ]]"}</h1>
-            <div className="flex flex-col flex-nowrap justify-center">
-                <hr className="m-auto w-80" />
-            </div>
-            <Link href="/" className="ml-5 text-blue-500">
-                {">>"} Volver ◀️
-            </Link>
-            <hr />
-            <p>FORMULARIO....CON DATA</p>
-
-            <button className="bg-blue-500 p-4 rounded-md text-white shadow-md" onClick={() => handleLogin()}>INGRESAR</button>
-            <hr />
-            {status === 'unauthenticated' && <p>USUARIO SIN IDENTIFICAR</p>}
-            {status === 'authenticated' && user && <p>USUARIO: {user.email}</p>}
-        </>
+        <LogoutRequiredPageWrapper>
+            <section
+                id='authentication-layout'
+                className="min-vh-100 d-flex"
+            >
+                <h1>LOGINPAGE</h1>
+            </section>
+        </LogoutRequiredPageWrapper>
     );
 };
 
-export default Login;
+export default LoginPage;
