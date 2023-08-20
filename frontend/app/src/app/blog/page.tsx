@@ -10,7 +10,7 @@ import {
 } from '@tanstack/react-table';
 import { Kingdom } from "@/interfaces/kingdom.interface";
 
-const GardenPage = () => {
+const BlogPage = () => {
     const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
@@ -51,30 +51,9 @@ const GardenPage = () => {
             <br />
             <br />
             <br />
-            <h1 className="text-center">{"[[ BIBLIOTECA ]]"}</h1>
-            <div className="flex flex-col flex-nowrap justify-center">
-                <hr className="m-auto w-80" />
-            </div>
-            <Link href="/blog" className="ml-5 text-blue-500">
-                {">>"} ENTERATE DE LAS ULTIMAS NOTICIAS. VISITA NUESTRO BLOG ◀️
-            </Link>
-            <p>CARRUSEL CON ULTIMAS NOTICIAS DEL BLOG</p>
-            <Link href="/admin" className="ml-5 text-blue-500">
-                {">>"} ADMIN PANEL ◀️
-            </Link>
-            <hr />
-
-            <p>Probando useSWR con reinos.</p>
-            {isLoading && <p>Buscando...</p>}
-            {error && <p>Error buscando...</p>}
-
-            {data && data.items && (
-                <>
-                    {data.items.map((kingdom: Kingdom) => <p key={kingdom.id}>{kingdom.name}</p>)}
-                </>
-            )}
+            <h1 className="text-center">{"[[ BLOG ]]"}</h1>
         </>
     );
 };
 
-export default GardenPage;
+export default BlogPage;

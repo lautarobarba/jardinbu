@@ -3,14 +3,14 @@ import { Button } from "@nextui-org/react";
 import { useContext } from "react";
 import { LangContext } from "@/providers/LanguageProvider";
 
-export const EnterButton = () => {
+export const GardenButton = () => {
   const { lang } = useContext(LangContext);
 
   return (
-    <Link href="/admin" className="w-full">
+    <Link href="/garden" className="w-full">
       <Button color="primary" radius="sm" className="w-full uppercase">
-        {lang == "es" && "Ingresar"}
-        {lang == "en" && "Login"}
+        {lang == "es" && "Jardín"}
+        {lang == "en" && "Garden"}
       </Button>
     </Link>
   );

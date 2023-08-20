@@ -7,10 +7,9 @@ import { LangContext } from "@/providers/LanguageProvider";
 import { getDictionary } from "@/dictionaries";
 import { MenuIcon } from "lucide-react";
 
-export const PublicNavbar = () => {
+export const GardenNavbar = () => {
   const [expandNavbar, setExpandNavbar] = useState<boolean>(false);
   const { lang } = useContext(LangContext);
-  const dictionary = getDictionary(lang);
 
   const toggleMenu = () => {
     setExpandNavbar(!expandNavbar);
@@ -19,7 +18,7 @@ export const PublicNavbar = () => {
   return (
     <nav className="bg-navbar-bg fixed w-full z-20 top-0 left-0">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <Brand />
+        <Brand href="/garden" />
         <div className="flex md:hidden md:order-2">
           <button
             type="button"
@@ -36,52 +35,47 @@ export const PublicNavbar = () => {
           <ul className="w-full flex flex-col p-4 md:p-0 mt-4 font-medium md:flex-row md:space-x-8 md:mt-0 md:border-0 text-light dark:text-dark">
             <li className="flex items-center w-full">
               <Link
-                href="/#home"
+                href="/garden"
                 className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
                 onClick={() => setExpandNavbar(false)}
               >
-                {dictionary.publicNavBarContent.home}
+                {lang == "es" && "Jardín"}
+                {lang == "en" && "Garden"}
               </Link>
             </li>
             <li className="flex items-center w-full">
               <Link
-                href="/#inst"
+                href="/blog"
                 className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
                 onClick={() => setExpandNavbar(false)}
               >
-                {dictionary.publicNavBarContent.inst}
+                {lang == "es" && "Blog"}
+                {lang == "en" && "Blog"}
               </Link>
             </li>
             <li className="flex items-center w-full">
               <Link
-                href="/#team"
+                href="/garden/species"
                 className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
                 onClick={() => setExpandNavbar(false)}
               >
-                {dictionary.publicNavBarContent.team}
+                {lang == "es" && "Especies"}
+                {lang == "en" && "Species"}
               </Link>
             </li>
             <li className="flex items-center w-full">
               <Link
-                href="/#blog"
+                href="/garden/embroidery"
                 className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
                 onClick={() => setExpandNavbar(false)}
               >
-                {"Blog"}
+                {lang == "es" && "Bordados"}
+                {lang == "en" && "Embroidery"}
               </Link>
             </li>
-            <li className="flex items-center w-full">
-              <Link
-                href="/#map"
-                className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
-                onClick={() => setExpandNavbar(false)}
-              >
-                {dictionary.publicNavBarContent.map}
-              </Link>
-            </li>
-            <li className="flex items-center w-full">
+            {/* <li className="flex items-center w-full">
               <EnterButton />
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>

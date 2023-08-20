@@ -2,12 +2,6 @@ import { LangOptions } from "@/providers/LanguageProvider";
 
 type DictionaryContent = {
   // El contenido de cada diccionario
-  publicNavBarContent: {
-    home: string;
-    inst: string;
-    team: string;
-    map: string;
-  };
   instSection: {
     title: string;
     contentParagraph1: string;
@@ -46,12 +40,6 @@ export const getDictionary = (lang: LangOptions): DictionaryContent => {
   // Un diccionario por cada lenguaje
   const diccionario: DictionaryType = {
     en: {
-      publicNavBarContent: {
-        home: "Home",
-        inst: "Institucional",
-        team: "Team",
-        map: "Map",
-      },
       instSection: {
         title: "History",
         contentParagraph1: "FALTA TRADUCCIÓN....",
@@ -81,12 +69,6 @@ export const getDictionary = (lang: LangOptions): DictionaryContent => {
       },
     },
     es: {
-      publicNavBarContent: {
-        home: "Inicio",
-        inst: "Institucional",
-        team: "Equipo",
-        map: "Mapa",
-      },
       instSection: {
         title: "Historia",
         contentParagraph1:

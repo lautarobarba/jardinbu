@@ -1,4 +1,4 @@
-import { PublicNavbar } from "@/components/navbar/PublicNavbar";
+import { LandingNavbar } from "@/components/navbar/LandingNavbar";
 import { ConfigMenu } from "@/components/config-button/ConfigMenu";
 import { HomeSection } from "./sections/HomeSection";
 import { InstSection } from "./sections/InstSection";
@@ -7,10 +7,10 @@ import { BlogSection } from "./sections/BlogSection";
 import { MapSection } from "./sections/MapSection";
 import { FooterSection } from "./sections/FooterSection";
 
-const Home = () => {
+const HomePage = () => {
   return (
     <main>
-      <PublicNavbar />
+      <LandingNavbar />
       <ConfigMenu />
 
       <HomeSection />
@@ -23,4 +23,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;
