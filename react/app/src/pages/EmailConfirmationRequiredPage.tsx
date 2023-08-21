@@ -16,7 +16,7 @@ export const EmailConfirmationRequiredPage = () => {
   const location = useLocation();
   const user = useCurrentUser();
 
-  const { 
+  const {
     mutate,
     isLoading,
     isSuccess,
@@ -28,11 +28,11 @@ export const EmailConfirmationRequiredPage = () => {
 
   const sendConfirmationEmail = () => {
     console.log('Enviando email de confirmacion.');
-    if(jwtToken){
-      mutate(jwtToken ,{
+    if (jwtToken) {
+      mutate(jwtToken, {
         onError: (error) => {
           // Esto solo lo uso para imprimir los errores en consola.
-          if(Axios.isAxiosError(error)){
+          if (Axios.isAxiosError(error)) {
             console.log({
               error: error.response?.status,
               mensaje: error.response?.data.message
@@ -45,18 +45,18 @@ export const EmailConfirmationRequiredPage = () => {
         }
       });
     } else {
-      console.log({Error: 'Error', msg: 'jwtToken no existe'})
+      console.log({ Error: 'Error', msg: 'jwtToken no existe' })
     }
   }
-  
+
   // Valido si el usuario esta autenticado
-  if(!isAuthenticated){
-    return (<Navigate to="/app/auth/login" replace state={{ location }}/>); 
-  }
+  // if(!isAuthenticated){
+  //   return (<Navigate to="/app/auth/login" replace state={{ location }}/>); 
+  // }
 
   // Valido si el usuario confirmó su correo electrónico
-  if(user && user.isEmailConfirmed){
-    return (<Navigate to="/app/admin" replace state={{ location }}/>);
+  if (user && user.isEmailConfirmed) {
+    return (<Navigate to="/app/admin" replace state={{ location }} />);
   }
 
   return (
@@ -69,11 +69,11 @@ export const EmailConfirmationRequiredPage = () => {
       {/* Contenido de la página */}
       <div className="d-flex flex-column align-items-center justify-content-center">
         <div style={{ maxWidth: '85%' }}>
-          <PageTitle title="Biblioteca del bosque" className="mt-5"/>
-          <PageSubTitle title="Confirmación de correo electrónico" className="text-center"/>
+          <PageTitle title="Biblioteca del bosque" className="mt-5" />
+          <PageSubTitle title="Confirmación de correo electrónico" className="text-center" />
           <p><strong className="text-danger">Antes de continuar debes validar tu cuenta de correo electrónico.</strong></p>
           <p>Se ha enviado un correo a la casilla {user?.email}. Por favor verifica tu casilla de entrada.</p>
-          <p 
+          <p
             className="text-primary"
             style={{ cursor: 'pointer' }}
             onClick={sendConfirmationEmail}
