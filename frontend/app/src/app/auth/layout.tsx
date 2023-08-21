@@ -22,7 +22,18 @@ export default function AuthLayout({
                 </div>
                 {/* Páginas */}
                 <div className="flex flex-col justify-between items-center h-screen w-6/6 lg:w-2/6 shadow-lg">
-                    {children}
+                    <div>
+                        <br className="hidden md:block" />
+                        <div className="hidden md:block mx-auto xl:mt-5 w-3/6">
+                            <img
+                                loading='lazy'
+                                alt="logo-jbu"
+                                title="logo-jbu"
+                                src="/assets/images/logo-circulo.png"
+                            />
+                        </div>
+                        {children}
+                    </div>
                     <footer id='footer'>
                         <hr />
                         <p className="text-dark dark:text-light my-4">{year} - Jardín Botánico Ushuaia</p>

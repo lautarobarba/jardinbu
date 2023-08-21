@@ -8,6 +8,8 @@ import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { FormikHelpers, useFormik } from 'formik';
 import { PageTitle } from "@/components/PageTitle";
+import { PageSubTitle } from "@/components/PageSubTitle";
+import { Button, Input } from "@nextui-org/react";
 
 
 const ValidationSchema = Yup.object().shape({
@@ -69,10 +71,144 @@ const RegisterPage = () => {
         <LogoutRequiredPageWrapper>
             <section
                 id='authentication-layout'
-                className="min-vh-100 d-flex"
+                className="w-screen md:w-full flex flex-col justify-center items-center"
             >
-                <PageTitle title="Biblioteca del bosque" className="mt-5" />
+                <PageTitle title="Biblioteca del bosque" className="mt-5 md:my-1" />
+                <PageSubTitle title="Crear cuenta" className="text-center" />
 
+                <form onSubmit={formik.handleSubmit} className="w-full px-5 xl:px-20 space-y-2">
+                    <Input
+                        // Value
+                        type="text"
+                        id="email"
+                        name="email"
+                        label="Email"
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        // Validations
+                        isRequired={true}
+                        autoComplete="off"
+                        validationState={
+                            formik.touched.email && Boolean(formik.errors.email)
+                                ? 'invalid'
+                                : 'valid'
+                        }
+                        errorMessage={formik.touched.email && formik.errors.email}
+                        // Style
+                        fullWidth={true}
+                        variant="bordered"
+                        radius="sm"
+                        className="text-dark dark:text-light"
+                    />
+                    <Input
+                        // Value
+                        type="text"
+                        id="firstname"
+                        name="firstname"
+                        label="Nombre"
+                        value={formik.values.firstname}
+                        onChange={formik.handleChange}
+                        // Validations
+                        isRequired={true}
+                        autoComplete="off"
+                        validationState={
+                            formik.touched.firstname && Boolean(formik.errors.firstname)
+                                ? 'invalid'
+                                : 'valid'
+                        }
+                        errorMessage={formik.touched.firstname && formik.errors.firstname}
+                        // Style
+                        fullWidth={true}
+                        variant="bordered"
+                        radius="sm"
+                        className="text-dark dark:text-light"
+                    />
+                    <Input
+                        // Value
+                        type="text"
+                        id="lastname"
+                        name="lastname"
+                        label="Apellido"
+                        value={formik.values.lastname}
+                        onChange={formik.handleChange}
+                        // Validations
+                        isRequired={true}
+                        autoComplete="off"
+                        validationState={
+                            formik.touched.lastname && Boolean(formik.errors.lastname)
+                                ? 'invalid'
+                                : 'valid'
+                        }
+                        errorMessage={formik.touched.lastname && formik.errors.lastname}
+                        // Style
+                        fullWidth={true}
+                        variant="bordered"
+                        radius="sm"
+                        className="text-dark dark:text-light"
+                    />
+                    <Input
+                        // Value
+                        type="password"
+                        id="password"
+                        name="password"
+                        label="Contraseña"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        // Validations
+                        isRequired={true}
+                        autoComplete="off"
+                        validationState={
+                            formik.touched.password && Boolean(formik.errors.password)
+                                ? 'invalid'
+                                : 'valid'
+                        }
+                        errorMessage={formik.touched.password && formik.errors.password}
+                        // Style
+                        fullWidth={true}
+                        variant="bordered"
+                        radius="sm"
+                        className="text-dark dark:text-light"
+                    />
+                    <Input
+                        // Value
+                        type="password"
+                        id="password2"
+                        name="password2"
+                        label="Repetir contraseña"
+                        value={formik.values.password2}
+                        onChange={formik.handleChange}
+                        // Validations
+                        isRequired={true}
+                        autoComplete="off"
+                        validationState={
+                            formik.touched.password2 && Boolean(formik.errors.password2)
+                                ? 'invalid'
+                                : 'valid'
+                        }
+                        errorMessage={formik.touched.password2 && formik.errors.password2}
+                        // Style
+                        fullWidth={true}
+                        variant="bordered"
+                        radius="sm"
+                        className="text-dark dark:text-light"
+                    />
+                    <Button
+                        type="submit"
+                        color="primary"
+                        radius="sm"
+                        className="w-full uppercase"
+                    >
+                        Registrarse
+                    </Button>
+                    <div>
+                        <Link
+                            href="/auth/login"
+                            className='text-dark dark:text-light hover:text-blue-700 dark:hover:text-blue-400'
+                        >
+                            ¿Ya tenés cuenta? Iniciá sesión
+                        </Link>
+                    </div>
+                </form>
             </section>
         </LogoutRequiredPageWrapper>
     );

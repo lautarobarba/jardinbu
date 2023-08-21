@@ -25,6 +25,9 @@ const LoginPage = () => {
                 className="min-vh-100 d-flex"
             >
                 <h1>LOGINPAGE</h1>
+                <Link href="/auth/register" className="inline-flex items-center font-medium text-primary-800 bg-primary-100 px-2 rounded-lg hover:underline ">
+                    IR AL REGISTRO
+                </Link>
             </section>
         </LogoutRequiredPageWrapper>
     );

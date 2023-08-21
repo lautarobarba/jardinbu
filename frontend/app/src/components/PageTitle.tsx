@@ -5,5 +5,5 @@ interface PageTitleProps {
 
 export const PageTitle = (props: PageTitleProps) => {
     const { title, className } = props;
-    return <h1 className={`text-center pb-4 pt-4 text-dark dark:text-light wei ${className}`}>{title}</h1>;
+    return <h1 className={`text-center mb-4 text-xl md:text-2xl tracking-tight font-extrabold text-dark dark:text-light ${className}`}>{title}</h1>;
 };
