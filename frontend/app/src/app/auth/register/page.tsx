@@ -5,7 +5,6 @@ import { AuthContext } from "@/providers/AuthProvider";
 import { LogoutRequiredPageWrapper } from "@/wrappers/LogoutRequiredPageWrapper";
 import { CreateUserDto } from "@/interfaces/user.interface";
 import * as Yup from 'yup';
-import { useSnackbar } from 'notistack';
 import { FormikHelpers, useFormik } from 'formik';
 import { PageTitle } from "@/components/PageTitle";
 import { PageSubTitle } from "@/components/PageSubTitle";
@@ -45,7 +44,6 @@ interface Values {
 
 const RegisterPage = () => {
     const { register } = useContext(AuthContext);
-    const { enqueueSnackbar } = useSnackbar();
 
     const formik = useFormik({
         initialValues: {
@@ -63,7 +61,7 @@ const RegisterPage = () => {
                 lastname: values.lastname,
                 password: values.password,
             };
-            register(createUserDto);
+            register(createUserDto, setErrors);
         },
     });
 

@@ -5,6 +5,7 @@ import { LanguageProvider } from "@/providers/LanguageProvider";
 import { LoadingPageWrapper } from "@/wrappers/LoadingPageWrapper";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { NextUIProvider } from "@/providers/NextUIProvider";
+import { SnackbarProvider } from "@/providers/SnackbarProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,11 +25,13 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <NextUIProvider>
-            <LanguageProvider>
-              <AuthProvider>
-                <LoadingPageWrapper>{children}</LoadingPageWrapper>
-              </AuthProvider>
-            </LanguageProvider>
+            <SnackbarProvider>
+              <LanguageProvider>
+                <AuthProvider>
+                  <LoadingPageWrapper>{children}</LoadingPageWrapper>
+                </AuthProvider>
+              </LanguageProvider>
+            </SnackbarProvider>
           </NextUIProvider>
         </ThemeProvider>
       </body>
