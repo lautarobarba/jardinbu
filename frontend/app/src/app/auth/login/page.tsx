@@ -2,35 +2,132 @@
 import { useContext, useState } from "react";
 import Link from "next/link";
 import { AuthContext } from "@/providers/AuthProvider";
-import { LoginUserDto } from "@/interfaces/auth.interface";
 import { LogoutRequiredPageWrapper } from "@/wrappers/LogoutRequiredPageWrapper";
+import { LoginUserDto } from "@/interfaces/auth.interface";
+import * as Yup from 'yup';
+import { FormikHelpers, useFormik } from 'formik';
+import { PageTitle } from "@/components/PageTitle";
+import { PageSubTitle } from "@/components/PageSubTitle";
+import { Button, Input } from "@nextui-org/react";
 
-const LoginPage = () => {
 
-    const { user, status, login, logout } = useContext(AuthContext);
+const ValidationSchema = Yup.object().shape({
+    email: Yup.string()
+        .email('El email no es válido')
+        .required('Por favor, ingrese una cuenta de correo'),
+    password: Yup.string()
+        .min(2, 'Contraseña Demasiado corta')
+        .max(50, 'Contraseña Demasiado larga')
+        .required('Por favor, ingrese la contraseña'),
+});
 
-    const [loginData, setLoginData] = useState<LoginUserDto>({
-        email: 'usuarioprueba@gmail.com',
-        password: 'usuarioprueba',
-    })
+interface Values {
+    email: string;
+    password: string;
+}
 
-    const handleLogin = () => {
-        login(loginData);
-    }
+const RegisterPage = () => {
+    const { login } = useContext(AuthContext);
+
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+        },
+        validationSchema: ValidationSchema,
+        onSubmit: async (values: Values, { setErrors }: FormikHelpers<Values>) => {
+            const loginUserDto: LoginUserDto = {
+                email: values.email,
+                password: values.password,
+            };
+            login(loginUserDto, setErrors);
+        },
+    });
 
     return (
         <LogoutRequiredPageWrapper>
             <section
                 id='authentication-layout'
-                className="min-vh-100 d-flex"
+                className="w-screen md:w-full flex flex-col justify-center items-center"
             >
-                <h1>LOGINPAGE</h1>
-                <Link href="/auth/register" className="inline-flex items-center font-medium text-primary-800 bg-primary-100 px-2 rounded-lg hover:underline ">
-                    IR AL REGISTRO
-                </Link>
+                <PageTitle title="Biblioteca del bosque" className="mt-5 md:my-1" />
+                <PageSubTitle title="Iniciar sesión" className="text-center" />
+
+                <form onSubmit={formik.handleSubmit} className="w-full px-5 xl:px-20 space-y-2">
+                    <Input
+                        // Value
+                        type="text"
+                        id="email"
+                        name="email"
+                        label="Email"
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        // Validations
+                        isRequired={true}
+                        autoComplete="off"
+                        validationState={
+                            formik.touched.email && Boolean(formik.errors.email)
+                                ? 'invalid'
+                                : 'valid'
+                        }
+                        errorMessage={formik.touched.email && formik.errors.email}
+                        // Style
+                        fullWidth={true}
+                        variant="bordered"
+                        radius="sm"
+                        className="text-dark dark:text-light"
+                    />
+                    <Input
+                        // Value
+                        type="password"
+                        id="password"
+                        name="password"
+                        label="Contraseña"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        // Validations
+                        isRequired={true}
+                        autoComplete="off"
+                        validationState={
+                            formik.touched.password && Boolean(formik.errors.password)
+                                ? 'invalid'
+                                : 'valid'
+                        }
+                        errorMessage={formik.touched.password && formik.errors.password}
+                        // Style
+                        fullWidth={true}
+                        variant="bordered"
+                        radius="sm"
+                        className="text-dark dark:text-light"
+                    />
+                    <Button
+                        type="submit"
+                        color="primary"
+                        radius="sm"
+                        className="w-full uppercase"
+                    >
+                        Iniciar sesión
+                    </Button>
+                    <div>
+                        <Link
+                            href="#"
+                            className='text-dark dark:text-light hover:text-blue-700 dark:hover:text-blue-400'
+                        >
+                            ¿Olvidaste tu contraseña?
+                        </Link>
+                    </div>
+                    <div>
+                        <Link
+                            href="/auth/register"
+                            className='text-dark dark:text-light hover:text-blue-700 dark:hover:text-blue-400'
+                        >
+                            ¿Todavía no tenés cuenta? Registrate
+                        </Link>
+                    </div>
+                </form>
             </section>
         </LogoutRequiredPageWrapper>
     );
 };
 
-export default LoginPage;
+export default RegisterPage;

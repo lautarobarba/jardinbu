@@ -12,7 +12,7 @@ type AuthContextType = {
     status: "authenticated" | "unauthenticated" | "loading";
     user: User | null;
     register: (data: CreateUserDto, formikSetFieldErrors: any) => void;
-    login: (data: LoginUserDto) => void;
+    login: (data: LoginUserDto, formikSetFieldErrors: any) => void;
     logout: () => void;
     hasRole: (roles: string[]) => boolean;
 };
@@ -75,7 +75,7 @@ export const AuthProvider = (props: AuthProviderProps) => {
         }
     };
 
-    const handleLogin = async (data: LoginUserDto) => {
+    const handleLogin = async (data: LoginUserDto, formikSetFieldErrors: any) => {
         console.log('Iniciando sesión..', { data });
 
         try {
@@ -91,6 +91,22 @@ export const AuthProvider = (props: AuthProviderProps) => {
         } catch (error) {
             setStatus("unauthenticated");
             console.log('ERROR al iniciar sesion');
+            enqueueSnackbar('ERROR: Error al iniciar sesion.', {
+                anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+                variant: 'error',
+            });
+            if (Axios.isAxiosError(error)) {
+                const errorCode = error.response?.status;
+                if (Number(errorCode) === 404) {
+                    formikSetFieldErrors({
+                        email: 'La cuenta no existe',
+                    });
+                } else if (Number(errorCode) === 401) {
+                    formikSetFieldErrors({
+                        password: 'Contraseña incorrecta',
+                    });
+                }
+            }
         }
     };
 
