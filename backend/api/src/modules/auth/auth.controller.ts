@@ -95,7 +95,6 @@ export class AuthController {
   }
 
   @Post("login")
-  @UseGuards(LocalAuthenticationGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiResponse({
     status: HttpStatus.OK,

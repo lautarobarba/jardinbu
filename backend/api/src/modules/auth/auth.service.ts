@@ -73,6 +73,8 @@ export class AuthService {
     if (!user) {
       this._logger.debug(ERROR_MESSAGE.NO_ENCONTRADO);
       throw new NotFoundException(ERROR_MESSAGE.NO_ENCONTRADO);
+    } else {
+      console.log({ user });
     }
 
     const passwordMatches = await compare(password, user.password);
