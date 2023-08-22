@@ -19,7 +19,7 @@ export const LoginRequiredPageWrapper = (props: LoginRequiredPageWrapperProps) =
 
   const redirectToValidateEmail = () => {
     console.log('Correo no validado. Redireccionando...');
-    window.location.href = `/auth/validate-email?next=${pathname}`
+    window.location.href = `/auth/email-confirmation-required?next=${pathname}`
   }
 
   if (status === 'loading') return <p>Recuperando sesión...</p>;

@@ -14,7 +14,7 @@ import { ENV_VAR } from "config";
       transport: {
         host: ENV_VAR.SMTP_HOST,
         port: ENV_VAR.SMTP_PORT,
-        secure: ENV_VAR.SMTP_SECURE,
+        // secure: ENV_VAR.SMTP_SECURE,
         auth: {
           user: ENV_VAR.SMTP_USER,
           pass: ENV_VAR.SMTP_PASSWORD,

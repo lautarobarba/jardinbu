@@ -280,40 +280,40 @@ export class AuthController {
   //     );
   //   }
 
-  //   @Post("email-confirmation/send")
-  //   @UseGuards(JwtAuthenticationGuard)
-  //   @UseInterceptors(ClassSerializerInterceptor)
-  //   @ApiBearerAuth()
-  //   @ApiResponse({
-  //     status: HttpStatus.OK,
-  //   })
-  //   @ApiResponse({
-  //     status: HttpStatus.NOT_FOUND,
-  //     description: "Error: Not Found",
-  //   })
-  //   @ApiResponse({
-  //     status: HttpStatus.UNAUTHORIZED,
-  //     description: "Error: Unauthorized",
-  //   })
-  //   async sendEmailConfirmationEmail(
-  //     @Req() request: Request,
-  //     @Res({ passthrough: true }) response: Response
-  //   ) {
-  //     this._logger.debug("POST: /api/auth/email-confirmation/send");
-  //     const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
-  //     const ulrToImportImagesInEmail: string = `${
-  //       request.protocol
-  //     }://${request.get("Host")}`;
+  @Post("email-confirmation/send")
+  @UseGuards(JwtAuthenticationGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: ERROR_MESSAGE.NO_ENCONTRADO,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: ERROR_MESSAGE.FALTAN_PERMISOS,
+  })
+  async sendEmailConfirmationEmail(
+    @Req() request: RequestWithUser,
+    @Res({ passthrough: true }) response: Response
+  ) {
+    this._logger.debug("POST: /api/auth/email-confirmation/send");
+    const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
+    const ulrToImportImagesInEmail: string = `${
+      request.protocol
+    }://${request.get("Host")}`;
 
-  //     const user: User = await this._userService.getUserFromRequest(request);
+    const user: User = await this._userService.getUserFromRequest(request);
 
-  //     response.status(HttpStatus.OK);
-  //     return this._authService.sendEmailConfirmationEmail(
-  //       ulrToImportCssInEmail,
-  //       ulrToImportImagesInEmail,
-  //       user
-  //     );
-  //   }
+    response.status(HttpStatus.OK);
+    return this._authService.sendEmailConfirmationEmail(
+      ulrToImportCssInEmail,
+      ulrToImportImagesInEmail,
+      user
+    );
+  }
 
   //   @Post("email-confirmation/confirm")
   //   @UseGuards(JwtAuthenticationGuard)

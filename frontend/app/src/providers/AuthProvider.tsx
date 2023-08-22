@@ -13,7 +13,7 @@ type AuthContextType = {
     user: User | null;
     register: (data: CreateUserDto, formikSetFieldErrors: any) => void;
     login: (data: LoginUserDto, formikSetFieldErrors: any) => void;
-    logout: () => void;
+    logout: (params?: { redirectHREF?: string }) => void;
     hasRole: (roles: string[]) => boolean;
 };
 
@@ -110,16 +110,15 @@ export const AuthProvider = (props: AuthProviderProps) => {
         }
     };
 
-    const handleLogout = async () => {
+    const handleLogout = async (params?: { redirectHREF?: string }) => {
         console.log('Cerrando sesión...');
 
         try {
-            const response = await logout();
+            await logout();
             setStatus("unauthenticated");
             setUser(null);
             console.log('Sesion cerrada correctamente');
-            const nextRoute: string | null = searchParams.get('next');
-            if (nextRoute) router.push(nextRoute);
+            if (params && params.redirectHREF) router.push(params.redirectHREF);
             else router.push("/garden")
         } catch (error) {
             setStatus("unauthenticated");

@@ -105,15 +105,14 @@ export const logout = async (): Promise<void> => {
     .then((response) => response.data);
 };
 
-// export const sendEmailConfirmationEmail = async (
-//   token: string
-// ): Promise<void> => {
-//   return axiosClient
-//     .post("auth/email-confirmation/send", null, {
-//       headers: { Authorization: `Bearer ${token}` },
-//     })
-//     .then((response) => response.data);
-// };
+export const sendEmailConfirmationEmail = async (): Promise<void> => {
+  const token = Cookies.get("accessToken");
+  return axiosClient
+    .post("auth/email-confirmation/send", null, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
 
 // export const confirmEmail = async (token: string): Promise<void> => {
 //   return axiosClient

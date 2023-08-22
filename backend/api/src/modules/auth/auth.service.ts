@@ -247,21 +247,23 @@ export class AuthService {
   //     return tokens;
   //   }
 
-  // async sendEmailConfirmationEmail(
-  // 	ulrToImportCssInEmail: string,
-  // 	ulrToImportImagesInEmail: string,
-  // 	user: User
-  // ) {
-  // 	this._logger.debug('sendEmailConfirmationEmail()');
-  // 	const tokens: SessionDto = await this.getTokens(user.id, user.email);
+  async sendEmailConfirmationEmail(
+    ulrToImportCssInEmail: string,
+    ulrToImportImagesInEmail: string,
+    user: User
+  ) {
+    this._logger.debug("sendEmailConfirmationEmail()");
+    // const tokens: SessionDto = await this.getTokens(user.id, user.email);
+    const tokenPayload: TokenPayload = { userId: user.id };
+    const token: string = this._jwtService.sign(tokenPayload);
 
-  // 	await this._mailerService.sendEmailConfirmationEmail(
-  // 		ulrToImportCssInEmail,
-  // 		ulrToImportImagesInEmail,
-  // 		user.email,
-  // 		tokens.accessToken
-  // 	);
-  // }
+    await this._mailerService.sendEmailConfirmationEmail(
+      ulrToImportCssInEmail,
+      ulrToImportImagesInEmail,
+      user.email,
+      token
+    );
+  }
 
   // async confirmEmail(
   // 	ulrToImportCssInEmail: string,
