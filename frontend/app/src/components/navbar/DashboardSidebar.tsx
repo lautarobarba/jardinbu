@@ -1,6 +1,7 @@
 "use client";
 
 import { HelpCircleIcon, NetworkIcon, NewspaperIcon, PieChartIcon, QrCodeIcon, SearchCheckIcon, TreeDeciduousIcon, TreesIcon, UsersIcon } from "lucide-react";
+import Link from "next/link";
 
 interface DashboardSidebarProps {
     expandSidebar: boolean;
@@ -20,76 +21,76 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
             <div className="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-gray-800">
                 <ul className="space-y-2">
                     <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/admin"
                             className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                         >
                             <PieChartIcon />
                             <span className="ml-3">Resumen</span>
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/admin/browser"
                             className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                         >
                             <SearchCheckIcon />
                             <span className="ml-3">Buscador</span>
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/admin/blog"
                             className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                         >
                             <NewspaperIcon />
                             <span className="ml-3">Blog</span>
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/admin/users"
                             className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                         >
                             <UsersIcon />
                             <span className="ml-3">Usuarios</span>
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/admin/taxonomy"
                             className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                         >
                             <NetworkIcon />
                             <span className="ml-3">Taxonomía</span>
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/admin/species"
                             className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                         >
                             <TreesIcon />
                             <span className="ml-3">Especies</span>
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/admin/specimen"
                             className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                         >
                             <TreeDeciduousIcon />
                             <span className="ml-3">Ejemplares</span>
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/admin/qr-code"
                             className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                         >
                             <QrCodeIcon />
                             <span className="ml-3">Códigos QR</span>
-                        </a>
+                        </Link>
                     </li>
                 </ul>
 
@@ -101,13 +102,13 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
                     className="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700"
                 >
                     <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/admin/help"
                             className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
                         >
                             <HelpCircleIcon />
                             <span className="ml-3">Ayuda</span>
-                        </a>
+                        </Link>
                     </li>
                 </ul>
             </div>

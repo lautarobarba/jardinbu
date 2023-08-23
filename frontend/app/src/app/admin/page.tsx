@@ -1,16 +1,11 @@
-const AdminPage = () => {
+const AdminDashboardPage = () => {
   return (
-    <>
+    <section id="dashboard">
       <br />
       <br />
       <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <h1 className="text-center">{"[[ ADMIN DASHBOARD ]]"}</h1>
-    </>
+      <h1 className="text-center text-dark dark:text-light">{"[[ ADMIN DASHBOARD ]]"}</h1>
+    </section>
   );
 }
-export default AdminPage;
+export default AdminDashboardPage;
