@@ -24,6 +24,6 @@ export const LoginRequiredPageWrapper = (props: LoginRequiredPageWrapperProps) =
 
   if (status === 'loading') return <p>Recuperando sesión...</p>;
   if (status === 'unauthenticated') redirectToLogin();
-  if (user && !user.isEmailConfirmed) redirectToValidateEmail();
+  // if (user && !user.isEmailConfirmed) redirectToValidateEmail();
   else return (<>{children}</>);
 }

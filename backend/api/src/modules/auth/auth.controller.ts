@@ -126,6 +126,39 @@ export class AuthController {
     return { accessToken: token };
   }
 
+  @Post("login-with-token")
+  @UseGuards(JwtAuthenticationGuard)
+  @ApiBearerAuth()
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Sesión iniciada correctamente",
+    type: SessionDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: ERROR_MESSAGE.NO_ENCONTRADO,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: ERROR_MESSAGE.CONTRASENA_INCORRECTA,
+  })
+  async loginWithToken(
+    @Res({ passthrough: true }) response: Response,
+    @Body() sessionDto: SessionDto
+  ): Promise<SessionDto> {
+    this._logger.debug("POST: /api/auth/login-with-token");
+    response.status(HttpStatus.OK);
+
+    // Guardo la cookie en el browser para autenticación
+    const cookie: string = `accessToken=${
+      sessionDto.accessToken
+    }; HttpOnly; Path=/; Max-Age=${process.env.JWT_EXPIRATION_TIME ?? "1d"}`;
+
+    response.setHeader("Set-Cookie", cookie);
+    return { accessToken: sessionDto.accessToken };
+  }
+
   @Get("me")
   @UseGuards(JwtAuthenticationGuard)
   @ApiBearerAuth()
@@ -315,44 +348,44 @@ export class AuthController {
     );
   }
 
-  //   @Post("email-confirmation/confirm")
-  //   @UseGuards(JwtAuthenticationGuard)
-  //   @UseInterceptors(ClassSerializerInterceptor)
-  //   @ApiBearerAuth()
-  //   @ApiResponse({
-  //     status: HttpStatus.OK,
-  //   })
-  //   @ApiResponse({
-  //     status: HttpStatus.NOT_FOUND,
-  //     description: "Error: Not Found",
-  //   })
-  //   @ApiResponse({
-  //     status: HttpStatus.UNAUTHORIZED,
-  //     description: "Error: Unauthorized",
-  //   })
-  //   @ApiResponse({
-  //     status: HttpStatus.BAD_REQUEST,
-  //     description: "Error: Email already confirmed",
-  //   })
-  //   async confirmEmail(
-  //     @Req() request: Request,
-  //     @Res({ passthrough: true }) response: Response
-  //   ) {
-  //     this._logger.debug("POST: /api/auth/email-confirmation/confirm");
-  //     const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
-  //     const ulrToImportImagesInEmail: string = `${
-  //       request.protocol
-  //     }://${request.get("Host")}`;
+  @Post("email-confirmation/confirm")
+  @UseGuards(JwtAuthenticationGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: ERROR_MESSAGE.NO_ENCONTRADO,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: ERROR_MESSAGE.FALTAN_PERMISOS,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: ERROR_MESSAGE.EMAIL_YA_CONFIRMADO,
+  })
+  async confirmEmail(
+    @Req() request: RequestWithUser,
+    @Res({ passthrough: true }) response: Response
+  ) {
+    this._logger.debug("POST: /api/auth/email-confirmation/confirm");
+    const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
+    const ulrToImportImagesInEmail: string = `${
+      request.protocol
+    }://${request.get("Host")}`;
 
-  //     const user: User = await this._userService.getUserFromRequest(request);
+    const user: User = await this._userService.getUserFromRequest(request);
 
-  //     response.status(HttpStatus.OK);
-  //     return this._authService.confirmEmail(
-  //       ulrToImportCssInEmail,
-  //       ulrToImportImagesInEmail,
-  //       user
-  //     );
-  //   }
+    response.status(HttpStatus.OK);
+    return this._authService.confirmEmail(
+      ulrToImportCssInEmail,
+      ulrToImportImagesInEmail,
+      user
+    );
+  }
 
   //   @Get("test-auth")
   //   @UseGuards(JwtAuthenticationGuard)

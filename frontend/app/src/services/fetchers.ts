@@ -77,6 +77,18 @@ export const login = async (
     .then((response) => response.data);
 };
 
+export const loginWithToken = async (token: string): Promise<SessionDto> => {
+  return axiosClient
+    .post(
+      "auth/login",
+      { token },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+    .then((response) => response.data);
+};
+
 // export const updateUser = async (params: {
 //   updateUserDto: UpdateUserDto;
 //   token: string;
@@ -114,13 +126,13 @@ export const sendEmailConfirmationEmail = async (): Promise<void> => {
     .then((response) => response.data);
 };
 
-// export const confirmEmail = async (token: string): Promise<void> => {
-//   return axiosClient
-//     .post("auth/email-confirmation/confirm", null, {
-//       headers: { Authorization: `Bearer ${token}` },
-//     })
-//     .then((response) => response.data);
-// };
+export const confirmEmail = async (token: string): Promise<void> => {
+  return axiosClient
+    .post("auth/email-confirmation/confirm", null, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
 
 // // ## Kingdoms
 // export const createKingdom = async (params: {

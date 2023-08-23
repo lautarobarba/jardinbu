@@ -265,28 +265,34 @@ export class AuthService {
     );
   }
 
-  // async confirmEmail(
-  // 	ulrToImportCssInEmail: string,
-  // 	ulrToImportImagesInEmail: string,
-  // 	user: User
-  // ) {
-  // 	this._logger.debug('confirmEmail()');
-  // 	// Reviso si el usuario ya tenia el correo confirmado
-  // 	if (user.isEmailConfirmed) {
-  // 		this._logger.debug('Error: Email already confirmed');
-  // 		throw new BadRequestException('Error: Email already confirmed');
-  // 	}
+  async confirmEmail(
+    ulrToImportCssInEmail: string,
+    ulrToImportImagesInEmail: string,
+    user: User
+  ) {
+    this._logger.debug("confirmEmail()");
+    // Reviso si el usuario ya tenia el correo confirmado
+    if (user.isEmailConfirmed) {
+      this._logger.debug(ERROR_MESSAGE.EMAIL_YA_CONFIRMADO);
+      throw new BadRequestException(ERROR_MESSAGE.EMAIL_YA_CONFIRMADO);
+    }
 
-  // 	const updateUserDto: UpdateUserDto = new UpdateUserDto();
-  // 	updateUserDto.id = user.id;
-  // 	updateUserDto.isEmailConfirmed = true;
+    const updateUserDto: UpdateUserDto = new UpdateUserDto();
+    const { id, email, firstname, lastname, status, role } = user;
+    updateUserDto.id = id;
+    updateUserDto.email = email;
+    updateUserDto.firstname = firstname;
+    updateUserDto.lastname = lastname;
+    updateUserDto.status = status;
+    updateUserDto.role = role;
+    updateUserDto.isEmailConfirmed = true;
 
-  // 	await this._userService.update(updateUserDto);
+    await this._userService.update(updateUserDto);
 
-  // 	await this._mailerService.sendEmailConfirmedEmail(
-  // 		ulrToImportCssInEmail,
-  // 		ulrToImportImagesInEmail,
-  // 		user.email
-  // 	);
-  // }
+    await this._mailerService.sendEmailConfirmedEmail(
+      ulrToImportCssInEmail,
+      ulrToImportImagesInEmail,
+      user.email
+    );
+  }
 }
