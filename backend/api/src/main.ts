@@ -10,7 +10,11 @@ async function bootstrap() {
 
   // CORS
   app.enableCors({
-    origin: ["http://localhost", "http://localhost:8000"],
+    origin: [
+      "https://jardin-botanico-ushuaia.org.ar",
+      "http://localhost",
+      "http://localhost:8000",
+    ],
     methods: "GET, PUT, POST, DELETE",
     allowedHeaders: "Content-Type, Authorization",
     credentials: true,
