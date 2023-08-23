@@ -63,7 +63,7 @@ $ cd backend && \
 $ # Frontend: Dejar una terminal corriendo con el servidor node
 $ cd frontend && \
    npm install && \
-   npm build && \
+   npm run build && \
    PORT=8000 npm run start:prod
 ```
 
