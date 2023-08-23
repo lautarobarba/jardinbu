@@ -1,16 +1,11 @@
 const SpeciesPage = () => {
     return (
-        <>
+        <section id="species">
             <br />
             <br />
             <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <h1 className="text-center">{"[[ SpeciesPage ]]"}</h1>
-        </>
+            <h1 className="text-center text-dark dark:text-light">{"[[ ESPECIES (PÚBLICO) ]]"}</h1>
+        </section>
     );
 }
 export default SpeciesPage;

@@ -10,7 +10,7 @@ export default function BlogLayout({
         <div className="antialiased bg-gray-50 dark:bg-gray-900">
             <GardenNavbar />
             <ConfigMenu type="both" />
-            <main>
+            <main className="h-auto pt-20">
                 {children}
             </main>
         </div>

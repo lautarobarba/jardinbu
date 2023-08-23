@@ -1,80 +1,18 @@
-'use client';
-import { useGetKingdoms } from "@/services/hooks";
+import { CogIcon } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import {
-    PaginationState,
-    SortingState,
-    getCoreRowModel,
-    useReactTable,
-} from '@tanstack/react-table';
-import { Kingdom } from "@/interfaces/kingdom.interface";
 
 const GardenPage = () => {
-    const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
-        pageIndex: 0,
-        pageSize: 10,
-    });
-    const [sorting, setSorting] = useState<SortingState>([
-        { id: 'name', desc: false },
-    ]);
-
-    const pagination = useMemo(
-        () => ({
-            pageIndex,
-            pageSize,
-        }),
-        [pageIndex, pageSize]
-    );
-
-    const { data, isLoading, error } = useGetKingdoms({
-        pagination: {
-            page: pagination.pageIndex + 1,
-            limit: pagination.pageSize,
-            orderBy: sorting.length === 1 ? sorting[0].id : undefined,
-            orderDirection:
-                sorting.length === 1 ? (sorting[0].desc ? 'DESC' : 'ASC') : undefined,
-        },
-    });
-
-    useEffect(() => {
-        console.log({ data })
-    }, [data]);
-
     return (
-        <>
+        <section id="browser">
             <br />
             <br />
             <br />
+            <h1 className="text-center text-dark dark:text-light">{"[[ BIBLIOTECA DEL BOSQUE ]]"}</h1>
             <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <h1 className="text-center">{"[[ BIBLIOTECA ]]"}</h1>
-            <div className="flex flex-col flex-nowrap justify-center">
-                <hr className="m-auto w-80" />
-            </div>
-            <Link href="/blog" className="ml-5 text-blue-500">
-                {">>"} ENTERATE DE LAS ULTIMAS NOTICIAS. VISITA NUESTRO BLOG ◀️
+            <Link href="/admin" className="ml-5 text-blue-500 flex flex-row">
+                <CogIcon />&nbsp;PANEL DE ADMINISTRACIÓN
             </Link>
-            <p>CARRUSEL CON ULTIMAS NOTICIAS DEL BLOG</p>
-            <Link href="/admin" className="ml-5 text-blue-500">
-                {">>"} ADMIN PANEL ◀️
-            </Link>
-            <hr />
-
-            <p>Probando useSWR con reinos.</p>
-            {isLoading && <p>Buscando...</p>}
-            {error && <p>Error buscando...</p>}
-
-            {data && data.items && (
-                <>
-                    {data.items.map((kingdom: Kingdom) => <p key={kingdom.id}>{kingdom.name}</p>)}
-                </>
-            )}
-        </>
+        </section>
     );
-};
-
+}
 export default GardenPage;

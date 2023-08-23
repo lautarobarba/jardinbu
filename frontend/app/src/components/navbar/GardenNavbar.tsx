@@ -65,6 +65,16 @@ export const GardenNavbar = () => {
             </li>
             <li className="flex items-center w-full">
               <Link
+                href="/garden/specimen"
+                className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
+                onClick={() => setExpandNavbar(false)}
+              >
+                {lang == "es" && "Ejemplares"}
+                {lang == "en" && "Specimen"}
+              </Link>
+            </li>
+            <li className="flex items-center w-full">
+              <Link
                 href="/garden/embroidery"
                 className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
                 onClick={() => setExpandNavbar(false)}
