@@ -68,10 +68,13 @@ export class MailerController {
     @Body() emailTestDto: EmailTestDto
   ) {
     this._logger.debug("POST: /api/mailer/test-register-email");
-    const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
-    const ulrToImportImagesInEmail: string = `${
-      request.protocol
-    }://${request.get("Host")}`;
+    // const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
+    const ulrToImportCssInEmail: string = ENV_VAR.API_URL;
+
+    // const ulrToImportImagesInEmail: string = `${
+    //   request.protocol
+    // }://${request.get("Host")}`;
+    const ulrToImportImagesInEmail: string = ENV_VAR.API_URL;
     return this._mailerService.sendRegistrationEmail(
       ulrToImportCssInEmail,
       ulrToImportImagesInEmail,
@@ -95,10 +98,13 @@ export class MailerController {
     @Body() emailTestDto: EmailTestDto
   ) {
     this._logger.debug("POST: /api/mailer/test-email-confirmation-email");
-    const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
-    const ulrToImportImagesInEmail: string = `${
-      request.protocol
-    }://${request.get("Host")}`;
+    // const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
+    const ulrToImportCssInEmail: string = ENV_VAR.API_URL;
+
+    // const ulrToImportImagesInEmail: string = `${
+    //   request.protocol
+    // }://${request.get("Host")}`;
+    const ulrToImportImagesInEmail: string = ENV_VAR.API_URL;
     return this._mailerService.sendEmailConfirmationEmail(
       ulrToImportCssInEmail,
       ulrToImportImagesInEmail,
@@ -123,10 +129,13 @@ export class MailerController {
     @Body() emailTestDto: EmailTestDto
   ) {
     this._logger.debug("POST: /api/mailer/test-email-confirmed-email");
-    const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
-    const ulrToImportImagesInEmail: string = `${
-      request.protocol
-    }://${request.get("Host")}`;
+    // const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
+    const ulrToImportCssInEmail: string = ENV_VAR.API_URL;
+
+    // const ulrToImportImagesInEmail: string = `${
+    //   request.protocol
+    // }://${request.get("Host")}`;
+    const ulrToImportImagesInEmail: string = ENV_VAR.API_URL;
     return this._mailerService.sendEmailConfirmedEmail(
       ulrToImportCssInEmail,
       ulrToImportImagesInEmail,
