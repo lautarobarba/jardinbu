@@ -14,14 +14,14 @@ import { ENV_VAR } from "config";
       transport: {
         host: ENV_VAR.SMTP_HOST,
         port: ENV_VAR.SMTP_PORT,
-        // secure: ENV_VAR.SMTP_SECURE,
+        secure: ENV_VAR.SMTP_SECURE,
         auth: {
           user: ENV_VAR.SMTP_USER,
           pass: ENV_VAR.SMTP_PASSWORD,
         },
       },
       defaults: {
-        from: '"No Reply" <noreply@example.com>',
+        from: '"Jardín Botánico Ushuaia" <jardinushuaia@gmail.com>',
       },
       template: {
         dir: join(__dirname, "../../../emails/templates"),

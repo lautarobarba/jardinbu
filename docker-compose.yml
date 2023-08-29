@@ -26,71 +26,73 @@ services:
     container_name: jbu_redis
     image: "redis:alpine"
     restart: always
-
-  jbu_back:
-    container_name: jbu_back
-    image: jbu_back:1.0.0
-    build:
-      context: .
-      target: base
-      dockerfile: ./backend/Dockerfile
-    command: bash /start.sh
-    depends_on:
-      - jbu_db
-      - jbu_redis
-    restart: always
-    env_file: .env
     ports:
-      - ${BACK_PORT}:${BACK_PORT}
-    volumes:
-      - ./backend/api:/app
-      - ./backend/start.sh:/start.sh
-    links:
-      - jbu_redis
-    extra_hosts:
-      - host.docker.internal:host-gateway
+      - 6379:6379
 
-  jbu_front:
-    container_name: jbu_front
-    image: jbu_front:1.0.0
-    build:
-      context: .
-      target: base
-      dockerfile: ./frontend/Dockerfile
-    command: bash /start.sh
-    restart: always
-    env_file: .env
-    environment:
-      - PORT=${FRONT_PORT}
-    ports:
-      - ${FRONT_PORT}:${FRONT_PORT}
-    volumes:
-      - ./frontend/app:/app
-      - ./frontend/start.sh:/start.sh
-    extra_hosts:
-      - host.docker.internal:host-gateway
+  # jbu_back:
+  #   container_name: jbu_back
+  #   image: jbu_back:1.0.0
+  #   build:
+  #     context: .
+  #     target: base
+  #     dockerfile: ./backend/Dockerfile
+  #   command: bash /start.sh
+  #   depends_on:
+  #     - jbu_db
+  #     - jbu_redis
+  #   restart: always
+  #   env_file: .env
+  #   ports:
+  #     - ${BACK_PORT}:${BACK_PORT}
+  #   volumes:
+  #     - ./backend/api:/app
+  #     - ./backend/start.sh:/start.sh
+  #   links:
+  #     - jbu_redis
+  #   extra_hosts:
+  #     - host.docker.internal:host-gateway
 
-  jbu_react:
-    container_name: jbu_react
-    image: jbu_react:1.0.0
-    build:
-      context: .
-      target: base
-      dockerfile: ./react/Dockerfile
-    command: bash /start.sh
-    depends_on:
-      - jbu_back
-    restart: always
-    env_file: .env
-    environment:
-      - PORT=9000
-    ports:
-      - 9000:9000
-    volumes:
-      - ./react/app:/app
-      - ./react/start.sh:/start.sh
-    extra_hosts:
-      - host.docker.internal:host-gateway
+  # jbu_front:
+  #   container_name: jbu_front
+  #   image: jbu_front:1.0.0
+  #   build:
+  #     context: .
+  #     target: base
+  #     dockerfile: ./frontend/Dockerfile
+  #   command: bash /start.sh
+  #   restart: always
+  #   env_file: .env
+  #   environment:
+  #     - PORT=${FRONT_PORT}
+  #   ports:
+  #     - ${FRONT_PORT}:${FRONT_PORT}
+  #   volumes:
+  #     - ./frontend/app:/app
+  #     - ./frontend/start.sh:/start.sh
+  #   extra_hosts:
+  #     - host.docker.internal:host-gateway
+
+  # jbu_react:
+  #   container_name: jbu_react
+  #   image: jbu_react:1.0.0
+  #   build:
+  #     context: .
+  #     target: base
+  #     dockerfile: ./react/Dockerfile
+  #   command: bash /start.sh
+  #   depends_on:
+  #     - jbu_back
+  #   restart: always
+  #   env_file: .env
+  #   environment:
+  #     - PORT=9000
+  #   ports:
+  #     - 9000:9000
+  #   volumes:
+  #     - ./react/app:/app
+  #     - ./react/start.sh:/start.sh
+  #   extra_hosts:
+  #     - host.docker.internal:host-gateway
 
   jbu_rproxy:
     container_name: jbu_rproxy

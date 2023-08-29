@@ -55,13 +55,13 @@ $ docker compose down
 
 ```bash
 $ # Backend: Dejar una terminal corriendo con el servidor node
-$ cd backend && \
+$ cd backend/api && \
    npm install && \
    npm run build && \
    npm run migration:run && \
    npm run start:prod
 $ # Frontend: Dejar una terminal corriendo con el servidor node
-$ cd frontend && \
+$ cd frontend/app && \
    npm install && \
    npm run build && \
    PORT=8000 npm run start:prod
@@ -350,3 +350,9 @@ $ sudo nano /etc/nginx/sites-enabled/jbu_rproxy
 $ sudo systemctl restart nginx
 $ sudo certbot --nginx
 ```
+
+## Configuración servidor SMTP de GMAIL
+
+1° Activar la verificación en dos pasos de Gmail.
+2° Buscar "Contraseñas de aplicaciones" y generar una llamada smtp.
+3° Configurar el backend smtp (.env) con user gmail y las credenciales.

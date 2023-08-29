@@ -9,6 +9,7 @@ import { FormikHelpers, useFormik } from 'formik';
 import { PageTitle } from "@/components/PageTitle";
 import { PageSubTitle } from "@/components/PageSubTitle";
 import { Button, Input } from "@nextui-org/react";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 
 const ValidationSchema = Yup.object().shape({
@@ -44,6 +45,9 @@ interface Values {
 
 const RegisterPage = () => {
     const { register } = useContext(AuthContext);
+
+    const [password1Visible, setPassword1Visible] = useState<boolean>(false);
+    const [password2Visible, setPassword2Visible] = useState<boolean>(false);
 
     const formik = useFormik({
         initialValues: {
@@ -146,7 +150,7 @@ const RegisterPage = () => {
                     />
                     <Input
                         // Value
-                        type="password"
+                        type={password1Visible ? "text" : "password"}
                         id="password"
                         name="password"
                         label="Contraseña"
@@ -166,10 +170,20 @@ const RegisterPage = () => {
                         variant="bordered"
                         radius="sm"
                         className="text-dark dark:text-light"
+                        // Password toggle
+                        endContent={
+                            <button className="focus:outline-none" type="button" onClick={() => setPassword1Visible(!password1Visible)}>
+                                {password1Visible ? (
+                                    <EyeOffIcon className="text-2xl text-default-400 pointer-events-none" />
+                                ) : (
+                                    <EyeIcon className="text-2xl text-default-400 pointer-events-none" />
+                                )}
+                            </button>
+                        }
                     />
                     <Input
                         // Value
-                        type="password"
+                        type={password2Visible ? "text" : "password"}
                         id="password2"
                         name="password2"
                         label="Repetir contraseña"
@@ -189,6 +203,16 @@ const RegisterPage = () => {
                         variant="bordered"
                         radius="sm"
                         className="text-dark dark:text-light"
+                        // Password toggle
+                        endContent={
+                            <button className="focus:outline-none" type="button" onClick={() => setPassword2Visible(!password2Visible)}>
+                                {password2Visible ? (
+                                    <EyeOffIcon className="text-2xl text-default-400 pointer-events-none" />
+                                ) : (
+                                    <EyeIcon className="text-2xl text-default-400 pointer-events-none" />
+                                )}
+                            </button>
+                        }
                     />
                     <Button
                         type="submit"

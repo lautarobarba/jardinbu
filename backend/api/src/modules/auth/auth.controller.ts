@@ -41,6 +41,7 @@ import { Role } from "../auth/role.enum";
 import { LocalFilesInterceptor } from "modules/utils/localFiles.interceptor";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
 import { RequestWithUser } from "./request-with-user.interface";
+import { ENV_VAR } from "config";
 
 @ApiTags("Autenticación")
 @Controller("auth")
@@ -73,10 +74,13 @@ export class AuthController {
   ): Promise<SessionDto> {
     this._logger.debug("POST: /api/auth/register");
     // Urls que necesito para los correos
-    const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
-    const ulrToImportImagesInEmail: string = `${
-      request.protocol
-    }://${request.get("Host")}`;
+    // const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
+    const ulrToImportCssInEmail: string = ENV_VAR.API_URL;
+
+    // const ulrToImportImagesInEmail: string = `${
+    //   request.protocol
+    // }://${request.get("Host")}`;
+    const ulrToImportImagesInEmail: string = ENV_VAR.API_URL;
 
     response.status(HttpStatus.CREATED);
     const token = await this._authService.register(
