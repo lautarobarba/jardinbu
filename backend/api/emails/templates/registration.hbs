@@ -17,32 +17,32 @@
 		--}}
 
 		<link rel="stylesheet" href="{{ ulrToImportCssInEmail }}/api/assets/css/styles.css">
-		<title>Registro Jardín Botánico Ushuaia</title>
+		<title>Registro Jardín Botánico de Ushuaia</title>
 
 	</head>
 	<body>
 		<h1 class="email-title">Gracias por registrarte en la Biblioteca del bosque</h1>
 		<div class="center-content">
-			<img width="300px" src="{{ ulrToImportImagesInEmail }}/api/assets/images/logo.jpg" >
+			<img width="300px" src="{{ ulrToImportImagesInEmail }}/api/assets/images/logo-circulo.png" >
 		</div>
 		<p>¡¡Hola {{ user.firstname }}!!</p>
-		<p>Te damos la bienvenida de parte de todos los miembros del Jardín Botánico Ushuaia.</p>
+		<p>Te damos la bienvenida de parte de todos los miembros del Jardín Botánico de Ushuaia.</p>
 		<p>Muchas gracias por registrarte.</p>
 
 		<p>El último paso para confirmar tu registro es validar tu cuenta de correo electrónico.</p>
 
 		<p>Para validarla sólo debes verificar tu correo electrónico presionando el siguiente botón:</p>
-		<button class="center-content">
-			<a href="{{ emailConfirmationUrl }}">Validar cuenta</a>
-		</button>
+		<div class="center-content">
+			<a href="{{ emailConfirmationUrl }}"><button class="validar-button">Validar cuenta</button></a>
+		</div>
 		<br>
-		
+
 		<p>Si tienes problemas prueba ingresando el enlace manualmente:</p>
 		<p><strong>{{ emailConfirmationUrl }}</strong></p>
 		<br>
 
 		<div class="right-content">
-			<p>Jardín Botánico Ushuaia</p>
+			<p>Jardín Botánico de Ushuaia</p>
 		</div>
 	</body>
 </html>

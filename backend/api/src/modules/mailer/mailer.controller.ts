@@ -11,12 +11,16 @@ import {
   ClassSerializerInterceptor,
   HttpStatus,
   Logger,
+  UseGuards,
 } from "@nestjs/common";
-import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Request } from "express";
 import { EmailTestDto } from "./mailer.dto";
 import { MailerService } from "./mailer.service";
 import { ENV_VAR } from "config";
+import { RoleGuard } from "modules/auth/guards/role.guard";
+import { Role } from "modules/auth/role.enum";
+import { IsEmailConfirmedGuard } from "modules/auth/guards/is-email-confirmed.guard";
 
 @ApiTags("Emails")
 @Controller("mailer")
@@ -25,7 +29,10 @@ export class MailerController {
   private readonly _logger = new Logger(MailerController.name);
 
   @Post("test-email")
+  @UseGuards(RoleGuard([Role.ADMIN]))
+  @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Email sent",
@@ -35,16 +42,11 @@ export class MailerController {
     @Body() emailTestDto: EmailTestDto
   ) {
     this._logger.debug("POST: /api/mailer/test-email");
-    // const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
-    const ulrToImportCssInEmail: string = ENV_VAR.API_URL;
-
-    // const ulrToImportImagesInEmail: string = `${
-    //   request.protocol
-    // }://${request.get("Host")}`;
-    const ulrToImportImagesInEmail: string = ENV_VAR.API_URL;
-
+    const ulrToImportCssInEmail: string = ENV_VAR.INTERNAL_LINK;
+    const ulrToImportImagesInEmail: string = ENV_VAR.EXTERNAL_LINK;
     // console.log(ulrToImportCssInEmail);
     // console.log(ulrToImportImagesInEmail);
+
     return this._mailerService.sendTestEmail(
       ulrToImportCssInEmail,
       ulrToImportImagesInEmail,
@@ -54,7 +56,10 @@ export class MailerController {
   }
 
   @Post("test-register-email")
+  @UseGuards(RoleGuard([Role.ADMIN]))
+  @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Email sent",
@@ -68,13 +73,11 @@ export class MailerController {
     @Body() emailTestDto: EmailTestDto
   ) {
     this._logger.debug("POST: /api/mailer/test-register-email");
-    // const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
-    const ulrToImportCssInEmail: string = ENV_VAR.API_URL;
+    const ulrToImportCssInEmail: string = ENV_VAR.INTERNAL_LINK;
+    const ulrToImportImagesInEmail: string = ENV_VAR.EXTERNAL_LINK;
+    // console.log(ulrToImportCssInEmail);
+    // console.log(ulrToImportImagesInEmail);
 
-    // const ulrToImportImagesInEmail: string = `${
-    //   request.protocol
-    // }://${request.get("Host")}`;
-    const ulrToImportImagesInEmail: string = ENV_VAR.API_URL;
     return this._mailerService.sendRegistrationEmail(
       ulrToImportCssInEmail,
       ulrToImportImagesInEmail,
@@ -84,7 +87,10 @@ export class MailerController {
   }
 
   @Post("test-email-confirmation-email")
+  @UseGuards(RoleGuard([Role.ADMIN]))
+  @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Email sent",
@@ -98,13 +104,11 @@ export class MailerController {
     @Body() emailTestDto: EmailTestDto
   ) {
     this._logger.debug("POST: /api/mailer/test-email-confirmation-email");
-    // const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
-    const ulrToImportCssInEmail: string = ENV_VAR.API_URL;
+    const ulrToImportCssInEmail: string = ENV_VAR.INTERNAL_LINK;
+    const ulrToImportImagesInEmail: string = ENV_VAR.EXTERNAL_LINK;
+    // console.log(ulrToImportCssInEmail);
+    // console.log(ulrToImportImagesInEmail);
 
-    // const ulrToImportImagesInEmail: string = `${
-    //   request.protocol
-    // }://${request.get("Host")}`;
-    const ulrToImportImagesInEmail: string = ENV_VAR.API_URL;
     return this._mailerService.sendEmailConfirmationEmail(
       ulrToImportCssInEmail,
       ulrToImportImagesInEmail,
@@ -115,7 +119,10 @@ export class MailerController {
   }
 
   @Post("test-email-confirmed-email")
+  @UseGuards(RoleGuard([Role.ADMIN]))
+  @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Email sent",
@@ -129,13 +136,11 @@ export class MailerController {
     @Body() emailTestDto: EmailTestDto
   ) {
     this._logger.debug("POST: /api/mailer/test-email-confirmed-email");
-    // const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
-    const ulrToImportCssInEmail: string = ENV_VAR.API_URL;
+    const ulrToImportCssInEmail: string = ENV_VAR.INTERNAL_LINK;
+    const ulrToImportImagesInEmail: string = ENV_VAR.EXTERNAL_LINK;
+    // console.log(ulrToImportCssInEmail);
+    // console.log(ulrToImportImagesInEmail);
 
-    // const ulrToImportImagesInEmail: string = `${
-    //   request.protocol
-    // }://${request.get("Host")}`;
-    const ulrToImportImagesInEmail: string = ENV_VAR.API_URL;
     return this._mailerService.sendEmailConfirmedEmail(
       ulrToImportCssInEmail,
       ulrToImportImagesInEmail,

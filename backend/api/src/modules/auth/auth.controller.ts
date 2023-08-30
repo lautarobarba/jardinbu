@@ -74,13 +74,10 @@ export class AuthController {
   ): Promise<SessionDto> {
     this._logger.debug("POST: /api/auth/register");
     // Urls que necesito para los correos
-    // const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
-    const ulrToImportCssInEmail: string = ENV_VAR.API_URL;
-
-    // const ulrToImportImagesInEmail: string = `${
-    //   request.protocol
-    // }://${request.get("Host")}`;
-    const ulrToImportImagesInEmail: string = ENV_VAR.API_URL;
+    const ulrToImportCssInEmail: string = ENV_VAR.INTERNAL_LINK;
+    const ulrToImportImagesInEmail: string = ENV_VAR.EXTERNAL_LINK;
+    // console.log(ulrToImportCssInEmail);
+    // console.log(ulrToImportImagesInEmail);
 
     response.status(HttpStatus.CREATED);
     const token = await this._authService.register(
@@ -304,13 +301,10 @@ export class AuthController {
   //   ) {
   //     this._logger.debug("POST: /api/auth/recover-password");
   //     // Urls que necesito para los correos
-  //  // const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
-  //  const ulrToImportCssInEmail: string = ENV_VAR.API_URL;
-
-  //  // const ulrToImportImagesInEmail: string = `${
-  //  //   request.protocol
-  //  // }://${request.get("Host")}`;
-  //  const ulrToImportImagesInEmail: string = ENV_VAR.API_URL;
+  //     const ulrToImportCssInEmail: string = ENV_VAR.INTERNAL_LINK;
+  //     const ulrToImportImagesInEmail: string = ENV_VAR.EXTERNAL_LINK;
+  //     console.log(ulrToImportCssInEmail);
+  //     console.log(ulrToImportImagesInEmail);
 
   //     response.status(HttpStatus.OK);
   //     return this._authService.recoverPassword(
@@ -340,10 +334,11 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response
   ) {
     this._logger.debug("POST: /api/auth/email-confirmation/send");
-    const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
-    const ulrToImportImagesInEmail: string = `${
-      request.protocol
-    }://${request.get("Host")}`;
+    // Urls que necesito para los correos
+    const ulrToImportCssInEmail: string = ENV_VAR.INTERNAL_LINK;
+    const ulrToImportImagesInEmail: string = ENV_VAR.EXTERNAL_LINK;
+    console.log(ulrToImportCssInEmail);
+    console.log(ulrToImportImagesInEmail);
 
     const user: User = await this._userService.getUserFromRequest(request);
 
@@ -379,13 +374,11 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response
   ) {
     this._logger.debug("POST: /api/auth/email-confirmation/confirm");
-    // const ulrToImportCssInEmail: string = `${request.protocol}://host.docker.internal:${process.env.BACK_PORT}`;
-    const ulrToImportCssInEmail: string = ENV_VAR.API_URL;
-
-    // const ulrToImportImagesInEmail: string = `${
-    //   request.protocol
-    // }://${request.get("Host")}`;
-    const ulrToImportImagesInEmail: string = ENV_VAR.API_URL;
+    // Urls que necesito para los correos
+    const ulrToImportCssInEmail: string = ENV_VAR.INTERNAL_LINK;
+    const ulrToImportImagesInEmail: string = ENV_VAR.EXTERNAL_LINK;
+    // console.log(ulrToImportCssInEmail);
+    // console.log(ulrToImportImagesInEmail);
 
     const user: User = await this._userService.getUserFromRequest(request);
 

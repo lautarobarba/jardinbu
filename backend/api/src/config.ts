@@ -3,7 +3,8 @@ import "dotenv/config";
 export const ENV_VAR: {
   // APP
   BACK_PORT: number;
-  API_URL: string;
+  EXTERNAL_LINK: string;
+  INTERNAL_LINK: string;
   // REDIS
   REDIS_HOST: string;
   REDIS_PORT: number;
@@ -32,7 +33,8 @@ export const ENV_VAR: {
 } = {
   // APP
   BACK_PORT: Number(process.env.BACK_PORT ?? 3000),
-  API_URL: process.env.API_URL ?? "http://localhost:7000",
+  EXTERNAL_LINK: process.env.EXTERNAL_LINK ?? "http://localhost:7000",
+  INTERNAL_LINK: process.env.INTERNAL_LINK ?? "http://localhost:7000",
   // REDIS
   REDIS_HOST: process.env.REDIS_HOST ?? "jbu_redis",
   REDIS_PORT: Number(process.env.REDIS_PORT ?? 6379),
