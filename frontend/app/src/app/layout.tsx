@@ -6,6 +6,7 @@ import { LoadingPageWrapper } from "@/wrappers/LoadingPageWrapper";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { NextUIProvider } from "@/providers/NextUIProvider";
 import { SnackbarProvider } from "@/providers/SnackbarProvider";
+import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +29,9 @@ export default function RootLayout({
             <SnackbarProvider>
               <LanguageProvider>
                 <AuthProvider>
-                  <LoadingPageWrapper>{children}</LoadingPageWrapper>
+                  <ReactQueryProvider>
+                    <LoadingPageWrapper>{children}</LoadingPageWrapper>
+                  </ReactQueryProvider>
                 </AuthProvider>
               </LanguageProvider>
             </SnackbarProvider>

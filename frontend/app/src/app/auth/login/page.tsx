@@ -9,6 +9,7 @@ import { FormikHelpers, useFormik } from 'formik';
 import { PageTitle } from "@/components/PageTitle";
 import { PageSubTitle } from "@/components/PageSubTitle";
 import { Button, Input } from "@nextui-org/react";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 
 const ValidationSchema = Yup.object().shape({
@@ -26,8 +27,9 @@ interface Values {
     password: string;
 }
 
-const RegisterPage = () => {
+const LoginPage = () => {
     const { login } = useContext(AuthContext);
+    const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 
     const formik = useFormik({
         initialValues: {
@@ -79,7 +81,7 @@ const RegisterPage = () => {
                     />
                     <Input
                         // Value
-                        type="password"
+                        type={passwordVisible ? "text" : "password"}
                         id="password"
                         name="password"
                         label="Contraseña"
@@ -99,6 +101,16 @@ const RegisterPage = () => {
                         variant="bordered"
                         radius="sm"
                         className="text-dark dark:text-light"
+                        // Password toggle
+                        endContent={
+                            <button className="focus:outline-none" type="button" onClick={() => setPasswordVisible(!passwordVisible)}>
+                                {passwordVisible ? (
+                                    <EyeOffIcon className="text-2xl text-default-400 pointer-events-none" />
+                                ) : (
+                                    <EyeIcon className="text-2xl text-default-400 pointer-events-none" />
+                                )}
+                            </button>
+                        }
                     />
                     <Button
                         type="submit"
@@ -130,4 +142,4 @@ const RegisterPage = () => {
     );
 };
 
-export default RegisterPage;
+export default LoginPage;
