@@ -2,6 +2,7 @@
 
 import { HelpCircleIcon, NetworkIcon, NewspaperIcon, PieChartIcon, QrCodeIcon, SearchCheckIcon, TreeDeciduousIcon, TreesIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface DashboardSidebarProps {
     expandSidebar: boolean;
@@ -9,6 +10,7 @@ interface DashboardSidebarProps {
 
 export const DashboardSidebar = (props: DashboardSidebarProps) => {
     const { expandSidebar } = props;
+    const pathname = usePathname()
 
     return (
         <aside
@@ -23,7 +25,14 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
                     <li>
                         <Link
                             href="/admin"
-                            className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                            className={`
+                                flex items-center p-2 text-base font-medium rounded-lg
+                                text-gray-900 dark:text-white
+                                ${pathname === '/admin'
+                                    ? "bg-gray-100 dark:bg-gray-700 group"
+                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                }
+                            `}
                         >
                             <PieChartIcon />
                             <span className="ml-3">Resumen</span>
@@ -32,7 +41,14 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
                     <li>
                         <Link
                             href="/admin/browser"
-                            className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                            className={`
+                                flex items-center p-2 text-base font-medium rounded-lg
+                                text-gray-900 dark:text-white
+                                ${pathname === '/admin/browser'
+                                    ? "bg-gray-100 dark:bg-gray-700 group"
+                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                }
+                            `}
                         >
                             <SearchCheckIcon />
                             <span className="ml-3">Buscador</span>
@@ -41,7 +57,14 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
                     <li>
                         <Link
                             href="/admin/blog"
-                            className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                            className={`
+                                flex items-center p-2 text-base font-medium rounded-lg
+                                text-gray-900 dark:text-white
+                                ${pathname === '/admin/blog'
+                                    ? "bg-gray-100 dark:bg-gray-700 group"
+                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                }
+                            `}
                         >
                             <NewspaperIcon />
                             <span className="ml-3">Blog</span>
@@ -50,7 +73,14 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
                     <li>
                         <Link
                             href="/admin/users"
-                            className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                            className={`
+                                flex items-center p-2 text-base font-medium rounded-lg
+                                text-gray-900 dark:text-white
+                                ${pathname === '/admin/users'
+                                    ? "bg-gray-100 dark:bg-gray-700 group"
+                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                }
+                            `}
                         >
                             <UsersIcon />
                             <span className="ml-3">Usuarios</span>
@@ -59,7 +89,14 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
                     <li>
                         <Link
                             href="/admin/taxonomy"
-                            className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                            className={`
+                                flex items-center p-2 text-base font-medium rounded-lg
+                                text-gray-900 dark:text-white
+                                ${pathname === '/admin/taxonomy'
+                                    ? "bg-gray-100 dark:bg-gray-700 group"
+                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                }
+                            `}
                         >
                             <NetworkIcon />
                             <span className="ml-3">Taxonomía</span>
@@ -68,7 +105,14 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
                     <li>
                         <Link
                             href="/admin/species"
-                            className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                            className={`
+                                flex items-center p-2 text-base font-medium rounded-lg
+                                text-gray-900 dark:text-white
+                                ${pathname === '/admin/species'
+                                    ? "bg-gray-100 dark:bg-gray-700 group"
+                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                }
+                            `}
                         >
                             <TreesIcon />
                             <span className="ml-3">Especies</span>
@@ -77,7 +121,14 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
                     <li>
                         <Link
                             href="/admin/specimen"
-                            className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                            className={`
+                                flex items-center p-2 text-base font-medium rounded-lg
+                                text-gray-900 dark:text-white
+                                ${pathname === '/admin/specimen'
+                                    ? "bg-gray-100 dark:bg-gray-700 group"
+                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                }
+                            `}
                         >
                             <TreeDeciduousIcon />
                             <span className="ml-3">Ejemplares</span>
@@ -86,7 +137,14 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
                     <li>
                         <Link
                             href="/admin/qr-code"
-                            className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                            className={`
+                                flex items-center p-2 text-base font-medium rounded-lg
+                                text-gray-900 dark:text-white
+                                ${pathname === '/admin/qr-code'
+                                    ? "bg-gray-100 dark:bg-gray-700 group"
+                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                }
+                            `}
                         >
                             <QrCodeIcon />
                             <span className="ml-3">Códigos QR</span>
@@ -104,7 +162,14 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
                     <li>
                         <Link
                             href="/admin/help"
-                            className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
+                            className={`
+                                flex items-center p-2 text-base font-medium rounded-lg
+                                text-gray-900 dark:text-white
+                                ${pathname === '/admin/help'
+                                    ? "bg-gray-100 dark:bg-gray-700 group"
+                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                }
+                            `}
                         >
                             <HelpCircleIcon />
                             <span className="ml-3">Ayuda</span>

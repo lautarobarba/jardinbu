@@ -4,7 +4,7 @@ const AdminDashboardPage = () => {
       <br />
       <br />
       <br />
-      <h1 className="text-center text-dark dark:text-light">{"[[ ADMIN DASHBOARD ]]"}</h1>
+      <h1 className="text-center text-dark dark:text-light">{"[[ ADMIN DASHBOARD - RESUMEN ]]"}</h1>
     </section>
   );
 }
