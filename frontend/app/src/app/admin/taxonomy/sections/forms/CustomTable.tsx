@@ -1,3 +1,4 @@
+"use client";
 import { Table as RTable, flexRender } from '@tanstack/react-table';
 import { styled } from '@mui/material/styles';
 import {
@@ -107,7 +108,7 @@ export const CustomTable = (props: ICustomTableProps) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <div className='d-flex justify-content-between align-items-center m-2'>
+      <div className='flex flex-row justify-between align-center m-2'>
         <p>
           Página &nbsp;
           <strong>
