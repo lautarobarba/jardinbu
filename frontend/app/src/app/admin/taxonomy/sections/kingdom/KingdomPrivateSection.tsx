@@ -1,9 +1,13 @@
 "use client";
+import { useEffect, useMemo, useState } from 'react';
 import { PageSubTitle } from '@/components/PageSubTitle';
 import { PageTitle } from '@/components/PageTitle';
 import { useGetKingdoms } from '@/services/hooks';
-import { useEffect, useMemo, useState } from 'react';
-import { CircularProgress, Dialog } from '@mui/material';
+import { CircularProgress } from "@nextui-org/react";
+import { Button } from '@nextui-org/react';
+
+// import { Dialog } from '@mui/material';
+
 import { CreateKingdomForm } from '../forms/CrudKingdomForm';
 import { CustomTable } from '../forms/CustomTable';
 import {
@@ -15,7 +19,7 @@ import {
 import { Kingdom } from '@/interfaces/kingdom.interface';
 import { columns } from './columns';
 
-export const KingdomPrivateList = () => {
+export const KingdomPrivateSection = () => {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -86,26 +90,24 @@ export const KingdomPrivateList = () => {
   ]);
 
   return (
-    <div className='bg-white p-3'>
+    <div className='p-3'>
       <PageTitle title='Reinos' />
 
-      <div className='d-flex justify-content-between'>
+      <div className='flex flex-row justify-between'>
         <PageSubTitle title='Listado de reinos' />
-        <button
-          className={
-            openCreate
-              ? 'btn bg-danger text-white'
-              : 'btn bg-success text-white'
-          }
+        <Button
+          color={openCreate ? 'danger' : 'primary'}
+          radius="sm"
+          className="uppercase"
           onClick={toggleCreateForm}
         >
           {openCreate ? 'Cancelar' : 'Crear'}
-        </button>
+        </Button>
       </div>
 
       <br />
 
-      <Dialog
+      {/* <Dialog
         onClose={() => setOpenCreate(false)}
         open={openCreate}
         maxWidth={'md'}
@@ -114,7 +116,7 @@ export const KingdomPrivateList = () => {
         <div className='p-5'>
           <CreateKingdomForm toggleVisibility={setOpenCreate} />
         </div>
-      </Dialog>
+      </Dialog> */}
 
       {getKingdomsIsError && <p className='text-danger'>Error...</p>}
 

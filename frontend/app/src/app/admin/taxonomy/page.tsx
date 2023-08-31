@@ -5,7 +5,7 @@ import { ExamplePrivateSection } from "./sections/example/ExamplePrivateSection"
 import { PageSubTitle } from "@/components/PageSubTitle";
 import { RolRequiredPageWrapper } from "@/wrappers/RolRequiredPageWrapper";
 import { Role } from "@/interfaces/user.interface";
-// import { KingdomPrivateList } from "./sections/kingdom/KingdomPrivateList";
+import { KingdomPrivateSection } from "./sections/kingdom/KingdomPrivateSection";
 // import { PhylumPrivateList } from "./sections/phylum/PhylumPrivateList";
 // import { ClassesTaxPrivateList } from "./sections/classes-tax/ClassesTaxPrivateList";
 // import { OrdersTaxPrivateList } from "./sections/order-tax/OrdersTaxPrivateList";
@@ -25,7 +25,7 @@ const TaxonomyPage = () => {
             <ExamplePrivateSection />
           </Tab>
           <Tab key="Reinos" title="Reinos">
-            {/* <KingdomPrivateList /> */}
+            <KingdomPrivateSection />
           </Tab>
           <Tab key="Filos" title="Filos">
             {/* <PhylumPrivateList /> */}
