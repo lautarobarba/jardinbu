@@ -1,5 +1,7 @@
 "use client";
 
+import { Role } from "@/interfaces/user.interface";
+import { RolRequiredComponentWrapper } from "@/wrappers/RolRequiredComponentWrapper";
 import { HelpCircleIcon, NetworkIcon, NewspaperIcon, PieChartIcon, QrCodeIcon, SearchCheckIcon, TreeDeciduousIcon, TreesIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -38,120 +40,133 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
                             <span className="ml-3">Resumen</span>
                         </Link>
                     </li>
-                    <li>
-                        <Link
-                            href="/admin/browser"
-                            className={`
+                    <RolRequiredComponentWrapper roles={[Role.ADMIN, Role.EDITOR]}>
+                        <li>
+                            <Link
+                                href="/admin/browser"
+                                className={`
                                 flex items-center p-2 text-base font-medium rounded-lg
                                 text-gray-900 dark:text-white
                                 ${pathname === '/admin/browser'
-                                    ? "bg-gray-100 dark:bg-gray-700 group"
-                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                                }
+                                        ? "bg-gray-100 dark:bg-gray-700 group"
+                                        : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                    }
                             `}
-                        >
-                            <SearchCheckIcon />
-                            <span className="ml-3">Buscador</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            href="/admin/blog"
-                            className={`
-                                flex items-center p-2 text-base font-medium rounded-lg
-                                text-gray-900 dark:text-white
-                                ${pathname === '/admin/blog'
-                                    ? "bg-gray-100 dark:bg-gray-700 group"
-                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                                }
-                            `}
-                        >
-                            <NewspaperIcon />
-                            <span className="ml-3">Blog</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            href="/admin/users"
-                            className={`
+                            >
+                                <SearchCheckIcon />
+                                <span className="ml-3">Buscador</span>
+                            </Link>
+                        </li>
+                    </RolRequiredComponentWrapper>
+                    <RolRequiredComponentWrapper roles={[Role.ADMIN]}>
+                        <li>
+                            <Link
+                                href="/admin/users"
+                                className={`
                                 flex items-center p-2 text-base font-medium rounded-lg
                                 text-gray-900 dark:text-white
                                 ${pathname === '/admin/users'
-                                    ? "bg-gray-100 dark:bg-gray-700 group"
-                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                                }
+                                        ? "bg-gray-100 dark:bg-gray-700 group"
+                                        : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                    }
                             `}
-                        >
-                            <UsersIcon />
-                            <span className="ml-3">Usuarios</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            href="/admin/taxonomy"
-                            className={`
+                            >
+                                <UsersIcon />
+                                <span className="ml-3">Usuarios</span>
+                            </Link>
+                        </li>
+                    </RolRequiredComponentWrapper>
+                    <RolRequiredComponentWrapper roles={[Role.ADMIN, Role.EDITOR]}>
+                        <li>
+                            <Link
+                                href="/admin/blog"
+                                className={`
+                                flex items-center p-2 text-base font-medium rounded-lg
+                                text-gray-900 dark:text-white
+                                ${pathname === '/admin/blog'
+                                        ? "bg-gray-100 dark:bg-gray-700 group"
+                                        : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                    }
+                            `}
+                            >
+                                <NewspaperIcon />
+                                <span className="ml-3">Blog</span>
+                            </Link>
+                        </li>
+                    </RolRequiredComponentWrapper>
+                    <RolRequiredComponentWrapper roles={[Role.ADMIN, Role.EDITOR]}>
+                        <li>
+                            <Link
+                                href="/admin/taxonomy"
+                                className={`
                                 flex items-center p-2 text-base font-medium rounded-lg
                                 text-gray-900 dark:text-white
                                 ${pathname === '/admin/taxonomy'
-                                    ? "bg-gray-100 dark:bg-gray-700 group"
-                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                                }
+                                        ? "bg-gray-100 dark:bg-gray-700 group"
+                                        : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                    }
                             `}
-                        >
-                            <NetworkIcon />
-                            <span className="ml-3">Taxonomía</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            href="/admin/species"
-                            className={`
+                            >
+                                <NetworkIcon />
+                                <span className="ml-3">Taxonomía</span>
+                            </Link>
+                        </li>
+                    </RolRequiredComponentWrapper>
+                    <RolRequiredComponentWrapper roles={[Role.ADMIN, Role.EDITOR]}>
+                        <li>
+                            <Link
+                                href="/admin/species"
+                                className={`
                                 flex items-center p-2 text-base font-medium rounded-lg
                                 text-gray-900 dark:text-white
                                 ${pathname === '/admin/species'
-                                    ? "bg-gray-100 dark:bg-gray-700 group"
-                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                                }
+                                        ? "bg-gray-100 dark:bg-gray-700 group"
+                                        : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                    }
                             `}
-                        >
-                            <TreesIcon />
-                            <span className="ml-3">Especies</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            href="/admin/specimen"
-                            className={`
+                            >
+                                <TreesIcon />
+                                <span className="ml-3">Especies</span>
+                            </Link>
+                        </li>
+                    </RolRequiredComponentWrapper>
+                    <RolRequiredComponentWrapper roles={[Role.ADMIN, Role.EDITOR]}>
+                        <li>
+                            <Link
+                                href="/admin/specimen"
+                                className={`
                                 flex items-center p-2 text-base font-medium rounded-lg
                                 text-gray-900 dark:text-white
                                 ${pathname === '/admin/specimen'
-                                    ? "bg-gray-100 dark:bg-gray-700 group"
-                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                                }
+                                        ? "bg-gray-100 dark:bg-gray-700 group"
+                                        : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                    }
                             `}
-                        >
-                            <TreeDeciduousIcon />
-                            <span className="ml-3">Ejemplares</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            href="/admin/qr-code"
-                            className={`
+                            >
+                                <TreeDeciduousIcon />
+                                <span className="ml-3">Ejemplares</span>
+                            </Link>
+                        </li>
+                    </RolRequiredComponentWrapper>
+                    <RolRequiredComponentWrapper roles={[Role.ADMIN]}>
+                        <li>
+                            <Link
+                                href="/admin/qr-code"
+                                className={`
                                 flex items-center p-2 text-base font-medium rounded-lg
                                 text-gray-900 dark:text-white
                                 ${pathname === '/admin/qr-code'
-                                    ? "bg-gray-100 dark:bg-gray-700 group"
-                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                                }
+                                        ? "bg-gray-100 dark:bg-gray-700 group"
+                                        : "hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                    }
                             `}
-                        >
-                            <QrCodeIcon />
-                            <span className="ml-3">Códigos QR</span>
-                        </Link>
-                    </li>
+                            >
+                                <QrCodeIcon />
+                                <span className="ml-3">Códigos QR</span>
+                            </Link>
+                        </li>
+                    </RolRequiredComponentWrapper>
                 </ul>
-
             </div>
             <div
                 className="absolute bottom-0 left-0 p-4 space-x-4 w-full bg-white dark:bg-gray-800 z-20"

@@ -99,10 +99,10 @@ export const AuthProvider = (props: AuthProviderProps) => {
         } catch (error) {
             setStatus("unauthenticated");
             console.log('ERROR al iniciar sesion');
-            enqueueSnackbar('ERROR: Error al iniciar sesion.', {
-                anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-                variant: 'error',
-            });
+            // enqueueSnackbar('ERROR: Error al iniciar sesion.', {
+            //     anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+            //     variant: 'error',
+            // });
             if (Axios.isAxiosError(error)) {
                 const errorCode = error.response?.status;
                 if (Number(errorCode) === 404) {

@@ -11,12 +11,9 @@ type RolRequiredComponentWrapperProps = {
 
 export const RolRequiredComponentWrapper = (props: RolRequiredComponentWrapperProps) => {
   const { children, roles } = props;
-  // const { status, role } = useContext(AuthContext);
-  const { status } = useContext(AuthContext);
-  const pathname = usePathname();
+  const { user } = useContext(AuthContext);
 
-  // TODO: Check rol required: if roles.include(role) render children else NOTHING
 
-  if (status === 'loading') return <p>Recuperando sesión...</p>;
-  else return <>{children}</>
+  if (user && roles.includes(user.role)) return <>{children}</>;
+  else return null;
 }
