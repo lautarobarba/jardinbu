@@ -2,7 +2,6 @@
 import { ReactNode, useContext } from "react";
 import { AuthContext } from "@/providers/AuthProvider";
 import { redirect } from 'next/navigation'
-import { LoadingPageWrapper } from "./LoadingPageWrapper";
 
 type LogoutRequiredPageWrapperProps = {
   children?: ReactNode;

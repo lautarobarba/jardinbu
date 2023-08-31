@@ -1,12 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  registerUser,
-  // login,
-  // logout,
   getAuthUser,
   getFamilies,
-  // sendEmailConfirmationEmail,
-  // confirmEmail,
   createFamily,
   getGenera,
   createGenus,
@@ -163,9 +158,7 @@ export const useDeleteSpecimen = () => {
 
 // Queries hooks --------------------------------------------------------------
 // ## Users
-export const useGetAuthUser = (
-  config?: any
-) => {
+export const useGetAuthUser = (config?: any) => {
   return useQuery(["auth-me"], () => getAuthUser(), config);
 };
 

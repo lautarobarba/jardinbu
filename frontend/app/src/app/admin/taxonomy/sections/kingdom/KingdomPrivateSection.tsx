@@ -3,11 +3,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { PageSubTitle } from '@/components/PageSubTitle';
 import { PageTitle } from '@/components/PageTitle';
 import { useGetKingdoms } from '@/services/hooks';
-import { CircularProgress } from "@nextui-org/react";
+import { CircularProgress, Modal, ModalBody, ModalContent } from "@nextui-org/react";
 import { Button } from '@nextui-org/react';
-
-// import { Dialog } from '@mui/material';
-
 import { CreateKingdomForm } from '../forms/CrudKingdomForm';
 import { CustomTable } from '../forms/CustomTable';
 import {
@@ -18,6 +15,8 @@ import {
 } from '@tanstack/react-table';
 import { Kingdom } from '@/interfaces/kingdom.interface';
 import { columns } from './columns';
+import { Dialog } from '@mui/material';
+import { ModalThemeWrapper } from '@/wrappers/ModalThemeWrapper';
 
 export const KingdomPrivateSection = () => {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
@@ -96,7 +95,7 @@ export const KingdomPrivateSection = () => {
       <div className='flex flex-row justify-between'>
         <PageSubTitle title='Listado de reinos' />
         <Button
-          color={openCreate ? 'danger' : 'primary'}
+          color={openCreate ? 'danger' : 'success'}
           radius="sm"
           className="uppercase"
           onClick={toggleCreateForm}
@@ -107,22 +106,26 @@ export const KingdomPrivateSection = () => {
 
       <br />
 
-      {/* <Dialog
+      <Modal
+        size="5xl"
+        radius="sm"
+        isOpen={openCreate}
         onClose={() => setOpenCreate(false)}
-        open={openCreate}
-        maxWidth={'md'}
-        fullWidth
       >
-        <div className='p-5'>
-          <CreateKingdomForm toggleVisibility={setOpenCreate} />
-        </div>
-      </Dialog> */}
+        <ModalThemeWrapper>
+          <ModalContent>
+            <div className='p-5 bg-light dark:bg-dark'>
+              <CreateKingdomForm toggleVisibility={setOpenCreate} />
+            </div>
+          </ModalContent>
+        </ModalThemeWrapper>
+      </Modal>
 
       {getKingdomsIsError && <p className='text-danger'>Error...</p>}
 
       {getKingdomsIsLoading && (
-        <div className='text-center'>
-          <CircularProgress />
+        <div className='flex justify-center'>
+          <CircularProgress aria-label="loading" />
         </div>
       )}
 

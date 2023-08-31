@@ -1,8 +1,9 @@
 "use client";
-import * as Yup from 'yup';
+import { FormEvent, useState } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
-import { Alert, Dialog, Grid, TextField } from '@mui/material';
-import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
+import * as Yup from 'yup';
+import { Button, Modal, ModalContent, Tooltip } from '@nextui-org/react';
+import { Alert, Grid, TextField } from '@mui/material';
 import {
   useCreateKingdom,
   useDeleteKingdom,
@@ -17,7 +18,9 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { PageSubTitle } from '@/components/PageSubTitle';
-import { FormEvent, useState } from 'react';
+import { ModalThemeWrapper } from '@/wrappers/ModalThemeWrapper';
+import { PencilIcon, TrashIcon } from 'lucide-react';
+
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -45,9 +48,6 @@ export const CreateKingdomForm = (props: CreateKingdomFormProps) => {
   const {
     mutate: createKingdomMutate,
     isLoading: createKingdomIsLoading,
-    // isSuccess: createKingdomIsSuccess,
-    // isError: createKingdomIsError,
-    // error: createKingdomError,
   } = useCreateKingdom();
 
   const formik = useFormik({
@@ -89,7 +89,7 @@ export const CreateKingdomForm = (props: CreateKingdomFormProps) => {
   });
 
   return (
-    <form onSubmit={formik.handleSubmit}>
+    <form onSubmit={formik.handleSubmit} >
       <Grid container spacing={2} justifyContent={'center'}>
         <Grid container item xs={12} justifyContent={'center'}>
           <PageSubTitle title='Registrar nuevo reino' />
@@ -134,23 +134,27 @@ export const CreateKingdomForm = (props: CreateKingdomFormProps) => {
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase"
           type='button'
           style={{ margin: '1rem' }}
           disabled={createKingdomIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
-          color='primary'
+        </Button>
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={createKingdomIsLoading}
         >
           {createKingdomIsLoading ? 'Guardando...' : 'Guardar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -168,20 +172,13 @@ export const UpdateKingdomForm = (props: UpdateKingdomFormProps) => {
 
   // Query
   const {
-    // isLoading: getKingdomIsLoading,
-    // isSuccess: getKingdomIsSuccess,
     data: getKingdomData,
-    // isError: getKingdomIsError,
-    // error: getKingdomError,
   } = useGetKingdom({ id: id }, { keepPreviousData: true });
 
   // Mutación
   const {
     mutate: updateKingdomMutate,
     isLoading: updateKingdomIsLoading,
-    // isSuccess: updateKingdomIsSuccess,
-    // isError: updateKingdomIsError,
-    // error: updateKingdomError,
   } = useUpdateKingdom();
 
   const formik = useFormik({
@@ -272,23 +269,27 @@ export const UpdateKingdomForm = (props: UpdateKingdomFormProps) => {
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase"
           type='button'
           style={{ margin: '1rem' }}
           disabled={updateKingdomIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
-          color='primary'
+        </Button>
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={updateKingdomIsLoading}
         >
           {updateKingdomIsLoading ? 'Guardando...' : 'Guardar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -306,20 +307,13 @@ export const DeleteKingdomForm = (props: DeleteKingdomFormProps) => {
 
   // Query
   const {
-    // isLoading: getKingdomIsLoading,
-    // isSuccess: getKingdomIsSuccess,
     data: getKingdomData,
-    // isError: getKingdomIsError,
-    // error: getKingdomError,
   } = useGetKingdom({ id: id }, { keepPreviousData: true });
 
   // Mutación
   const {
     mutate: deleteKingdomMutate,
     isLoading: deleteKingdomIsLoading,
-    // isSuccess: deleteKingdomIsSuccess,
-    // isError: deleteKingdomIsError,
-    // error: deleteKingdomError,
   } = useDeleteKingdom();
 
   const deleteKingdom = (event: FormEvent<HTMLFormElement>) => {
@@ -387,23 +381,27 @@ export const DeleteKingdomForm = (props: DeleteKingdomFormProps) => {
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
-          color='primary'
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase"
           type='button'
           style={{ margin: '1rem' }}
           disabled={deleteKingdomIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
+        </Button>
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={deleteKingdomIsLoading}
         >
           {deleteKingdomIsLoading ? 'Eliminando...' : 'Eliminar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -419,44 +417,52 @@ export const ModalCrudKingdom = (props: ModalCrudKingdomProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   return (
     <>
-      <div>
-        <MDBIcon
-          icon='pencil-alt'
-          size='lg'
-          className='d-inline mx-2 text-dark'
-          style={{ marginTop: 'auto', marginBottom: 'auto' }}
-          onClick={() => setShowEditModal(true)}
-        />
-        <MDBIcon
-          icon='trash-alt'
-          size='lg'
-          className='d-inline mx-2 text-danger'
-          style={{ marginTop: 'auto', marginBottom: 'auto' }}
-          onClick={() => setShowDeleteModal(true)}
-        />
+      <div className='flex flex-row space-x-2'>
+        <Tooltip content="Editar">
+          <span
+            onClick={() => setShowEditModal(true)}
+          >
+            <PencilIcon className='text-primary' />
+          </span>
+        </Tooltip>
+        <Tooltip content="Eliminar">
+          <span
+            onClick={() => setShowDeleteModal(true)}
+          >
+            <TrashIcon className='text-error' />
+          </span>
+        </Tooltip>
       </div>
       <div>
-        <Dialog
+        <Modal
+          size="5xl"
+          radius="sm"
+          isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
-          open={showEditModal}
-          maxWidth={'md'}
-          fullWidth
         >
-          <div className='p-5'>
-            <UpdateKingdomForm toggleVisibility={setShowEditModal} id={id} />
-          </div>
-        </Dialog>
-        <Dialog
+          <ModalThemeWrapper>
+            <ModalContent>
+              <div className='p-5 bg-light dark:bg-dark'>
+                <UpdateKingdomForm toggleVisibility={setShowEditModal} id={id} />
+              </div>
+            </ModalContent>
+          </ModalThemeWrapper>
+        </Modal>
+        <Modal
+          size="5xl"
+          radius="sm"
+          isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
-          open={showDeleteModal}
-          maxWidth={'md'}
-          fullWidth
         >
-          <div className='p-5'>
-            <DeleteKingdomForm toggleVisibility={setShowDeleteModal} id={id} />
-          </div>
-        </Dialog>
-      </div>
+          <ModalThemeWrapper>
+            <ModalContent>
+              <div className='p-5 bg-light dark:bg-dark'>
+                <DeleteKingdomForm toggleVisibility={setShowDeleteModal} id={id} />
+              </div>
+            </ModalContent>
+          </ModalThemeWrapper>
+        </Modal>
+      </div >
     </>
   );
 };

@@ -49,11 +49,11 @@ module.exports = {
         'light': '#F8FAFC',
         'dark': '#2e303e',
         'navbar-bg': '#009485',
-        // 'success': '#16A34A',
-        'success': '#42B883',
+        'success': '#16A34A',
         'info': '#8DC6FF',
         'warning': '#FFC93C',
-        'error': '#FD5959'
+        'error': '#FD5959',
+        'danger': '#FD5959'
       }
     },
   },

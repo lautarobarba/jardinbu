@@ -16,7 +16,7 @@ export default function AdminLayout({
                     <div className="antialiased bg-gray-50 dark:bg-gray-900">
                         <DashboardLayout />
                         <ConfigMenu type="theme" />
-                        <main className="p-4 md:ml-64 h-auto pt-20 bg-light dark:bg-dark">
+                        <main className="p-4 md:ml-64 min-h-screen pt-20 bg-light dark:bg-dark">
                             {children}
                         </main>
                     </div>

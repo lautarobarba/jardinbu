@@ -1,7 +1,6 @@
 "use client";
 import { ReactNode, useContext } from "react";
 import { AuthContext } from "@/providers/AuthProvider";
-import { usePathname } from 'next/navigation'
 import Link from "next/link";
 import { Button } from "@nextui-org/react";
 

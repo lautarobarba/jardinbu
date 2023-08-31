@@ -1,8 +1,6 @@
 "use client";
 import { ReactNode, useContext } from "react";
 import { AuthContext } from "@/providers/AuthProvider";
-import { usePathname } from 'next/navigation'
-
 
 type RolRequiredComponentWrapperProps = {
   children?: ReactNode;
