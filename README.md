@@ -299,7 +299,7 @@ $ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plug
 ```bash
 $ sudo apt install curl gpg gnupg2 software-properties-common apt-transport-https lsb-release ca-certificates
 $ curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
-$ echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
+$ echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | sudo tee  /etc/apt/sources.list.d/pgdg.list
 $ sudo apt update
 $ sudo apt install postgresql-13 postgresql-client-13
 $ sudo passwd postgres # Para cambiar la contraseña del usuario postgres

@@ -345,7 +345,7 @@ export const deleteSpecimen = async (params: { id: number }): Promise<void> => {
 export const getAuthUser = async (): Promise<User> => {
   const token = Cookies.get("accessToken");
   return axiosClient
-    .get("auth/me", { headers: { Authorization: `Bearer ${token}` } })
+    .get("auth/me")
     .then((response) => response.data);
 };
 

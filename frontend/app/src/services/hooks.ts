@@ -3,7 +3,7 @@ import {
   registerUser,
   // login,
   // logout,
-  // getAuthUser,
+  getAuthUser,
   getFamilies,
   // sendEmailConfirmationEmail,
   // confirmEmail,
@@ -53,28 +53,8 @@ import { Pagination } from "../interfaces/pagination.interface";
 
 // Mutations hooks ------------------------------------------------------------
 // ## Users
-// export const useRegister = () => {
-//   return useMutation(registerUser);
-// };
-
-// export const useLogin = () => {
-//   return useSWR("user", login);
-// };
-
 // export const useUpdateUser = () => {
 //   return useMutation(updateUser);
-// };
-
-// export const useLogout = () => {
-//   return useMutation(logout);
-// };
-
-// export const useSendEmailConfirmationEmail = () => {
-//   return useMutation(sendEmailConfirmationEmail);
-// };
-
-// export const useConfirmEmail = () => {
-//   return useMutation(confirmEmail);
 // };
 
 // ## Kingdoms
@@ -181,17 +161,13 @@ export const useDeleteSpecimen = () => {
   return useMutation(deleteSpecimen);
 };
 
-// // Queries hooks --------------------------------------------------------------
-// // ## Users
-// export const useGetAuthUser = (
-//   token: string,
-//   config?: Omit<
-//     UseQueryOptions<any, unknown, any, string[]>,
-//     "queryKey" | "queryFn"
-//   >
-// ) => {
-//   return useQuery(["auth-user"], () => getAuthUser(token), config);
-// };
+// Queries hooks --------------------------------------------------------------
+// ## Users
+export const useGetAuthUser = (
+  config?: any
+) => {
+  return useQuery(["auth-me"], () => getAuthUser(), config);
+};
 
 // ## Kingdoms
 export const useGetKingdoms = (

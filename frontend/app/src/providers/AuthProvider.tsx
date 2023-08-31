@@ -6,6 +6,7 @@ import { LoginUserDto } from "@/interfaces/auth.interface";
 import { useRouter, useSearchParams } from 'next/navigation';
 import Axios from 'axios';
 import { useSnackbar } from 'notistack';
+import { useGetAuthUser } from "@/services/hooks";
 
 
 type AuthContextType = {
@@ -36,9 +37,14 @@ export const AuthProvider = (props: AuthProviderProps) => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { enqueueSnackbar } = useSnackbar();
+    
+    // Queries
+    const {data: user, refetch: refetchAuthUser} = useGetAuthUser({
+
+    });
 
     const [status, setStatus] = useState<"authenticated" | "unauthenticated" | "loading">("loading");
-    const [user, setUser] = useState<User | null>(null);
+    // const [user, setUser] = useState<User | null>(null);
 
     const handleRegister = async (data: CreateUserDto, formikSetFieldErrors: any) => {
         console.log('Registrando usuario...', { data });
@@ -50,9 +56,10 @@ export const AuthProvider = (props: AuthProviderProps) => {
                 anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
                 variant: 'success',
             });
-            const user: User = await getAuthUser();
-            console.log({ user });
-            setUser(user);
+            // const user: User = await getAuthUser();
+            // console.log({ user });
+            // setUser(user);
+            refetchAuthUser();
             setStatus("authenticated");
             console.log(searchParams.get('next'));
             const nextRoute: string | null = searchParams.get('next');
@@ -81,9 +88,10 @@ export const AuthProvider = (props: AuthProviderProps) => {
         try {
             await login(data);
             console.log('Sesión iniciada correctamente');
-            const user: User = await getAuthUser();
-            console.log({ user });
-            setUser(user);
+            // const user: User = await getAuthUser();
+            // console.log({ user });
+            // setUser(user);
+            refetchAuthUser();
             setStatus("authenticated");
             console.log(searchParams.get('next'));
             const nextRoute: string | null = searchParams.get('next');
@@ -116,7 +124,7 @@ export const AuthProvider = (props: AuthProviderProps) => {
         try {
             await logout();
             setStatus("unauthenticated");
-            setUser(null);
+            // setUser(null);
             console.log('Sesion cerrada correctamente');
             if (params && params.redirectHREF) router.push(params.redirectHREF);
             else router.push("/garden")
@@ -134,9 +142,10 @@ export const AuthProvider = (props: AuthProviderProps) => {
         console.log("Validando último token...");
 
         try {
-            const user: User = await getAuthUser();
-            setStatus("authenticated");
-            setUser(user);
+            // const user: User = await getAuthUser();
+            // setStatus("authenticated");
+            // setUser(user);
+            refetchAuthUser();
             console.log("Sesion válida");
         } catch (e) {
             setStatus("unauthenticated");
@@ -152,7 +161,7 @@ export const AuthProvider = (props: AuthProviderProps) => {
         <AuthContext.Provider
             value={{
                 status: status,
-                user: user,
+                user: user ? user : null,
                 register: handleRegister,
                 login: handleLogin,
                 logout: handleLogout,
