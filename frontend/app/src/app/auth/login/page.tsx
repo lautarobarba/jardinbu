@@ -10,6 +10,7 @@ import { PageTitle } from "@/components/PageTitle";
 import { PageSubTitle } from "@/components/PageSubTitle";
 import { Button, Input } from "@nextui-org/react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { LoadingPageWrapper } from "@/wrappers/LoadingPageWrapper";
 
 
 const ValidationSchema = Yup.object().shape({
@@ -28,7 +29,7 @@ interface Values {
 }
 
 const LoginPage = () => {
-    const { login } = useContext(AuthContext);
+    const { login, status } = useContext(AuthContext);
     const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 
     const formik = useFormik({

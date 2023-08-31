@@ -3,7 +3,7 @@ import { CreateUserDto, User } from "@/interfaces/user.interface";
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { getAuthUser, registerUser, login, logout } from "@/services/fetchers";
 import { LoginUserDto } from "@/interfaces/auth.interface";
-import { useRouter, useSearchParams } from 'next/navigation';
+import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import Axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { useGetAuthUser } from "@/services/hooks";
@@ -37,14 +37,16 @@ export const AuthProvider = (props: AuthProviderProps) => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { enqueueSnackbar } = useSnackbar();
-    
+
     // Queries
-    const {data: user, refetch: refetchAuthUser} = useGetAuthUser({
-
-    });
-
+    const {
+        data: authUser,
+        isSuccess: authUserIsSuccess,
+        isError: authUserIsError,
+        isLoading: authUserIsLoading,
+        refetch: refetchAuthUser
+    } = useGetAuthUser({ retry: 1 });
     const [status, setStatus] = useState<"authenticated" | "unauthenticated" | "loading">("loading");
-    // const [user, setUser] = useState<User | null>(null);
 
     const handleRegister = async (data: CreateUserDto, formikSetFieldErrors: any) => {
         console.log('Registrando usuario...', { data });
@@ -95,7 +97,7 @@ export const AuthProvider = (props: AuthProviderProps) => {
             setStatus("authenticated");
             console.log(searchParams.get('next'));
             const nextRoute: string | null = searchParams.get('next');
-            if (nextRoute) router.push(nextRoute);
+            if (nextRoute) redirect(nextRoute);
         } catch (error) {
             setStatus("unauthenticated");
             console.log('ERROR al iniciar sesion');
@@ -126,8 +128,8 @@ export const AuthProvider = (props: AuthProviderProps) => {
             setStatus("unauthenticated");
             // setUser(null);
             console.log('Sesion cerrada correctamente');
-            if (params && params.redirectHREF) router.push(params.redirectHREF);
-            else router.push("/garden")
+            if (params && params.redirectHREF) redirect(params.redirectHREF);
+            else redirect("/garden")
         } catch (error) {
             setStatus("unauthenticated");
             console.log('ERROR al cerrar sesión');
@@ -135,33 +137,36 @@ export const AuthProvider = (props: AuthProviderProps) => {
     };
 
     const hasRole = (rolesPermitidos: string[]): boolean => {
-        return user ? rolesPermitidos.indexOf(String(user.role)) > -1 : false;
+        return authUser ? rolesPermitidos.indexOf(String(authUser.role)) > -1 : false;
     };
 
-    const validateSession = async () => {
-        console.log("Validando último token...");
+    // const validateSession = async () => {
+    //     console.log("Validando último token...");
 
-        try {
-            // const user: User = await getAuthUser();
-            // setStatus("authenticated");
-            // setUser(user);
-            refetchAuthUser();
-            console.log("Sesion válida");
-        } catch (e) {
-            setStatus("unauthenticated");
-            console.log('Sesion expirada...');
-        }
-    }
+    //     await refetchAuthUser();
+    //     if (authUserIsSuccess) {
+    //         setStatus("authenticated");
+    //         console.log("Sesion válida");
+    //     } else {
+    //         setStatus("unauthenticated");
+    //         console.log('Sesion expirada...');
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     validateSession()
+    // }, []);
 
     useEffect(() => {
-        validateSession()
-    }, []);
+        if (authUserIsSuccess) setStatus("authenticated");
+        else if (authUserIsError) setStatus("unauthenticated");
+    }, [authUserIsSuccess, authUserIsError]);
 
     return (
         <AuthContext.Provider
             value={{
                 status: status,
-                user: user ? user : null,
+                user: authUser ? authUser : null,
                 register: handleRegister,
                 login: handleLogin,
                 logout: handleLogout,

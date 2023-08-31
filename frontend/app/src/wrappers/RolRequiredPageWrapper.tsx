@@ -1,7 +1,7 @@
 "use client";
 import { ReactNode, useContext } from "react";
 import { AuthContext } from "@/providers/AuthProvider";
-import { usePathname } from 'next/navigation'
+import { redirect, usePathname } from 'next/navigation'
 
 
 const RolRequiredMessage = () => {
@@ -27,7 +27,7 @@ export const RolRequiredPageWrapper = (props: RolRequiredPageWrapperProps) => {
 
   const redirectToLogin = () => {
     console.log('Usuario no loggeado. Redireccionando...');
-    window.location.href = `/auth/login?next=${pathname}`
+    redirect(`/auth/login?next=${pathname}`);
   }
 
   if (status === 'loading') return <p>Recuperando sesión...</p>;

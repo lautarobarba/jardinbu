@@ -1,10 +1,10 @@
 import Link from "next/link";
 
-interface BrandProps {
+interface BrandJBUProps {
   href: string;
 }
 
-export const Brand = (props: BrandProps) => {
+export const BrandJBU = (props: BrandJBUProps) => {
   const { href } = props;
   return (
     <Link href={href} className="flex items-center">

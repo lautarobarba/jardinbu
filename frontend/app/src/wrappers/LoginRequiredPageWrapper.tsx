@@ -1,7 +1,8 @@
 "use client";
 import { ReactNode, useContext } from "react";
 import { AuthContext } from "@/providers/AuthProvider";
-import { usePathname } from 'next/navigation'
+import { redirect, usePathname, useRouter } from 'next/navigation'
+import { LoadingPageWrapper } from "./LoadingPageWrapper";
 
 type LoginRequiredPageWrapperProps = {
   children?: ReactNode;
@@ -14,16 +15,15 @@ export const LoginRequiredPageWrapper = (props: LoginRequiredPageWrapperProps) =
 
   const redirectToLogin = () => {
     console.log('Usuario no loggeado. Redireccionando...');
-    window.location.href = `/auth/login?next=${pathname}`
+    redirect(`/auth/login?next=${pathname}`);
   }
 
   const redirectToValidateEmail = () => {
-    console.log('Correo no validado. Redireccionando...');
-    window.location.href = `/auth/email-confirmation-required?next=${pathname}`
+    console.log('Correo no válidado. Redireccionando...');
+    redirect(`/auth/email-confirmation-required?next=${pathname}`);
   }
 
-  if (status === 'loading') return <p>Recuperando sesión...</p>;
   if (status === 'unauthenticated') redirectToLogin();
-  // if (user && !user.isEmailConfirmed) redirectToValidateEmail();
+  if (user && !user.isEmailConfirmed) redirectToValidateEmail();
   else return (<>{children}</>);
 }

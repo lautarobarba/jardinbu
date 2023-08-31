@@ -6,6 +6,7 @@ import { PageSubTitle } from "@/components/PageSubTitle";
 import { Button } from "@nextui-org/react";
 import { sendEmailConfirmationEmail } from "@/services/fetchers";
 import { useSnackbar } from 'notistack';
+import { redirect } from "next/navigation";
 
 
 const EmailConfirmationRequiredPage = () => {
@@ -36,12 +37,12 @@ const EmailConfirmationRequiredPage = () => {
 
     const redirectToDashboard = () => {
         console.log('Usuario loggeado y correo validado. Redireccionando...');
-        window.location.href = '/admin';
+        redirect('/admin');
     }
 
     const redirectToLogin = () => {
         console.log('Usuario no loggeado. Redireccionando...');
-        window.location.href = '/auth/login';
+        redirect('/auth/login');
     }
 
     if (status === 'unauthenticated') redirectToLogin();

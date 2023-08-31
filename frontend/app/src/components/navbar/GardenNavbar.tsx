@@ -1,7 +1,7 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
-import { Brand } from "./elements/Brand";
+import { BrandBDB } from "./elements/BrandBDB";
 import { EnterButton } from "./elements/EnterButton";
 import { LangContext } from "@/providers/LanguageProvider";
 import { getDictionary } from "@/dictionaries";
@@ -18,7 +18,7 @@ export const GardenNavbar = () => {
   return (
     <nav className="bg-navbar-bg fixed w-full z-20 top-0 left-0">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <Brand href="/garden" />
+        <BrandBDB href="/garden" />
         <div className="flex md:hidden md:order-2">
           <button
             type="button"

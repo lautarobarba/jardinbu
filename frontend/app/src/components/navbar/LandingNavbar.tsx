@@ -1,7 +1,7 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
-import { Brand } from "./elements/Brand";
+import { BrandJBU } from "./elements/BrandJBU";
 import { LangContext } from "@/providers/LanguageProvider";
 import { getDictionary } from "@/dictionaries";
 import { MenuIcon } from "lucide-react";
@@ -18,7 +18,7 @@ export const LandingNavbar = () => {
   return (
     <nav className="bg-navbar-bg fixed w-full z-20 top-0 left-0">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <Brand href="/" />
+        <BrandJBU href="/" />
         <div className="flex md:hidden md:order-2">
           <button
             type="button"

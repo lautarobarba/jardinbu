@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { LanguageProvider } from "@/providers/LanguageProvider";
 import { LoadingPageWrapper } from "@/wrappers/LoadingPageWrapper";
-import { AuthProvider } from "@/providers/AuthProvider";
 import { NextUIProvider } from "@/providers/NextUIProvider";
 import { SnackbarProvider } from "@/providers/SnackbarProvider";
 import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
@@ -28,11 +27,9 @@ export default function RootLayout({
           <NextUIProvider>
             <SnackbarProvider>
               <LanguageProvider>
-                <AuthProvider>
-                  <ReactQueryProvider>
-                    <LoadingPageWrapper>{children}</LoadingPageWrapper>
-                  </ReactQueryProvider>
-                </AuthProvider>
+                <ReactQueryProvider>
+                  <LoadingPageWrapper>{children}</LoadingPageWrapper>
+                </ReactQueryProvider>
               </LanguageProvider>
             </SnackbarProvider>
           </NextUIProvider>

@@ -3,6 +3,7 @@ import { ThemeContext } from "@/providers/ThemeProvider";
 import { ReactNode, useContext } from "react";
 import { LangContext } from "@/providers/LanguageProvider";
 
+
 const LoadingPage = () => {
   return (
     <section id="loading" className="bg-white h-screen">
@@ -39,11 +40,12 @@ const LoadingPage = () => {
 
 type LoadingPageWrapperProps = {
   children?: ReactNode;
+  keepLoading?: boolean;
 };
 
 export const LoadingPageWrapper = (props: LoadingPageWrapperProps) => {
-  const { children } = props;
+  const { children, keepLoading } = props;
   const { loading: loadingTheme } = useContext(ThemeContext);
   const { loading: loadingLang } = useContext(LangContext);
-  return <>{loadingTheme || loadingLang ? <LoadingPage /> : <>{children}</>}</>;
+  return <>{loadingTheme || loadingLang || keepLoading ? <LoadingPage /> : <>{children}</>}</>;
 };
