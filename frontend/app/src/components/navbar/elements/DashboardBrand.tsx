@@ -2,10 +2,11 @@ import Link from "next/link";
 
 interface DashboardBrandProps {
   href: string;
+  role?: string;
 }
 
 export const DashboardBrand = (props: DashboardBrandProps) => {
-  const { href } = props;
+  const { href, role } = props;
   return (
     <Link href={href} className="flex items-center justify-between">
       <img
@@ -22,7 +23,7 @@ export const DashboardBrand = (props: DashboardBrandProps) => {
         }}
       />
       <span className="text-xl md:text-2xl font-semibold whitespace-nowrap text-white">
-        JBU<span className="hidden md:inline-block">&nbsp;-&nbsp;Dashboard (ROL)</span>
+        JBU<span className="hidden md:inline-block">&nbsp;-&nbsp;Dashboard{role ? ` (${role})` : ""}</span>
       </span>
     </Link>
   );

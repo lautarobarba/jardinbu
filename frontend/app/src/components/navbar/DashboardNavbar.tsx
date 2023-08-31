@@ -1,7 +1,7 @@
 "use client";
 import { useContext, useState } from "react";
 import { DashboardBrand } from "./elements/DashboardBrand";
-import { DoorOpenIcon, KeyIcon, MenuIcon, UserIcon, XIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronLeftIcon, DoorOpenIcon, KeyIcon, MenuIcon, UserIcon, XIcon } from "lucide-react";
 import { AuthContext } from "@/providers/AuthProvider";
 
 interface DashboardNavbarProps {
@@ -34,7 +34,7 @@ export const DashboardNavbar = (props: DashboardNavbarProps) => {
           </button>
 
           {/* Brand */}
-          <DashboardBrand href="/admin" />
+          <DashboardBrand href="/admin" role={user?.role} />
         </div>
 
         <div className="flex items-center lg:order-2">
@@ -45,12 +45,18 @@ export const DashboardNavbar = (props: DashboardNavbarProps) => {
             onClick={() => setExpandUserMenu(!expandUserMenu)}
           >
             <span className="sr-only">Open user menu</span>
-            <span className="hidden md:inline-block text-white mr-4">NOMBRE APELLIDO</span>
+            <span className="hidden md:inline-block text-white">
+              {user ? `${user.firstname.toUpperCase()} ${user.lastname.toUpperCase()}` : ""}
+            </span>
             <img
-              className="w-8 h-8 rounded-full"
+              className="w-8 h-8 rounded-full ml-4 mr-2"
               src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gough.png"
               alt="user photo"
             />
+            {expandUserMenu
+              ? <ChevronLeftIcon className="text-white" />
+              : <ChevronDownIcon className="text-white" />
+            }
           </button>
 
           {/* UserMenu */}
