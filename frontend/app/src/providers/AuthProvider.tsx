@@ -53,14 +53,11 @@ export const AuthProvider = (props: AuthProviderProps) => {
 
         try {
             await registerUser(data);
-            console.log('Registro realizado correctamente');
+            console.log('Usuario registrado correctamente');
             enqueueSnackbar('¡Usuario registrado correctamente!', {
                 anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
                 variant: 'success',
             });
-            // const user: User = await getAuthUser();
-            // console.log({ user });
-            // setUser(user);
             refetchAuthUser();
             setStatus("authenticated");
             console.log(searchParams.get('next'));
@@ -90,9 +87,10 @@ export const AuthProvider = (props: AuthProviderProps) => {
         try {
             await login(data);
             console.log('Sesión iniciada correctamente');
-            // const user: User = await getAuthUser();
-            // console.log({ user });
-            // setUser(user);
+            enqueueSnackbar('¡Sesión iniciada correctamente!', {
+                anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+                variant: 'success',
+            });
             refetchAuthUser();
             setStatus("authenticated");
             console.log(searchParams.get('next'));
@@ -126,7 +124,6 @@ export const AuthProvider = (props: AuthProviderProps) => {
         try {
             await logout();
             setStatus("unauthenticated");
-            // setUser(null);
             console.log('Sesion cerrada correctamente');
             if (params && params.redirectHREF) redirect(params.redirectHREF);
             else redirect("/garden")
@@ -139,23 +136,6 @@ export const AuthProvider = (props: AuthProviderProps) => {
     const hasRole = (rolesPermitidos: string[]): boolean => {
         return authUser ? rolesPermitidos.indexOf(String(authUser.role)) > -1 : false;
     };
-
-    // const validateSession = async () => {
-    //     console.log("Validando último token...");
-
-    //     await refetchAuthUser();
-    //     if (authUserIsSuccess) {
-    //         setStatus("authenticated");
-    //         console.log("Sesion válida");
-    //     } else {
-    //         setStatus("unauthenticated");
-    //         console.log('Sesion expirada...');
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     validateSession()
-    // }, []);
 
     useEffect(() => {
         if (authUserIsSuccess) setStatus("authenticated");

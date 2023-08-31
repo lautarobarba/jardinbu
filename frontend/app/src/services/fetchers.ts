@@ -80,8 +80,8 @@ export const login = async (
 export const loginWithToken = async (token: string): Promise<SessionDto> => {
   return axiosClient
     .post(
-      "auth/login",
-      { token },
+      "auth/login-with-token",
+      { accessToken: token },
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -344,9 +344,7 @@ export const deleteSpecimen = async (params: { id: number }): Promise<void> => {
 // ## Users
 export const getAuthUser = async (): Promise<User> => {
   const token = Cookies.get("accessToken");
-  return axiosClient
-    .get("auth/me")
-    .then((response) => response.data);
+  return axiosClient.get("auth/me").then((response) => response.data);
 };
 
 // ## Kingdoms

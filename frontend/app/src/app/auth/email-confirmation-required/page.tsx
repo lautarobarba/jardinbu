@@ -7,6 +7,7 @@ import { Button } from "@nextui-org/react";
 import { sendEmailConfirmationEmail } from "@/services/fetchers";
 import { useSnackbar } from 'notistack';
 import { redirect } from "next/navigation";
+import { LoginRequiredPageWrapper } from "@/wrappers/LoginRequiredPageWrapper";
 
 
 const EmailConfirmationRequiredPage = () => {
@@ -49,7 +50,7 @@ const EmailConfirmationRequiredPage = () => {
     if (status === 'authenticated' && user && user.isEmailConfirmed) redirectToDashboard();
     return (
         <section
-            id='authentication-layout'
+            id='authentication-layout-email-confirm-required'
             className="w-screen md:w-full flex flex-col justify-center items-center"
         >
             <PageTitle title="Biblioteca del bosque" className="mt-5 md:my-1" />

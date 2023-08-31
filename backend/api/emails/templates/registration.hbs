@@ -17,7 +17,7 @@
 		--}}
 
 		<link rel="stylesheet" href="{{ ulrToImportCssInEmail }}/api/assets/css/styles.css">
-		<title>Registro Jardín Botánico de Ushuaia</title>
+		<title>Registro - Jardín Botánico de Ushuaia</title>
 
 	</head>
 	<body>
@@ -25,7 +25,7 @@
 		<div class="center-content">
 			<img width="300px" src="{{ ulrToImportImagesInEmail }}/api/assets/images/logo-circulo.png" >
 		</div>
-		<p>¡¡Hola {{ user.firstname }}!!</p>
+		<p>¡Hola {{ user.firstname }}!</p>
 		<p>Te damos la bienvenida de parte de todos los miembros del Jardín Botánico de Ushuaia.</p>
 		<p>Muchas gracias por registrarte.</p>
 
@@ -33,7 +33,7 @@
 
 		<p>Para validarla sólo debes verificar tu correo electrónico presionando el siguiente botón:</p>
 		<div class="center-content">
-			<a href="{{ emailConfirmationUrl }}"><button class="validar-button">Validar cuenta</button></a>
+			<a href="{{ emailConfirmationUrl }}" target="_blank"><button class="validar-button">Validar cuenta</button></a>
 		</div>
 		<br>
 

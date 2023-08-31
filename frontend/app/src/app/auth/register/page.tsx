@@ -72,7 +72,7 @@ const RegisterPage = () => {
     return (
         <LogoutRequiredPageWrapper>
             <section
-                id='authentication-layout'
+                id='authentication-layout-register'
                 className="w-screen md:w-full flex flex-col justify-center items-center"
             >
                 <PageTitle title="Biblioteca del bosque" className="mt-5 md:my-1" />

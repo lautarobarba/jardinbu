@@ -128,8 +128,6 @@ export class AuthController {
   }
 
   @Post("login-with-token")
-  @UseGuards(JwtAuthenticationGuard)
-  @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiResponse({
     status: HttpStatus.OK,

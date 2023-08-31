@@ -17,7 +17,7 @@
 		--}}
 
 		<link rel="stylesheet" href="{{ ulrToImportCssInEmail }}/api/assets/css/styles.css">
-		<title>TITULO: Confirmación de correo electrónico</title>
+		<title>Validar correo - Jardín Botánico de Ushuaia</title>
 
 	</head>
 	<body>
@@ -25,11 +25,11 @@
 		<div class="center-content">
 			<img width="300px" src="{{ ulrToImportImagesInEmail }}/api/assets/images/logo-circulo.png" >
 		</div>
-		<p>¡¡Hola {{ user.firstname }}!!</p>
+		<p>¡Hola {{ user.firstname }}!</p>
 		<p>Para validar tu cuenta sólo debes verificar tu correo electrónico presionando el siguiente botón:</p>
-		<button class="center-content">
-			<a href="{{ emailConfirmationUrl }}">Validar cuenta</a>
-		</button>
+		<div class="center-content">
+			<a href="{{ emailConfirmationUrl }}" target="_blank"><button class="validar-button">Validar cuenta</button></a>
+		</div>
 		<br>
 		
 		<p>Si tienes problemas prueba ingresando el enlace manualmente:</p>

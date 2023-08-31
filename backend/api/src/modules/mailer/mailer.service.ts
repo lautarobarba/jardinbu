@@ -53,7 +53,7 @@ export class MailerService {
       await this._mailerServiceNode.sendMail({
         to: mailbox,
         // from: '"Support Team" <support@example.com>', // override default from
-        subject: "TITULO: Correo de prueba",
+        subject: "Correo de prueba - Jardín Botánico de Ushuaia",
         template: "./test", // `.hbs` extension is appended automatically
         context: {
           ulrToImportCssInEmail: ulrToImportCssInEmail,
@@ -127,7 +127,7 @@ export class MailerService {
       await this._mailerServiceNode.sendMail({
         to: mailbox,
         // from: '"Support Team" <support@example.com>', // override default from
-        subject: "Registro Jardín Botánico Ushuaia",
+        subject: "Registro - Jardín Botánico de Ushuaia",
         template: "./registration", // `.hbs` extension is appended automatically
         context: {
           ulrToImportCssInEmail: ulrToImportCssInEmail,
@@ -202,7 +202,7 @@ export class MailerService {
       await this._mailerServiceNode.sendMail({
         to: mailbox,
         // from: '"Support Team" <support@example.com>', // override default from
-        subject: "TITULO: Confirmación de correo electrónico",
+        subject: "Validar correo - Jardín Botánico de Ushuaia",
         template: "./email-confirmation", // `.hbs` extension is appended automatically
         context: {
           ulrToImportCssInEmail: ulrToImportCssInEmail,
@@ -272,7 +272,7 @@ export class MailerService {
       await this._mailerServiceNode.sendMail({
         to: mailbox,
         // from: '"Support Team" <support@example.com>', // override default from
-        subject: "TITULO: Confirmación de correo electrónico ACCEPTADA",
+        subject: "Confirmación correcta - Jardín Botánico de Ushuaia",
         template: "./email-confirmed", // `.hbs` extension is appended automatically
         context: {
           ulrToImportCssInEmail: ulrToImportCssInEmail,
@@ -346,7 +346,7 @@ export class MailerService {
       await this._mailerServiceNode.sendMail({
         to: mailbox,
         // from: '"Support Team" <support@example.com>', // override default from
-        subject: "TITULO: Recuperar contraseña",
+        subject: "Recuperar contraseña - Jardín Botánico de Ushuaia",
         template: "./recover-password", // `.hbs` extension is appended automatically
         context: {
           ulrToImportCssInEmail: ulrToImportCssInEmail,
