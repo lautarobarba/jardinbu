@@ -92,7 +92,8 @@ export const ExamplePrivateSection = () => {
                 );
             case "status":
                 return (
-                    <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
+                    // <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
+                    <Chip className="capitalize" color={"success"} size="sm" variant="flat">
                         {cellValue}
                     </Chip>
                 );

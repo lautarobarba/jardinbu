@@ -92,6 +92,7 @@ export class SpeciesController {
     @Body() createSpeciesDto: CreateSpeciesDto
   ): Promise<Species> {
     this._logger.debug("POST: /api/species");
+    console.log({ createSpeciesDto });
     const userId: number = getUserIdFromRequest(request);
     return this._speciesService.create(createSpeciesDto, userId);
   }

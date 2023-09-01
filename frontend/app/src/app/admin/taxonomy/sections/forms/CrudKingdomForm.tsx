@@ -137,7 +137,7 @@ export const CreateKingdomForm = (props: CreateKingdomFormProps) => {
         <Button
           color='danger'
           radius="sm"
-          className="uppercase"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={createKingdomIsLoading}
@@ -148,7 +148,7 @@ export const CreateKingdomForm = (props: CreateKingdomFormProps) => {
         <Button
           color='success'
           radius="sm"
-          className="uppercase"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={createKingdomIsLoading}
@@ -439,6 +439,7 @@ export const ModalCrudKingdom = (props: ModalCrudKingdomProps) => {
           radius="sm"
           isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
+          isDismissable={false}
         >
           <ModalThemeWrapper>
             <ModalContent>
@@ -453,6 +454,7 @@ export const ModalCrudKingdom = (props: ModalCrudKingdomProps) => {
           radius="sm"
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
+          isDismissable={false}
         >
           <ModalThemeWrapper>
             <ModalContent>

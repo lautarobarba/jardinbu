@@ -1,20 +1,20 @@
-import * as Yup from 'yup';
+"use client";
+import { FormEvent, HTMLAttributes, SyntheticEvent, useEffect, useState } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
+import * as Yup from 'yup';
+import { Button, Modal, ModalContent, Tooltip, Select, SelectItem } from '@nextui-org/react';
 import {
+  Chip,
   TextField,
   Grid,
   Autocomplete,
   Dialog,
-  Tooltip,
   IconButton,
   FormControl,
   InputLabel,
-  Select,
   MenuItem,
   Alert,
 } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import { MDBBtn, MDBFile, MDBIcon } from 'mdb-react-ui-kit';
 import {
   useCreateSpecies,
   useDeleteSpecies,
@@ -35,9 +35,10 @@ import {
 } from '@/interfaces/species.interface';
 import { useSnackbar } from 'notistack';
 import { PageSubTitle } from '@/components/PageSubTitle';
-import { FormEvent, useEffect, useState } from 'react';
-import { CreateGenusForm } from './CrudGenusForm';
+import { CreateGenusForm } from '../taxonomy/sections/forms/CrudGenusForm';
 import { formatTitleCase } from '@/utils/tools';
+import { PlusIcon } from 'lucide-react';
+
 
 const ValidationSchema = Yup.object().shape({
   scientificName: Yup.string()
@@ -108,9 +109,6 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
   const {
     mutate: createSpeciesMutate,
     isLoading: createSpeciesIsLoading,
-    // isSuccess: createSpeciesIsSuccess,
-    // isError: createSpeciesIsError,
-    // error: createSpeciesError
   } = useCreateSpecies();
 
   const formik = useFormik({
@@ -187,10 +185,23 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
                 required={true}
               />
             )}
-            isOptionEqualToValue={(option: any, selection: any) =>
-              option.value === selection.value
-            }
-            onChange={(e, selection: Genus) => {
+            renderOption={(props: HTMLAttributes<HTMLLIElement>, genus: Genus) => {
+              return (
+                <li {...props} key={genus.id}>
+                  {genusToString(genus)}
+                </li>
+              );
+            }}
+            // renderTags={(tagValue, getTagProps) => {
+            //   return tagValue.map((option, index) => (
+            //     <Chip {...getTagProps({ index })} key={option.id} label={option.description} />
+            //   ))
+            // }}
+            // isOptionEqualToValue={(option: any, selection: any) =>
+            //   option.value === selection.value
+            // }
+            onChange={(event: SyntheticEvent<Element, Event>, selection: Genus) => {
+              event.preventDefault();
               formik.setFieldValue('genus', selection);
               formik.setFieldValue(
                 'scientificName',
@@ -216,16 +227,15 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
           justifyContent={'center'}
           alignItems={'center'}
         >
-          <Tooltip title='Nuevo' arrow>
-            <IconButton
-              type='button'
+          <Tooltip content='Nuevo'>
+            <span
               onClick={() => toggleOpenCreateGenusModal()}
             >
-              <AddIcon className='text-primary' fontSize={'large'} />
-            </IconButton>
+              <PlusIcon className='text-primary' fontSize={'large'} />
+            </span>
           </Tooltip>
 
-          <Dialog
+          {/* <Dialog
             onClose={() => setOpenCreateGenusModal(false)}
             open={openCreateGenusModal}
             maxWidth={'md'}
@@ -234,7 +244,7 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
             <div className='p-5'>
               <CreateGenusForm toggleVisibility={toggleOpenCreateGenusModal} />
             </div>
-          </Dialog>
+          </Dialog> */}
         </Grid>
         <Grid item xs={12} md={4}>
           <TextField
@@ -347,146 +357,152 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
             autoComplete='description'
           />
         </Grid>
-
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth required>
-            <InputLabel>Tipo de organismo</InputLabel>
-            <Select
-              id='organismType'
-              name='organismType'
-              label='Tipo de organismo'
-              value={formik.values.organismType}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.organismType &&
-                Boolean(formik.errors.organismType)
-              }
-              fullWidth
-              autoComplete='organismType'
-              required
-            >
-              <MenuItem key={0} value={'TREE'}>
-                ARBOL
-              </MenuItem>
-              <MenuItem key={1} value={'BUSH'}>
-                ARBUSTO
-              </MenuItem>
-              <MenuItem key={2} value={'SUBSHRUB'}>
-                SUBARBUSTO
-              </MenuItem>
-              <MenuItem key={3} value={'FUNGUS'}>
-                HONGO
-              </MenuItem>
-              <MenuItem key={4} value={'GRASS'}>
-                HIERBA
-              </MenuItem>
-              <MenuItem key={5} value={'LICHEN'}>
-                LIQUEN
-              </MenuItem>
-              <MenuItem key={6} value={'HEMIPARASITE_SUBSHRUB'}>
-                SUBARBUSTO HEMIPARÁSITO
-              </MenuItem>
-            </Select>
-          </FormControl>
+          <Select
+            id='organismType'
+            name='organismType'
+            label="Tipo de organismo"
+            value={formik.values.organismType}
+            onChange={formik.handleChange}
+            validationState={
+              formik.touched.organismType && Boolean(formik.errors.organismType)
+                ? 'invalid'
+                : 'valid'
+            }
+            autoComplete='organismType'
+            isRequired
+            variant="bordered"
+            radius="sm"
+          >
+            <SelectItem key={0} value={'TREE'}>
+              ARBOL
+            </SelectItem>
+            <SelectItem key={1} value={'BUSH'}>
+              ARBUSTO
+            </SelectItem>
+            <SelectItem key={2} value={'SUBSHRUB'}>
+              SUBARBUSTO
+            </SelectItem>
+            <SelectItem key={3} value={'FUNGUS'}>
+              HONGO
+            </SelectItem>
+            <SelectItem key={4} value={'GRASS'}>
+              HIERBA
+            </SelectItem>
+            <SelectItem key={5} value={'LICHEN'}>
+              LIQUEN
+            </SelectItem>
+            <SelectItem key={6} value={'HEMIPARASITE_SUBSHRUB'}>
+              SUBARBUSTO HEMIPARÁSITO
+            </SelectItem>
+          </Select>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth required>
-            <InputLabel>Tipo de follage</InputLabel>
-            <Select
-              id='foliageType'
-              name='foliageType'
-              label='Tipo de follage'
-              value={formik.values.foliageType}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.foliageType && Boolean(formik.errors.foliageType)
-              }
-              fullWidth
-              autoComplete='foliageType'
-              required
-            >
-              <MenuItem key={0} value={'PERENNIAL'}>
-                PERENNE
-              </MenuItem>
-              <MenuItem key={1} value={'DECIDUOUS'}>
-                CADUCIFOLIA
-              </MenuItem>
-            </Select>
-          </FormControl>
+          <Select
+            id='foliageType'
+            name='foliageType'
+            label="Tipo de follage"
+            value={formik.values.foliageType}
+            onChange={formik.handleChange}
+            validationState={
+              formik.touched.foliageType && Boolean(formik.errors.foliageType)
+                ? 'invalid'
+                : 'valid'
+            }
+            autoComplete='foliageType'
+            isRequired
+            variant="bordered"
+            radius="sm"
+          >
+            <SelectItem key={0} value={'PERENNIAL'}>
+              PERENNE
+            </SelectItem>
+            <SelectItem key={1} value={'DECIDUOUS'}>
+              CADUCIFOLIA
+            </SelectItem>
+          </Select>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth required>
-            <InputLabel>Status</InputLabel>
-            <Select
-              id='status'
-              name='status'
-              label='Status'
-              value={formik.values.status}
-              onChange={formik.handleChange}
-              error={formik.touched.status && Boolean(formik.errors.status)}
-              fullWidth
-              autoComplete='status'
-              required
-            >
-              <MenuItem key={0} value={'NATIVE'}>
-                NATIVA
-              </MenuItem>
-              <MenuItem key={1} value={'ENDEMIC'}>
-                ENDEMICA
-              </MenuItem>
-              <MenuItem key={2} value={'INTRODUCED'}>
-                INTRODUCIDA
-              </MenuItem>
-            </Select>
-          </FormControl>
+          <Select
+            id='status'
+            name='status'
+            label="Status"
+            value={formik.values.status}
+            onChange={formik.handleChange}
+            validationState={
+              formik.touched.status && Boolean(formik.errors.status)
+                ? 'invalid'
+                : 'valid'
+            }
+            autoComplete='status'
+            isRequired
+            variant="bordered"
+            radius="sm"
+          >
+            <SelectItem key={0} value={'NATIVE'}>
+              NATIVA
+            </SelectItem>
+            <SelectItem key={1} value={'ENDEMIC'}>
+              ENDEMICA
+            </SelectItem>
+            <SelectItem key={2} value={'INTRODUCED'}>
+              INTRODUCIDA
+            </SelectItem>
+          </Select>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth required>
-            <InputLabel>Presencia</InputLabel>
-            <Select
-              id='presence'
-              name='presence'
-              label='Presencia'
-              value={formik.values.presence}
-              onChange={formik.handleChange}
-              error={formik.touched.presence && Boolean(formik.errors.presence)}
-              fullWidth
-              autoComplete='presence'
-              required
-            >
-              <MenuItem key={0} value={'PRESENT'}>
-                PRESENTE
-              </MenuItem>
-              <MenuItem key={1} value={'ABSENT'}>
-                AUSENTE
-              </MenuItem>
-            </Select>
-          </FormControl>
+          <Select
+            id='presence'
+            name='presence'
+            label="Presencia"
+            value={formik.values.presence}
+            onChange={formik.handleChange}
+            validationState={
+              formik.touched.presence && Boolean(formik.errors.presence)
+                ? 'invalid'
+                : 'valid'
+            }
+            autoComplete='presence'
+            isRequired
+            variant="bordered"
+            radius="sm"
+          >
+            <SelectItem key={0} value={'PRESENT'}>
+              PRESENTE
+            </SelectItem>
+            <SelectItem key={1} value={'ABSENT'}>
+              AUSENTE
+            </SelectItem>
+          </Select>
         </Grid>
       </Grid>
 
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={createSpeciesIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
-          color='primary'
+        </Button>
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={createSpeciesIsLoading}
         >
           {createSpeciesIsLoading ? 'Guardando...' : 'Guardar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -664,14 +680,14 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
           justifyContent={'center'}
           alignItems={'center'}
         >
-          <Tooltip title='Nuevo' arrow>
+          {/* <Tooltip title='Nuevo' arrow>
             <IconButton
               type='button'
               onClick={() => toggleOpenCreateGenusModal()}
             >
               <AddIcon className='text-primary' fontSize={'large'} />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
 
           <Dialog
             onClose={() => setOpenCreateGenusModal(false)}
@@ -797,7 +813,7 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth required>
+          {/* <FormControl fullWidth required>
             <InputLabel>Tipo de organismo</InputLabel>
             <Select
               id='organismType'
@@ -835,11 +851,11 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
                 SUBARBUSTO HEMIPARÁSITO
               </MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth required>
+          {/* <FormControl fullWidth required>
             <InputLabel>Tipo de follage</InputLabel>
             <Select
               id='foliageType'
@@ -861,11 +877,11 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
                 CADUCIFOLIA
               </MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth required>
+          {/* <FormControl fullWidth required>
             <InputLabel>Status</InputLabel>
             <Select
               id='status'
@@ -888,11 +904,11 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
                 INTRODUCIDA
               </MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth required>
+          {/* <FormControl fullWidth required>
             <InputLabel>Presencia</InputLabel>
             <Select
               id='presence'
@@ -912,14 +928,14 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
                 AUSENTE
               </MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
         </Grid>
       </Grid>
 
       <Grid item xs={12} md={4}>
         {/* exampleImg?: null,
   foliageImg?: null, */}
-        <MDBFile
+        {/* <MDBFile
           // disabled={!editMode}
           id='exampleImg'
           name='exampleImg'
@@ -933,12 +949,12 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
           }}
         // error={formik.touched.exampleImg && Boolean(formik.errors.exampleImg)}
         // helperText={formik.touched.exampleImg && formik.errors.exampleImg}
-        />
+        /> */}
       </Grid>
 
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
+        {/* <MDBBtn
           color='danger'
           type='button'
           style={{ margin: '1rem' }}
@@ -954,7 +970,7 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
           disabled={updateSpeciesIsLoading}
         >
           {updateSpeciesIsLoading ? 'Guardando...' : 'Guardar'}
-        </MDBBtn>
+        </MDBBtn> */}
       </Grid>
     </form>
   );
@@ -1213,7 +1229,7 @@ export const DeleteSpeciesForm = (props: DeleteSpeciesFormProps) => {
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
+        {/* <MDBBtn
           color='primary'
           type='button'
           style={{ margin: '1rem' }}
@@ -1229,7 +1245,7 @@ export const DeleteSpeciesForm = (props: DeleteSpeciesFormProps) => {
           disabled={deleteSpeciesIsLoading}
         >
           {deleteSpeciesIsLoading ? 'Eliminando...' : 'Eliminar'}
-        </MDBBtn>
+        </MDBBtn> */}
       </Grid>
     </form>
   );
@@ -1246,7 +1262,7 @@ export const ModalCrudSpecies = (props: ModalCrudSpeciesProps) => {
   return (
     <>
       <div>
-        <MDBIcon
+        {/* <MDBIcon
           icon='pencil-alt'
           size='lg'
           className='d-inline mx-2 text-dark'
@@ -1259,7 +1275,7 @@ export const ModalCrudSpecies = (props: ModalCrudSpeciesProps) => {
           className='d-inline mx-2 text-danger'
           style={{ marginTop: 'auto', marginBottom: 'auto' }}
           onClick={() => setShowDeleteModal(true)}
-        />
+        /> */}
       </div>
       <div>
         <Dialog

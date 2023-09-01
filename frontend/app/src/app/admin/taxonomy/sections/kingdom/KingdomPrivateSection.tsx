@@ -97,7 +97,7 @@ export const KingdomPrivateSection = () => {
         <Button
           color={openCreate ? 'danger' : 'success'}
           radius="sm"
-          className="uppercase"
+          className="uppercase text-white"
           onClick={toggleCreateForm}
         >
           {openCreate ? 'Cancelar' : 'Crear'}
@@ -111,6 +111,7 @@ export const KingdomPrivateSection = () => {
         radius="sm"
         isOpen={openCreate}
         onClose={() => setOpenCreate(false)}
+        isDismissable={false}
       >
         <ModalThemeWrapper>
           <ModalContent>

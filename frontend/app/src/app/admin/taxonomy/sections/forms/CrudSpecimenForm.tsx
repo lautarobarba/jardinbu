@@ -34,7 +34,7 @@ import { useSnackbar } from 'notistack';
 import { CreateSpecimenDto, Specimen } from '@/interfaces/specimen.interface';
 import { PageSubTitle } from '@/components/PageSubTitle';
 import { useEffect, useState } from 'react';
-import { CreateSpeciesForm } from './CrudSpeciesForm';
+import { CreateSpeciesForm } from '../../../species/CrudSpeciesForm';
 
 interface Props {
   toggleVisibility: Function;
