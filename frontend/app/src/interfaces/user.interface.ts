@@ -1,4 +1,4 @@
-import { Picture } from "./picture.interface";
+import { Picture } from "./image.interface";
 
 export enum Role {
   USER = "USER",

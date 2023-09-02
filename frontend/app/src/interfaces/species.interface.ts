@@ -1,6 +1,6 @@
 import { formatTitleCase } from "../utils/tools";
 import { Genus } from "./genus.interface";
-import { Picture } from "./picture.interface";
+import { Image } from "./image.interface";
 import { User } from "./user.interface";
 
 export enum OrganismType {
@@ -40,8 +40,8 @@ export interface Species {
   status: Status;
   foliageType: FoliageType;
   presence: Presence;
-  // exampleImg?: Picture;
-  // foliageImg?: Picture;
+  exampleImg?: Image;
+  galleryImg?: Image[];
   createdAt: Date;
   updatedAt: Date;
   deleted: boolean;

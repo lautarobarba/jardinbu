@@ -200,7 +200,7 @@ export class SpeciesService {
       }
     }
 
-    console.log(galleryImg);
+    // console.log(galleryImg);
     if (galleryImg && galleryImg.length > 0) {
       // Buscar todas las imagenes que ya se encuentran en la galeria.
       const gallery: Image[] = species.galleryImg;
@@ -223,7 +223,7 @@ export class SpeciesService {
               uuid: newImgUUID,
               fileName: imageReceived.originalname,
               originalPath: imageReceived.path,
-              saveFolder: SPECIES_EXAMPLE_IMAGE_PATH,
+              saveFolder: SPECIES_GALLERY_IMAGE_PATH,
               mimetype: imageReceived.mimetype,
               originalName: imageReceived.originalname,
             } as CreateImageDto,

@@ -1,6 +1,6 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { Species } from '@/interfaces/species.interface';
-import { formatDate, formatTitleCase } from '@/utils/tools';
+import { formatDate, formatTitleCase, getUrlForImageById } from '@/utils/tools';
 import { genusToString } from '@/interfaces/genus.interface';
 import { familyToString } from '@/interfaces/family.interface';
 import { orderTaxToString } from '@/interfaces/order-tax.interface';
@@ -8,6 +8,7 @@ import { classTaxToString } from '@/interfaces/class-tax.interface';
 import { phylumToString } from '@/interfaces/phylum.interface';
 import { kingdomToString } from '@/interfaces/kingdom.interface';
 import { ModalCrudSpecies } from './CrudSpeciesForm';
+import { Image } from '@/interfaces/image.interface';
 
 const columnHelper = createColumnHelper<Species>();
 
@@ -63,44 +64,30 @@ export const columns: any = [
     ),
     enableSorting: false,
   }),
-  // // Accessor Column
-  // columnHelper.accessor('genus', {
-  //   id: 'family',
-  //   header: 'Familia',
-  //   cell: (props) => familyToString(props.getValue().family),
-  //   enableSorting: false,
-  // }),
-  // // Accessor Column
-  // columnHelper.accessor('genus', {
-  //   id: 'orderTax',
-  //   header: 'Orden',
-  //   cell: (props) => orderTaxToString(props.getValue().family.orderTax),
-  //   enableSorting: false,
-  // }),
-  // // Accessor Column
-  // columnHelper.accessor('genus', {
-  //   id: 'classTax',
-  //   header: 'Clase',
-  //   cell: (props) =>
-  //     classTaxToString(props.getValue().family.orderTax.classTax),
-  //   enableSorting: false,
-  // }),
-  // // Accessor Column
-  // columnHelper.accessor('genus', {
-  //   id: 'phylum',
-  //   header: 'Filo',
-  //   cell: (props) =>
-  //     phylumToString(props.getValue().family.orderTax.classTax.phylum),
-  //   enableSorting: false,
-  // }),
-  // // Accessor Column
-  // columnHelper.accessor('genus', {
-  //   id: 'kingdom',
-  //   header: 'Reino',
-  //   cell: (props) =>
-  //     kingdomToString(props.getValue().family.orderTax.classTax.phylum.kingdom),
-  //   enableSorting: false,
-  // }),
+  // Accessor Column
+  columnHelper.accessor('exampleImg', {
+    id: 'exampleImg',
+    header: 'Imágen',
+    cell: (props) => {
+      const image: Image | undefined = props.getValue();
+      if (image)
+        return (
+          <>
+            {props.getValue() && (
+              <img
+                loading='lazy'
+                src={getUrlForImageById(image.id)}
+                alt="Logo JBU"
+                title="Logo JBU"
+                width={100}
+              />
+            )}
+          </>
+        );
+      else return "";
+    },
+    enableSorting: false,
+  }),
   // Accessor Column
   columnHelper.accessor('createdAt', {
     id: 'createdAt',

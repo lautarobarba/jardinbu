@@ -76,6 +76,22 @@ export class ImageService {
     });
   }
 
+  async findOneById(id: number): Promise<Image> {
+    this._logger.debug("findOnById()");
+    return this._imageRepository.findOne({
+      where: { id },
+      relations: ["userMod"],
+    });
+  }
+
+  async findOneByUUID(uuid: string): Promise<Image> {
+    this._logger.debug("findOnByUUID()");
+    return this._imageRepository.findOne({
+      where: { uuid },
+      relations: ["userMod"],
+    });
+  }
+
   async delete(id: number, userId: number): Promise<void> {
     this._logger.debug("delete()");
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
