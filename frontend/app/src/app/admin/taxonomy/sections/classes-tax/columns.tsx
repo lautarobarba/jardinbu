@@ -17,7 +17,7 @@ export const columns = [
   columnHelper.accessor('name', {
     id: 'name',
     header: 'Nombre',
-    cell: (props) => formatTitleCase(props.getValue()),
+    cell: (props) => (<strong>{formatTitleCase(props.getValue())}</strong>),
   }),
   // Accessor Column
   columnHelper.accessor('description', {
@@ -28,17 +28,25 @@ export const columns = [
   // Accessor Column
   columnHelper.accessor('phylum', {
     id: 'phylum',
-    header: 'Filo',
-    cell: (props) => phylumToString(props.getValue()),
+    // header: 'Filo',
+    // cell: (props) => phylumToString(props.getValue()),
+    header: 'Taxonomía',
+    cell: (props) => (
+      <>
+        <strong>Filo:</strong> {phylumToString(props.getValue())}.
+        <br />
+        <strong>Reino:</strong> {kingdomToString(props.getValue().kingdom)}.
+      </>
+    ),
     enableSorting: false,
   }),
-  // Accessor Column
-  columnHelper.accessor('phylum', {
-    id: 'kingdom',
-    header: 'Reino',
-    cell: (props) => kingdomToString(props.getValue().kingdom),
-    enableSorting: false,
-  }),
+  // // Accessor Column
+  // columnHelper.accessor('phylum', {
+  //   id: 'kingdom',
+  //   header: 'Reino',
+  //   cell: (props) => kingdomToString(props.getValue().kingdom),
+  //   enableSorting: false,
+  // }),
   // Accessor Column
   columnHelper.accessor('createdAt', {
     id: 'createdAt',

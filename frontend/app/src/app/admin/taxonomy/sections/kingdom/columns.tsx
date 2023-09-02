@@ -15,7 +15,7 @@ export const columns = [
   columnHelper.accessor('name', {
     id: 'name',
     header: 'Nombre',
-    cell: (props) => formatTitleCase(props.getValue()),
+    cell: (props) => (<strong>{formatTitleCase(props.getValue())}</strong>),
   }),
   // Accessor Column
   columnHelper.accessor('description', {

@@ -16,7 +16,7 @@ export const columns = [
   columnHelper.accessor('name', {
     id: 'name',
     header: 'Nombre',
-    cell: (props) => formatTitleCase(props.getValue()),
+    cell: (props) => (<strong>{formatTitleCase(props.getValue())}</strong>),
   }),
   // Accessor Column
   columnHelper.accessor('description', {
@@ -27,8 +27,12 @@ export const columns = [
   // Accessor Column
   columnHelper.accessor('kingdom', {
     id: 'kingdom',
-    header: 'Reino',
-    cell: (props) => kingdomToString(props.getValue()),
+    header: 'Taxonomía',
+    cell: (props) => (
+      <>
+        <strong>Reino:</strong> {kingdomToString(props.getValue())}.
+      </>
+    ),
     enableSorting: false,
   }),
   // Accessor Column

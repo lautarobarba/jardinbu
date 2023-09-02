@@ -19,7 +19,7 @@ export const columns = [
   columnHelper.accessor('name', {
     id: 'name',
     header: 'Nombre',
-    cell: (props) => formatTitleCase(props.getValue()),
+    cell: (props) => (<strong>{formatTitleCase(props.getValue())}</strong>),
   }),
   // Accessor Column
   columnHelper.accessor('description', {
@@ -30,31 +30,43 @@ export const columns = [
   // Accessor Column
   columnHelper.accessor('orderTax', {
     id: 'orderTax',
-    header: 'Orden',
-    cell: (props) => orderTaxToString(props.getValue()),
+    // header: 'Orden',
+    // cell: (props) => orderTaxToString(props.getValue()),
+    header: 'Taxonomía',
+    cell: (props) => (
+      <>
+        <strong>Orden:</strong> {orderTaxToString(props.getValue())}.
+        <br />
+        <strong>Clase:</strong> {classTaxToString(props.getValue().classTax)}.
+        <br />
+        <strong>Filo:</strong> {phylumToString(props.getValue().classTax.phylum)}.
+        <br />
+        <strong>Reino:</strong> {kingdomToString(props.getValue().classTax.phylum.kingdom)}.
+      </>
+    ),
     enableSorting: false,
   }),
-  // Accessor Column
-  columnHelper.accessor('orderTax', {
-    id: 'classTax',
-    header: 'Clase',
-    cell: (props) => classTaxToString(props.getValue().classTax),
-    enableSorting: false,
-  }),
-  // Accessor Column
-  columnHelper.accessor('orderTax', {
-    id: 'phylum',
-    header: 'Filo',
-    cell: (props) => phylumToString(props.getValue().classTax.phylum),
-    enableSorting: false,
-  }),
-  // Accessor Column
-  columnHelper.accessor('orderTax', {
-    id: 'kingdom',
-    header: 'Reino',
-    cell: (props) => kingdomToString(props.getValue().classTax.phylum.kingdom),
-    enableSorting: false,
-  }),
+  // // Accessor Column
+  // columnHelper.accessor('orderTax', {
+  //   id: 'classTax',
+  //   header: 'Clase',
+  //   cell: (props) => classTaxToString(props.getValue().classTax),
+  //   enableSorting: false,
+  // }),
+  // // Accessor Column
+  // columnHelper.accessor('orderTax', {
+  //   id: 'phylum',
+  //   header: 'Filo',
+  //   cell: (props) => phylumToString(props.getValue().classTax.phylum),
+  //   enableSorting: false,
+  // }),
+  // // Accessor Column
+  // columnHelper.accessor('orderTax', {
+  //   id: 'kingdom',
+  //   header: 'Reino',
+  //   cell: (props) => kingdomToString(props.getValue().classTax.phylum.kingdom),
+  //   enableSorting: false,
+  // }),
   // Accessor Column
   columnHelper.accessor('createdAt', {
     id: 'createdAt',
