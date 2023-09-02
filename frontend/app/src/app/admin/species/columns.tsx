@@ -20,7 +20,7 @@ export const columns: any = [
   columnHelper.accessor('scientificName', {
     id: 'scientificName',
     header: 'Nombre científico',
-    cell: (props) => formatTitleCase(props.getValue()),
+    cell: (props) => (<strong>{formatTitleCase(props.getValue())}</strong>),
   }),
   // Accessor Column
   columnHelper.accessor('commonName', {

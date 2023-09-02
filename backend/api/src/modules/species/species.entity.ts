@@ -179,7 +179,7 @@ export class Species extends BaseEntity {
       referencedColumnName: "id",
     },
   })
-  galleryImg: Image;
+  galleryImg: Image[];
 
   @ApiProperty()
   @CreateDateColumn({ name: "created_at" })

@@ -161,6 +161,7 @@ export class SpeciesService {
 
     // Actualizo las imágenes recibidas
     // TODO: LA MISMA IMAGEN DEVUELVE DISTINTOS UUID. NO ME SIRVE PARA CHECKEAR SI YA ESTABA SUBIDA.
+    // Se deberia enviar del front la misma que existe y si no elimnar y dejar vacio
     if (exampleImg) {
       // Primero reviso imágenes existentes y si no coincide el hash debo eliminarlas
       const newImgUUID: string = uuidv1(exampleImg.buffer);
@@ -197,6 +198,44 @@ export class SpeciesService {
         );
         species.exampleImg = newExampleImg;
       }
+    }
+
+    console.log(galleryImg);
+    if (galleryImg && galleryImg.length > 0) {
+      // Buscar todas las imagenes que ya se encuentran en la galeria.
+      const gallery: Image[] = species.galleryImg;
+      const newGallery: Image[] = [];
+      const prevImagesUUIDS: string[] = gallery.map(
+        (image: Image) => image.uuid
+      );
+      console.log({ gallery });
+      const newImagesUUIDS: string[] = [];
+
+      for (let i = 0; i < galleryImg.length; i++) {
+        const imageReceived: Express.Multer.File = galleryImg[i];
+        const newImgUUID: string = uuidv1(imageReceived.buffer);
+        newImagesUUIDS.push(newImgUUID);
+
+        if (!(prevImagesUUIDS.indexOf(newImgUUID) > 0)) {
+          // La imagen no se encuentra en la galeria
+          const newImg: Image = await this._imageService.create(
+            {
+              uuid: newImgUUID,
+              fileName: imageReceived.originalname,
+              originalPath: imageReceived.path,
+              saveFolder: SPECIES_EXAMPLE_IMAGE_PATH,
+              mimetype: imageReceived.mimetype,
+              originalName: imageReceived.originalname,
+            } as CreateImageDto,
+            userId
+          );
+          newGallery.push(newImg);
+        }
+      }
+      // Ahora tengo que quitar las imagenes que estan en la galeria gallery pero no vinieron con el dto
+      // Son todas las imagenes uuid de la prevImagesUUIDS que no estan en newImagesUUIDS
+      // Las tengo que eliminar de la relacion manyToMany y de la tabla imagenes (this._imageService.delete())
+      species.galleryImg = [...gallery, ...newGallery];
     }
 
     // Controlo que el modelo no tenga errores antes de guardar
