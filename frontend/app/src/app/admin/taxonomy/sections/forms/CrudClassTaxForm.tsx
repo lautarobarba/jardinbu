@@ -210,6 +210,7 @@ export const CreateClassTaxForm = (props: CreateClassTaxFormProps) => {
             isOpen={openCreatePhylumModal}
             onClose={() => setOpenCreatePhylumModal(false)}
             isDismissable={false}
+            scrollBehavior="outside"
           >
             <ModalThemeWrapper>
               <ModalContent>
@@ -442,6 +443,7 @@ export const UpdateClassTaxForm = (props: UpdateClassTaxFormProps) => {
             isOpen={openCreatePhylumModal}
             onClose={() => setOpenCreatePhylumModal(false)}
             isDismissable={false}
+            scrollBehavior="outside"
           >
             <ModalThemeWrapper>
               <ModalContent>
@@ -669,6 +671,7 @@ export const ModalCrudClassTax = (props: ModalCrudClassTaxProps) => {
           isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
           isDismissable={false}
+          scrollBehavior="outside"
         >
           <ModalThemeWrapper>
             <ModalContent>
@@ -684,6 +687,7 @@ export const ModalCrudClassTax = (props: ModalCrudClassTaxProps) => {
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           isDismissable={false}
+          scrollBehavior="outside"
         >
           <ModalThemeWrapper>
             <ModalContent>

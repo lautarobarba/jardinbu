@@ -216,6 +216,7 @@ export const CreateFamilyForm = (props: CreateFamilyFormProps) => {
             isOpen={openCreateOrderTaxModal}
             onClose={() => setOpenCreateOrderTaxModal(false)}
             isDismissable={false}
+            scrollBehavior="outside"
           >
             <ModalThemeWrapper>
               <ModalContent>
@@ -475,6 +476,7 @@ export const UpdateFamilyForm = (props: UpdateFamilyFormProps) => {
             isOpen={openCreateOrderTaxModal}
             onClose={() => setOpenCreateOrderTaxModal(false)}
             isDismissable={false}
+            scrollBehavior="outside"
           >
             <ModalThemeWrapper>
               <ModalContent>
@@ -743,6 +745,7 @@ export const ModalCrudFamily = (props: ModalCrudFamilyProps) => {
           isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
           isDismissable={false}
+          scrollBehavior="outside"
         >
           <ModalThemeWrapper>
             <ModalContent>
@@ -758,6 +761,7 @@ export const ModalCrudFamily = (props: ModalCrudFamilyProps) => {
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           isDismissable={false}
+          scrollBehavior="outside"
         >
           <ModalThemeWrapper>
             <ModalContent>

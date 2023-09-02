@@ -208,6 +208,7 @@ export const CreatePhylumForm = (props: CreatePhylumFormProps) => {
             isOpen={openCreateKingdomModal}
             onClose={() => setOpenCreateKingdomModal(false)}
             isDismissable={false}
+            scrollBehavior="outside"
           >
             <ModalThemeWrapper>
               <ModalContent>
@@ -423,6 +424,7 @@ export const UpdatePhylumForm = (props: UpdatePhylumFormProps) => {
             isOpen={openCreateKingdomModal}
             onClose={() => setOpenCreateKingdomModal(false)}
             isDismissable={false}
+            scrollBehavior="outside"
           >
             <ModalThemeWrapper>
               <ModalContent>
@@ -625,6 +627,7 @@ export const ModalCrudPhylum = (props: ModalCrudPhylumProps) => {
           isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
           isDismissable={false}
+          scrollBehavior="outside"
         >
           <ModalThemeWrapper>
             <ModalContent>
@@ -640,6 +643,7 @@ export const ModalCrudPhylum = (props: ModalCrudPhylumProps) => {
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           isDismissable={false}
+          scrollBehavior="outside"
         >
           <ModalThemeWrapper>
             <ModalContent>

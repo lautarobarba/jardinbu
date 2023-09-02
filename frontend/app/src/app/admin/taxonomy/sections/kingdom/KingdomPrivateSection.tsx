@@ -112,6 +112,7 @@ export const KingdomPrivateSection = () => {
         isOpen={openCreate}
         onClose={() => setOpenCreate(false)}
         isDismissable={false}
+        scrollBehavior="outside"
       >
         <ModalThemeWrapper>
           <ModalContent>

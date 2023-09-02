@@ -607,40 +607,40 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
       };
 
       // TODO: sacar y reemplazar por reactqueryhook
-      const response = await axiosClient
-        .patch("species", updateSpeciesDto, {
-          headers: {
-            "Content-Type": "multipart/form-data",
+      // const response = await axiosClient
+      //   .patch("species", updateSpeciesDto, {
+      //     headers: {
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   })
+      //   .then((response) => response.data);
+
+      // console.log(response);
+
+      updateSpeciesMutate(
+        { updateSpeciesDto },
+        {
+          onError: (error: any) => {
+            console.log('ERROR: Error al actualizar especie');
+            console.log(error);
+            enqueueSnackbar('ERROR: Error al actualizar especie', {
+              anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+              variant: 'error',
+            });
           },
-        })
-        .then((response) => response.data);
-
-      console.log(response);
-
-      // updateSpeciesMutate(
-      //   { updateSpeciesDto },
-      //   {
-      //     onError: (error: any) => {
-      //       console.log('ERROR: Error al actualizar especie');
-      //       console.log(error);
-      //       enqueueSnackbar('ERROR: Error al actualizar especie', {
-      //         anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-      //         variant: 'error',
-      //       });
-      //     },
-      //     onSuccess: (species: Species) => {
-      //       console.log('Especie actualizada correctamente');
-      //       console.log(species);
-      //       queryClient.invalidateQueries(['species']);
-      //       queryClient.invalidateQueries([`species-${id}`]);
-      //       toggleVisibility(false);
-      //       enqueueSnackbar('Especie actualizada correctamente', {
-      //         anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-      //         variant: 'success',
-      //       });
-      //     },
-      //   }
-      // );
+          onSuccess: (species: Species) => {
+            console.log('Especie actualizada correctamente');
+            console.log(species);
+            queryClient.invalidateQueries(['species']);
+            queryClient.invalidateQueries([`species-${id}`]);
+            toggleVisibility(false);
+            enqueueSnackbar('Especie actualizada correctamente', {
+              anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+              variant: 'success',
+            });
+          },
+        }
+      );
     },
   });
 
@@ -657,7 +657,7 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
     if (getOneSpeciesData && getOneSpeciesData.galleryImg && getOneSpeciesData.galleryImg.length > 0) {
       const arrayFiles: File[] = [];
       for (let i = 0; i < getOneSpeciesData.galleryImg.length; i++) {
-        console.log(getOneSpeciesData.galleryImg[i]);
+        // console.log(getOneSpeciesData.galleryImg[i]);
         const response = await fetch(getUrlForImageByUUID(getOneSpeciesData.galleryImg[i].uuid));
         const blob = await response.blob();
         const file = new File([blob], getOneSpeciesData.galleryImg[i].mimetype, { type: blob.type });
@@ -1525,6 +1525,7 @@ export const ModalCrudSpecies = (props: ModalCrudSpeciesProps) => {
           isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
           isDismissable={false}
+          scrollBehavior="outside"
         >
           <ModalThemeWrapper>
             <ModalContent>
@@ -1540,6 +1541,7 @@ export const ModalCrudSpecies = (props: ModalCrudSpeciesProps) => {
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           isDismissable={false}
+          scrollBehavior="outside"
         >
           <ModalThemeWrapper>
             <ModalContent>

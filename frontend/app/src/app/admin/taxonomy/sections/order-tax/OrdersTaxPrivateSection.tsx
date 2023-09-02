@@ -111,6 +111,7 @@ export const OrdersTaxPrivateSection = () => {
         isOpen={openCreate}
         onClose={() => setOpenCreate(false)}
         isDismissable={false}
+        scrollBehavior="outside"
       >
         <ModalThemeWrapper>
           <ModalContent>

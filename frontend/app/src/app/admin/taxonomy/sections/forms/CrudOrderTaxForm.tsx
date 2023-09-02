@@ -214,6 +214,7 @@ export const CreateOrderTaxForm = (props: CreateOrderTaxFormProps) => {
             isOpen={openCreateClassTaxModal}
             onClose={() => setOpenCreateClassTaxModal(false)}
             isDismissable={false}
+            scrollBehavior="outside"
           >
             <ModalThemeWrapper>
               <ModalContent>
@@ -461,6 +462,7 @@ export const UpdateOrderTaxForm = (props: UpdateOrderTaxFormProps) => {
             isOpen={openCreateClassTaxModal}
             onClose={() => setOpenCreateClassTaxModal(false)}
             isDismissable={false}
+            scrollBehavior="outside"
           >
             <ModalThemeWrapper>
               <ModalContent>
@@ -709,6 +711,7 @@ export const ModalCrudOrderTax = (props: ModalCrudOrderTaxProps) => {
           isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
           isDismissable={false}
+          scrollBehavior="outside"
         >
           <ModalThemeWrapper>
             <ModalContent>
@@ -724,6 +727,7 @@ export const ModalCrudOrderTax = (props: ModalCrudOrderTaxProps) => {
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           isDismissable={false}
+          scrollBehavior="outside"
         >
           <ModalThemeWrapper>
             <ModalContent>

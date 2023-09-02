@@ -440,6 +440,7 @@ export const ModalCrudKingdom = (props: ModalCrudKingdomProps) => {
           isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
           isDismissable={false}
+          scrollBehavior="outside"
         >
           <ModalThemeWrapper>
             <ModalContent>
@@ -455,6 +456,7 @@ export const ModalCrudKingdom = (props: ModalCrudKingdomProps) => {
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           isDismissable={false}
+          scrollBehavior="outside"
         >
           <ModalThemeWrapper>
             <ModalContent>

@@ -217,6 +217,7 @@ export const CreateGenusForm = (props: CreateGenusFormProps) => {
             isOpen={openCreateFamilyModal}
             onClose={() => setOpenCreateFamilyModal(false)}
             isDismissable={false}
+            scrollBehavior="outside"
           >
             <ModalThemeWrapper>
               <ModalContent>
@@ -490,6 +491,7 @@ export const UpdateGenusForm = (props: UpdateGenusFormProps) => {
             isOpen={openCreateFamilyModal}
             onClose={() => setOpenCreateFamilyModal(false)}
             isDismissable={false}
+            scrollBehavior="outside"
           >
             <ModalThemeWrapper>
               <ModalContent>
@@ -781,6 +783,7 @@ export const ModalCrudGenus = (props: ModalCrudGenusProps) => {
           isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
           isDismissable={false}
+          scrollBehavior="outside"
         >
           <ModalThemeWrapper>
             <ModalContent>
@@ -796,6 +799,7 @@ export const ModalCrudGenus = (props: ModalCrudGenusProps) => {
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           isDismissable={false}
+          scrollBehavior="outside"
         >
           <ModalThemeWrapper>
             <ModalContent>
