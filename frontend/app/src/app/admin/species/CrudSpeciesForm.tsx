@@ -36,7 +36,7 @@ import { CreateGenusForm } from '../taxonomy/sections/forms/CrudGenusForm';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { PageSubTitle } from '@/components/PageSubTitle';
-import { formatTitleCase } from '@/utils/tools';
+import { formatTitleCase, getUrlForImageByUUID } from '@/utils/tools';
 import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import Axios from "axios";
 
@@ -644,6 +644,29 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
     },
   });
 
+  const setImagesOnFirstFetch = async () => {
+    // Recupero la exampleImg
+    if (getOneSpeciesData && getOneSpeciesData.exampleImg) {
+      // console.log(getOneSpeciesData.exampleImg);
+      const response = await fetch(getUrlForImageByUUID(getOneSpeciesData.exampleImg.uuid));
+      const blob = await response.blob();
+      const file = new File([blob], getOneSpeciesData.exampleImg.mimetype, { type: blob.type });
+      formik.setFieldValue('exampleImg', file);
+    }
+    // Recupero todas las imagenes de la galleryImg
+    if (getOneSpeciesData && getOneSpeciesData.galleryImg && getOneSpeciesData.galleryImg.length > 0) {
+      const arrayFiles: File[] = [];
+      for (let i = 0; i < getOneSpeciesData.galleryImg.length; i++) {
+        console.log(getOneSpeciesData.galleryImg[i]);
+        const response = await fetch(getUrlForImageByUUID(getOneSpeciesData.galleryImg[i].uuid));
+        const blob = await response.blob();
+        const file = new File([blob], getOneSpeciesData.galleryImg[i].mimetype, { type: blob.type });
+        arrayFiles.push(file);
+      }
+      formik.setFieldValue('galleryImg', arrayFiles);
+    }
+  }
+
   useEffect(() => {
     if (
       getOneSpeciesIsSuccess &&
@@ -654,6 +677,9 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
       setClassTax(getOneSpeciesData.genus.family.orderTax.classTax.name);
       setPhylum(getOneSpeciesData.genus.family.orderTax.classTax.phylum.name);
       setKingdom(getOneSpeciesData.genus.family.orderTax.classTax.phylum.kingdom.name);
+
+      // También recupero las imágenes
+      setImagesOnFirstFetch();
     }
   }, [getOneSpeciesIsSuccess]);
 
@@ -688,24 +714,26 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
 
   // Update galleryImgPreview
   useEffect(() => {
-    console.log(formik.values.galleryImg);
+    // console.log(formik.values.galleryImg);
     if (formik.values.galleryImg && formik.values.galleryImg.length > 0) {
       const fileReaders: FileReader[] = [];
       const imagesAux: any[] = [];
-      // formik.values.galleryImg.forEach((image: File) => {
-      //     const fileReader = new FileReader();
-      //     fileReaders.push(fileReader);
-      //     fileReader.onload = (event: any) => {
-      //       const { result } = event.target;
-      //       if (result) {
-      //         imagesAux.push(result);
-      //       }
-      //       if (formik.values.galleryImg && (imagesAux.length === formik.values.galleryImg.length)) {
-      //         setGalleryImgPreview(imagesAux);
-      //       }
-      //     }
-      //     fileReader.readAsDataURL(image);
-      // });
+
+      for (let i = 0; i < formik.values.galleryImg.length; i++) {
+        const image: File = formik.values.galleryImg[i];
+        const fileReader = new FileReader();
+        fileReaders.push(fileReader);
+        fileReader.onload = (event: any) => {
+          const { result } = event.target;
+          if (result) {
+            imagesAux.push(result);
+          }
+          if (formik.values.galleryImg && (imagesAux.length === formik.values.galleryImg.length)) {
+            setGalleryImgPreview(imagesAux);
+          }
+        }
+        fileReader.readAsDataURL(image);
+      }
     }
 
 
@@ -1143,9 +1171,9 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
       {/* Example image preview */}
       {galleryImgPreview && galleryImgPreview.length > 0 && (
         <>
-          {galleryImgPreview.forEach((imagePreview: any, index: number) => {
+          {galleryImgPreview.map((imagePreview: any, index: number) => {
             return (
-              <Grid item xs={12}>
+              <Grid item xs={12} key={index}>
                 <div className='flex flex-col items-center'>
                   <img
                     loading='lazy'

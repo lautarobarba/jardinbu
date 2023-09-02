@@ -1,6 +1,6 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { Species } from '@/interfaces/species.interface';
-import { formatDate, formatTitleCase, getUrlForImageById } from '@/utils/tools';
+import { formatDate, formatTitleCase, getUrlForImageById, getUrlForImageByUUID } from '@/utils/tools';
 import { genusToString } from '@/interfaces/genus.interface';
 import { familyToString } from '@/interfaces/family.interface';
 import { orderTaxToString } from '@/interfaces/order-tax.interface';
@@ -76,9 +76,9 @@ export const columns: any = [
             {props.getValue() && (
               <img
                 loading='lazy'
-                src={getUrlForImageById(image.id)}
-                alt="Logo JBU"
-                title="Logo JBU"
+                src={getUrlForImageByUUID(image.uuid)}
+                alt={image.originalName}
+                title={image.originalName}
                 width={100}
               />
             )}
