@@ -20,7 +20,6 @@ import {
 } from "nestjs-typeorm-paginate";
 import { UserService } from "modules/user/user.service";
 import { ImageService } from "modules/image/image.service";
-import { v1 as uuidv1 } from "uuid";
 import { Image } from "modules/image/image.entity";
 import { CreateImageDto } from "modules/image/image.dto";
 
@@ -164,7 +163,11 @@ export class SpeciesService {
     // Se deberia enviar del front la misma que existe y si no elimnar y dejar vacio
     if (exampleImg) {
       // Primero reviso imágenes existentes y si no coincide el hash debo eliminarlas
-      const newImgUUID: string = uuidv1(exampleImg.buffer);
+      const newImgUUID: string =
+        `${exampleImg.size}_${exampleImg.mimetype}_${exampleImg.originalname}`.replace(
+          "/",
+          "_"
+        );
       if (species.exampleImg) {
         if (species.exampleImg.uuid !== newImgUUID) {
           // Tenía una imagen previa. Reemplazo
@@ -188,7 +191,7 @@ export class SpeciesService {
         const newExampleImg: Image = await this._imageService.create(
           {
             uuid: newImgUUID,
-            fileName: exampleImg.originalname,
+            fileName: exampleImg.filename,
             originalPath: exampleImg.path,
             saveFolder: SPECIES_EXAMPLE_IMAGE_PATH,
             mimetype: exampleImg.mimetype,
@@ -202,7 +205,7 @@ export class SpeciesService {
 
     // console.log(galleryImg);
     if (galleryImg && galleryImg.length > 0) {
-      // Buscar todas las imagenes que ya se encuentran en la galeria.
+      // // Buscar todas las imagenes que ya se encuentran en la galeria.
       const gallery: Image[] = species.galleryImg;
       const newGallery: Image[] = [];
       const prevImagesUUIDS: string[] = gallery.map(
@@ -210,18 +213,20 @@ export class SpeciesService {
       );
       console.log({ gallery });
       const newImagesUUIDS: string[] = [];
-
       for (let i = 0; i < galleryImg.length; i++) {
         const imageReceived: Express.Multer.File = galleryImg[i];
-        const newImgUUID: string = uuidv1(imageReceived.buffer);
+        const newImgUUID: string =
+          `${imageReceived.size}_${imageReceived.mimetype}_${imageReceived.originalname}`.replace(
+            "/",
+            "_"
+          );
         newImagesUUIDS.push(newImgUUID);
-
-        if (!(prevImagesUUIDS.indexOf(newImgUUID) > 0)) {
+        if (!(prevImagesUUIDS.indexOf(newImgUUID) > -1)) {
           // La imagen no se encuentra en la galeria
           const newImg: Image = await this._imageService.create(
             {
               uuid: newImgUUID,
-              fileName: imageReceived.originalname,
+              fileName: imageReceived.filename,
               originalPath: imageReceived.path,
               saveFolder: SPECIES_GALLERY_IMAGE_PATH,
               mimetype: imageReceived.mimetype,
@@ -235,7 +240,18 @@ export class SpeciesService {
       // Ahora tengo que quitar las imagenes que estan en la galeria gallery pero no vinieron con el dto
       // Son todas las imagenes uuid de la prevImagesUUIDS que no estan en newImagesUUIDS
       // Las tengo que eliminar de la relacion manyToMany y de la tabla imagenes (this._imageService.delete())
-      species.galleryImg = [...gallery, ...newGallery];
+      const cleanGallery: Image[] = [];
+      for (let i = 0; i < gallery.length; i++) {
+        const image: Image = gallery[i];
+        if (newImagesUUIDS.indexOf(image.uuid) > -1) {
+          cleanGallery.push(image);
+        } else {
+          // Hay que eliminar aquellas huerfanas de galleria xD
+          // La imagen ya no deberia estar en la galeria
+          await this._imageService.delete(image.id, userId);
+        }
+      }
+      species.galleryImg = [...cleanGallery, ...newGallery];
     }
 
     // Controlo que el modelo no tenga errores antes de guardar

@@ -38,17 +38,9 @@ import { useSnackbar } from 'notistack';
 import { PageSubTitle } from '@/components/PageSubTitle';
 import { formatTitleCase, getUrlForImageByUUID } from '@/utils/tools';
 import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react';
-import Axios from "axios";
-
-// TODO: SACAR ESTO
-// Api Url
-const apiBaseUrl: string =
-  process.env.NEXT_PUBLIC_API_ROUTE ?? "http://ERROR/api";
-const axiosClient = Axios.create({
-  baseURL: `${apiBaseUrl}/api/`,
-  timeout: 10 * 1000, // 10 sec
-  withCredentials: true, // Cookies
-});
+import { EmblaOptionsType } from 'embla-carousel-react'
+import useEmblaCarousel from 'embla-carousel-react'
+import "./CrudSpeciesForm.css";
 
 // TODO: mover esta restriccion a otro lugar mas generico
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
@@ -552,6 +544,11 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
   const [exampleImgPreview, setExampleImgPreview] = useState<any>(null);
   const [galleryImgPreview, setGalleryImgPreview] = useState<any[]>([]);
 
+  const [emblaRef] = useEmblaCarousel({
+    slidesToScroll: 'auto',
+    containScroll: 'trimSnaps'
+  });
+
   const [openCreateGenusModal, setOpenCreateGenusModal] =
     useState<boolean>(false);
 
@@ -650,7 +647,7 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
       // console.log(getOneSpeciesData.exampleImg);
       const response = await fetch(getUrlForImageByUUID(getOneSpeciesData.exampleImg.uuid));
       const blob = await response.blob();
-      const file = new File([blob], getOneSpeciesData.exampleImg.mimetype, { type: blob.type });
+      const file = new File([blob], getOneSpeciesData.exampleImg.originalName, { type: blob.type });
       formik.setFieldValue('exampleImg', file);
     }
     // Recupero todas las imagenes de la galleryImg
@@ -660,7 +657,7 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         // console.log(getOneSpeciesData.galleryImg[i]);
         const response = await fetch(getUrlForImageByUUID(getOneSpeciesData.galleryImg[i].uuid));
         const blob = await response.blob();
-        const file = new File([blob], getOneSpeciesData.galleryImg[i].mimetype, { type: blob.type });
+        const file = new File([blob], getOneSpeciesData.galleryImg[i].originalName, { type: blob.type });
         arrayFiles.push(file);
       }
       formik.setFieldValue('galleryImg', arrayFiles);
@@ -1095,60 +1092,63 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         </div>
       </Grid> */}
 
-      {/* Example image input */}
-      <Grid item xs={12}>
-        <label
-          className="block m-2 text-sm font-medium text-gray-900 dark:text-white"
-          htmlFor="exampleImg"
-        >Foto principal</label>
-        <input
-          type="file"
-          id="exampleImg"
-          name="exampleImg"
-          accept="image/*"
-          // TODO: agregar control de tipos de archivos imagenes
-          className={`block w-full text-sm focus:outline-none rounded-lg cursor-pointer 
+      <Grid container alignItems={'center'} justifyContent={'space-around'} className='pt-5 pb-5'>
+        {/* Example image input */}
+        <Grid item alignItems={'center'} xs={12} md={exampleImgPreview && !Boolean(formik.errors.exampleImg) ? 6 : 12}>
+          <label
+            className="m-2 text-sm font-medium text-gray-900 dark:text-white"
+            htmlFor="exampleImg"
+          >Foto principal</label>
+          <input
+            type="file"
+            id="exampleImg"
+            name="exampleImg"
+            accept="image/*"
+            // TODO: agregar control de tipos de archivos imagenes
+            className={`block mb-2 w-full text-sm focus:outline-none rounded-lg cursor-pointer 
               border border-gray-300 dark:border-gray-600 
               text-gray-900 dark:text-gray-400 bg-gray-50 dark:bg-gray-700
               dark:placeholder-gray-400`}
-          onChange={(event: any) => {
-            const auxFile: File = event.target.files[0];
-            if (auxFile) {
-              if (auxFile.type.match(imageMimeType)) {
-                formik.setFieldValue('exampleImg', auxFile);
-              } else {
-                formik.setErrors({ exampleImg: 'Error en el tipo de archivo. No es una imagen' });
-                console.log('Error en el tipo de archivo. No es una imagen');
+            onChange={(event: any) => {
+              const auxFile: File = event.target.files[0];
+              if (auxFile) {
+                if (auxFile.type.match(imageMimeType)) {
+                  formik.setFieldValue('exampleImg', auxFile);
+                } else {
+                  formik.setErrors({ exampleImg: 'Error en el tipo de archivo. No es una imagen' });
+                  console.log('Error en el tipo de archivo. No es una imagen');
+                }
               }
-            }
-          }}
-        />
-      </Grid>
+            }}
+          />
+        </Grid>
 
-      {Boolean(formik.errors.exampleImg) && (
+        {/* {Boolean(formik.errors.exampleImg) && (
         <Grid item xs={12}>
           <p className='text-error'>ERROR:{formik.errors.exampleImg}</p>
         </Grid>
-      )}
+      )} */}
 
-      {/* Example image preview */}
-      {exampleImgPreview && !Boolean(formik.errors.exampleImg) && (
-        <Grid item xs={12}>
-          <div className='flex flex-col items-center'>
+        {/* Example image preview */}
+        {exampleImgPreview && !Boolean(formik.errors.exampleImg) && (
+          <Grid item xs={12} md={6}>
             <img
               loading='lazy'
               src={exampleImgPreview}
               alt="Logo JBU"
               title="Logo JBU"
-              className="w-60 md:w-80 lg:w-96 mb-6"
+              width={300}
+              className="m-auto"
             />
-          </div>
-        </Grid>
-      )}
+          </Grid>
+        )}
+      </Grid>
+
+      <hr />
 
       <Grid item xs={12} md={4}>
         <label
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          className="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white"
           htmlFor="galleryImg"
         >Galeria (opcional)</label>
         <input
@@ -1168,26 +1168,51 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         />
       </Grid>
 
-      {/* Example image preview */}
+      {/* Example image preview
       {galleryImgPreview && galleryImgPreview.length > 0 && (
         <>
-          {galleryImgPreview.map((imagePreview: any, index: number) => {
-            return (
-              <Grid item xs={12} key={index}>
-                <div className='flex flex-col items-center'>
+          <Grid item xs={12}>
+            <div className='flex flex-row items-center flex-wrap'>
+              {galleryImgPreview.map((imagePreview: any, index: number) => {
+                return (
                   <img
+                    key={index}
                     loading='lazy'
                     src={imagePreview}
                     alt={`gallery_${index}`}
                     title={`gallery_${index}`}
-                    className="w-60 md:w-80 lg:w-96 mb-6"
+                    width={100}
+                  // className="w-60 md:w-80 lg:w-96 mb-6"
                   />
-                </div>
-              </Grid>
-            );
-          })}
+                );
+              })}
+            </div>
+          </Grid>
         </>
-      )}
+      )} */}
+
+      {/* <EmblaCarousel>  */}
+
+      <div className="embla">
+        <div className="embla__viewport" ref={emblaRef}>
+          <div className="embla__container">
+            {galleryImgPreview.map((imagePreview: any, index: number) => (
+              <div className="embla__slide" key={index}>
+                <div className="embla__slide__number">
+                  <span>{index + 1}</span>
+                </div>
+                <img
+                  className="embla__slide__img"
+                  src={imagePreview}
+                  alt="Your alt text"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* </EmblaCarousel>  */}
 
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
