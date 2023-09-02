@@ -3,7 +3,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { PageSubTitle } from '@/components/PageSubTitle';
 import { PageTitle } from '@/components/PageTitle';
 import { useGetKingdoms } from '@/services/hooks';
-import { CircularProgress, Modal, ModalBody, ModalContent } from "@nextui-org/react";
+import { CircularProgress, Modal, ModalContent } from "@nextui-org/react";
+import { ModalThemeWrapper } from '@/wrappers/ModalThemeWrapper';
 import { Button } from '@nextui-org/react';
 import { CreateKingdomForm } from '../forms/CrudKingdomForm';
 import { CustomTable } from '../forms/CustomTable';
@@ -15,8 +16,6 @@ import {
 } from '@tanstack/react-table';
 import { Kingdom } from '@/interfaces/kingdom.interface';
 import { columns } from './columns';
-import { Dialog } from '@mui/material';
-import { ModalThemeWrapper } from '@/wrappers/ModalThemeWrapper';
 
 export const KingdomPrivateSection = () => {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({

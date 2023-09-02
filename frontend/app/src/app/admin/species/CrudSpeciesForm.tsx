@@ -3,6 +3,7 @@ import { ChangeEventHandler, FormEvent, HTMLAttributes, SyntheticEvent, useEffec
 import { FormikHelpers, useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Modal, ModalContent, Tooltip, Select, SelectItem, Input } from '@nextui-org/react';
+import { ModalThemeWrapper } from '@/wrappers/ModalThemeWrapper';
 import {
   Chip,
   TextField,
@@ -21,7 +22,6 @@ import {
   useGetOneSpecies,
   useUpdateSpecies
 } from '@/services/hooks';
-import { useQueryClient } from '@tanstack/react-query';
 import { Genus, genusToString } from '@/interfaces/genus.interface';
 import {
   CreateSpeciesDto,
@@ -32,11 +32,11 @@ import {
   Status,
   UpdateSpeciesDto,
 } from '@/interfaces/species.interface';
+import { CreateGenusForm } from '../taxonomy/sections/forms/CrudGenusForm';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { PageSubTitle } from '@/components/PageSubTitle';
-import { CreateGenusForm } from '../taxonomy/sections/forms/CrudGenusForm';
 import { formatTitleCase } from '@/utils/tools';
-import { ModalThemeWrapper } from '@/wrappers/ModalThemeWrapper';
 import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import Axios from "axios";
 
@@ -204,11 +204,6 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
                 </li>
               );
             }}
-            // renderTags={(tagValue, getTagProps) => {
-            //   return tagValue.map((option, index) => (
-            //     <Chip {...getTagProps({ index })} key={option.id} label={option.description} />
-            //   ))
-            // }}
             isOptionEqualToValue={(option: any, selection: any) =>
               option.value === selection.value
             }

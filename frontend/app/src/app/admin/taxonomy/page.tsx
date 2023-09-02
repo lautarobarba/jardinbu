@@ -6,7 +6,7 @@ import { PageSubTitle } from "@/components/PageSubTitle";
 import { RolRequiredPageWrapper } from "@/wrappers/RolRequiredPageWrapper";
 import { Role } from "@/interfaces/user.interface";
 import { KingdomPrivateSection } from "./sections/kingdom/KingdomPrivateSection";
-// import { PhylumPrivateList } from "./sections/phylum/PhylumPrivateList";
+import { PhylumPrivateSection } from "./sections/phylum/PhylumPrivateSection";
 // import { ClassesTaxPrivateList } from "./sections/classes-tax/ClassesTaxPrivateList";
 // import { OrdersTaxPrivateList } from "./sections/order-tax/OrdersTaxPrivateList";
 // import { FamiliesPrivateList } from "./sections/families/FamiliesPrivateList";
@@ -20,15 +20,15 @@ const TaxonomyPage = () => {
         <PageTitle title="Taxonomía" />
 
         <Tabs aria-label="Options" radius="sm" color="primary" classNames={{ tabList: "bg-white dark:bg-gray-800", tab: "bg-none" }}>
-          <Tab key="Example" title="Example">
+          {/* <Tab key="Example" title="Example">
             <PageSubTitle title="Ejemplo" />
             <ExamplePrivateSection />
-          </Tab>
+          </Tab> */}
           <Tab key="Reinos" title="Reinos">
             <KingdomPrivateSection />
           </Tab>
           <Tab key="Filos" title="Filos">
-            {/* <PhylumPrivateList /> */}
+            <PhylumPrivateSection />
           </Tab>
           <Tab key="Clases" title="Clases">
             {/* <ClassesTaxPrivateList /> */}

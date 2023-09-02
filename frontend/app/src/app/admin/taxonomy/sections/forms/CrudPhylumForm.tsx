@@ -1,16 +1,15 @@
-import * as Yup from 'yup';
+"use client";
+import { ChangeEventHandler, FormEvent, HTMLAttributes, SyntheticEvent, useEffect, useState } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
+import * as Yup from 'yup';
+import { Button, Modal, ModalContent, Tooltip } from '@nextui-org/react';
+import { ModalThemeWrapper } from '@/wrappers/ModalThemeWrapper';
 import {
-  Alert,
-  Autocomplete,
-  Dialog,
-  Grid,
-  IconButton,
   TextField,
-  Tooltip,
+  Grid,
+  Autocomplete,
+  Alert,
 } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
 import {
   useCreatePhylum,
   useDeletePhylum,
@@ -23,12 +22,13 @@ import {
   CreatePhylumDto,
   UpdatePhylumDto,
 } from '@/interfaces/phylum.interface';
+import { Kingdom, kingdomToString } from '@/interfaces/kingdom.interface';
+import { CreateKingdomForm } from './CrudKingdomForm';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { PageSubTitle } from '@/components/PageSubTitle';
-import { FormEvent, useState } from 'react';
-import { Kingdom, kingdomToString } from '@/interfaces/kingdom.interface';
-import { CreateKingdomForm } from './CrudKingdomForm';
+import { formatTitleCase } from '@/utils/tools';
+import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react';
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -69,9 +69,6 @@ export const CreatePhylumForm = (props: CreatePhylumFormProps) => {
   const {
     mutate: createPhylumMutate,
     isLoading: createPhylumIsLoading,
-    // isSuccess: createPhylumIsSuccess,
-    // isError: createPhylumIsError,
-    // error: createPhylumError,
   } = useCreatePhylum();
 
   const formik = useFormik({
@@ -172,6 +169,13 @@ export const CreatePhylumForm = (props: CreatePhylumFormProps) => {
                 required={true}
               />
             )}
+            renderOption={(props: HTMLAttributes<HTMLLIElement>, kingdom: Kingdom) => {
+              return (
+                <li {...props} key={kingdom.id}>
+                  {kingdomToString(kingdom)}
+                </li>
+              );
+            }}
             isOptionEqualToValue={(option: any, selection: any) =>
               option.value === selection.value
             }
@@ -190,48 +194,56 @@ export const CreatePhylumForm = (props: CreatePhylumFormProps) => {
           justifyContent={'center'}
           alignItems={'center'}
         >
-          <Tooltip title='Nuevo' arrow>
-            <IconButton
-              type='button'
+          <Tooltip content='Nuevo'>
+            <span
               onClick={() => toggleOpenCreateKingdomModal()}
             >
-              <AddIcon className='text-primary' fontSize={'large'} />
-            </IconButton>
+              <PlusIcon className='text-primary' fontSize={'large'} />
+            </span>
           </Tooltip>
 
-          <Dialog
+          <Modal
+            size="5xl"
+            radius="sm"
+            isOpen={openCreateKingdomModal}
             onClose={() => setOpenCreateKingdomModal(false)}
-            open={openCreateKingdomModal}
-            maxWidth={'md'}
-            fullWidth
+            isDismissable={false}
           >
-            <div className='p-5'>
-              <CreateKingdomForm
-                toggleVisibility={toggleOpenCreateKingdomModal}
-              />
-            </div>
-          </Dialog>
+            <ModalThemeWrapper>
+              <ModalContent>
+                <div className='p-5 bg-light dark:bg-dark'>
+                  <CreateKingdomForm
+                    toggleVisibility={toggleOpenCreateKingdomModal}
+                  />
+                </div>
+              </ModalContent>
+            </ModalThemeWrapper>
+          </Modal>
         </Grid>
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={createPhylumIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
-          color='primary'
+        </Button>
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={createPhylumIsLoading}
         >
           {createPhylumIsLoading ? 'Guardando...' : 'Guardar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -260,20 +272,13 @@ export const UpdatePhylumForm = (props: UpdatePhylumFormProps) => {
 
   // Query
   const {
-    // isLoading: getPhylumIsLoading,
-    // isSuccess: getPhylumIsSuccess,
     data: getPhylumData,
-    // isError: getPhylumIsError,
-    // error: getPhylumError,
   } = useGetPhylum({ id: id }, { keepPreviousData: true });
 
   // Mutación
   const {
     mutate: updatePhylumMutate,
     isLoading: updatePhylumIsLoading,
-    // isSuccess: updatePhylumIsSuccess,
-    // isError: updatePhylumIsError,
-    // error: updatePhylumError,
   } = useUpdatePhylum();
 
   const formik = useFormik({
@@ -379,6 +384,13 @@ export const UpdatePhylumForm = (props: UpdatePhylumFormProps) => {
                 required={true}
               />
             )}
+            renderOption={(props: HTMLAttributes<HTMLLIElement>, kingdom: Kingdom) => {
+              return (
+                <li {...props} key={kingdom.id}>
+                  {kingdomToString(kingdom)}
+                </li>
+              );
+            }}
             isOptionEqualToValue={(option: any, selection: any) =>
               option.value === selection.value
             }
@@ -397,48 +409,56 @@ export const UpdatePhylumForm = (props: UpdatePhylumFormProps) => {
           justifyContent={'center'}
           alignItems={'center'}
         >
-          <Tooltip title='Nuevo' arrow>
-            <IconButton
-              type='button'
+          <Tooltip content='Nuevo'>
+            <span
               onClick={() => toggleOpenCreateKingdomModal()}
             >
-              <AddIcon className='text-primary' fontSize={'large'} />
-            </IconButton>
+              <PlusIcon className='text-primary' fontSize={'large'} />
+            </span>
           </Tooltip>
 
-          <Dialog
+          <Modal
+            size="5xl"
+            radius="sm"
+            isOpen={openCreateKingdomModal}
             onClose={() => setOpenCreateKingdomModal(false)}
-            open={openCreateKingdomModal}
-            maxWidth={'md'}
-            fullWidth
+            isDismissable={false}
           >
-            <div className='p-5'>
-              <CreateKingdomForm
-                toggleVisibility={toggleOpenCreateKingdomModal}
-              />
-            </div>
-          </Dialog>
+            <ModalThemeWrapper>
+              <ModalContent>
+                <div className='p-5 bg-light dark:bg-dark'>
+                  <CreateKingdomForm
+                    toggleVisibility={toggleOpenCreateKingdomModal}
+                  />
+                </div>
+              </ModalContent>
+            </ModalThemeWrapper>
+          </Modal>
         </Grid>
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={updatePhylumIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
-          color='primary'
+        </Button>
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={updatePhylumIsLoading}
         >
           {updatePhylumIsLoading ? 'Guardando...' : 'Guardar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -456,20 +476,13 @@ export const DeletePhylumForm = (props: DeletePhylumFormProps) => {
 
   // Query
   const {
-    // isLoading: getPhylumIsLoading,
-    // isSuccess: getPhylumIsSuccess,
     data: getPhylumData,
-    // isError: getPhylumIsError,
-    // error: getPhylumError,
   } = useGetPhylum({ id: id }, { keepPreviousData: true });
 
   // Mutación
   const {
     mutate: deletePhylumMutate,
     isLoading: deletePhylumIsLoading,
-    // isSuccess: deletePhylumIsSuccess,
-    // isError: deletePhylumIsError,
-    // error: deletePhylumError,
   } = useDeletePhylum();
 
   const deletePhylum = (event: FormEvent<HTMLFormElement>) => {
@@ -553,23 +566,27 @@ export const DeletePhylumForm = (props: DeletePhylumFormProps) => {
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
-          color='primary'
+        <Button
+          color='danger'
+          radius="sm"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={deletePhylumIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
-          color='danger'
+        </Button>
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={deletePhylumIsLoading}
         >
           {deletePhylumIsLoading ? 'Eliminando...' : 'Eliminar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -585,43 +602,53 @@ export const ModalCrudPhylum = (props: ModalCrudPhylumProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   return (
     <>
-      <div>
-        <MDBIcon
-          icon='pencil-alt'
-          size='lg'
-          className='d-inline mx-2 text-dark'
-          style={{ marginTop: 'auto', marginBottom: 'auto' }}
-          onClick={() => setShowEditModal(true)}
-        />
-        <MDBIcon
-          icon='trash-alt'
-          size='lg'
-          className='d-inline mx-2 text-danger'
-          style={{ marginTop: 'auto', marginBottom: 'auto' }}
-          onClick={() => setShowDeleteModal(true)}
-        />
+      <div className='flex flex-row space-x-2'>
+        <Tooltip content="Editar">
+          <span
+            onClick={() => setShowEditModal(true)}
+          >
+            <PencilIcon className='text-primary' />
+          </span>
+        </Tooltip>
+        <Tooltip content="Eliminar">
+          <span
+            onClick={() => setShowDeleteModal(true)}
+          >
+            <TrashIcon className='text-error' />
+          </span>
+        </Tooltip>
       </div>
       <div>
-        <Dialog
+        <Modal
+          size="5xl"
+          radius="sm"
+          isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
-          open={showEditModal}
-          maxWidth={'md'}
-          fullWidth
+          isDismissable={false}
         >
-          <div className='p-5'>
-            <UpdatePhylumForm toggleVisibility={setShowEditModal} id={id} />
-          </div>
-        </Dialog>
-        <Dialog
+          <ModalThemeWrapper>
+            <ModalContent>
+              <div className='p-5 bg-light dark:bg-dark'>
+                <UpdatePhylumForm toggleVisibility={setShowEditModal} id={id} />
+              </div>
+            </ModalContent>
+          </ModalThemeWrapper>
+        </Modal>
+        <Modal
+          size="5xl"
+          radius="sm"
+          isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
-          open={showDeleteModal}
-          maxWidth={'md'}
-          fullWidth
+          isDismissable={false}
         >
-          <div className='p-5'>
-            <DeletePhylumForm toggleVisibility={setShowDeleteModal} id={id} />
-          </div>
-        </Dialog>
+          <ModalThemeWrapper>
+            <ModalContent>
+              <div className='p-5 bg-light dark:bg-dark'>
+                <DeletePhylumForm toggleVisibility={setShowDeleteModal} id={id} />
+              </div>
+            </ModalContent>
+          </ModalThemeWrapper>
+        </Modal>
       </div>
     </>
   );
