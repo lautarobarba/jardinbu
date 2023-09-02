@@ -1,9 +1,12 @@
 "use client";
-import { PageSubTitle } from '@/components/PageSubTitle';
-import { PageTitle } from '@/components/PageTitle';
-import { useGetFamilies } from '@/services/hooks';
 import { useEffect, useMemo, useState } from 'react';
-import { CircularProgress, Dialog } from '@mui/material';
+import { PageTitle } from '@/components/PageTitle';
+import { PageSubTitle } from '@/components/PageSubTitle';
+import { useGetFamilies } from '@/services/hooks';
+import { CircularProgress, Modal, ModalContent } from "@nextui-org/react";
+import { ModalThemeWrapper } from '@/wrappers/ModalThemeWrapper';
+import { Button } from '@nextui-org/react';
+import { CreateFamilyForm } from '../forms/CrudFamilyForm';
 import { CustomTable } from '../forms/CustomTable';
 import {
   PaginationState,
@@ -11,11 +14,10 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { columns } from './columns';
 import { Family } from '@/interfaces/family.interface';
-import { CreateFamilyForm } from '../forms/CrudFamilyForm';
+import { columns } from './columns';
 
-export const FamiliesPrivateList = () => {
+export const FamiliesPrivateSection = () => {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -86,41 +88,44 @@ export const FamiliesPrivateList = () => {
   ]);
 
   return (
-    <div className='bg-white p-3'>
+    <div className='p-3'>
       <PageTitle title='Familias' />
 
-      <div className='d-flex justify-content-between'>
+      <div className='flex flex-row justify-between'>
         <PageSubTitle title='Listado de familias' />
-        <button
-          className={
-            openCreate
-              ? 'btn bg-danger text-white'
-              : 'btn bg-success text-white'
-          }
+        <Button
+          color={openCreate ? 'danger' : 'success'}
+          radius="sm"
+          className="uppercase text-white"
           onClick={toggleCreateForm}
         >
           {openCreate ? 'Cancelar' : 'Crear'}
-        </button>
+        </Button>
       </div>
 
       <br />
 
-      <Dialog
+      <Modal
+        size="5xl"
+        radius="sm"
+        isOpen={openCreate}
         onClose={() => setOpenCreate(false)}
-        open={openCreate}
-        maxWidth={'md'}
-        fullWidth
+        isDismissable={false}
       >
-        <div className='p-5'>
-          <CreateFamilyForm toggleVisibility={setOpenCreate} />
-        </div>
-      </Dialog>
+        <ModalThemeWrapper>
+          <ModalContent>
+            <div className='p-5 bg-light dark:bg-dark'>
+              <CreateFamilyForm toggleVisibility={setOpenCreate} />
+            </div>
+          </ModalContent>
+        </ModalThemeWrapper>
+      </Modal>
 
       {getFamiliesIsError && <p className='text-danger'>Error...</p>}
 
       {getFamiliesIsLoading && (
-        <div className='text-center'>
-          <CircularProgress />
+        <div className='flex justify-center'>
+          <CircularProgress aria-label="loading" />
         </div>
       )}
 

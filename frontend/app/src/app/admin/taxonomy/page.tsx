@@ -9,7 +9,7 @@ import { KingdomPrivateSection } from "./sections/kingdom/KingdomPrivateSection"
 import { PhylumPrivateSection } from "./sections/phylum/PhylumPrivateSection";
 import { ClassesTaxPrivateSection } from "./sections/classes-tax/ClassesTaxPrivateSection";
 import { OrdersTaxPrivateSection } from "./sections/order-tax/OrdersTaxPrivateSection";
-// import { FamiliesPrivateList } from "./sections/families/FamiliesPrivateList";
+import { FamiliesPrivateSection } from "./sections/families/FamiliesPrivateSection";
 // import { GeneraPrivateList } from "./sections/genera/GeneraPrivateList";
 
 
@@ -37,7 +37,7 @@ const TaxonomyPage = () => {
             <OrdersTaxPrivateSection />
           </Tab>
           <Tab key="Familias" title="Familias">
-            {/* <FamiliesPrivateList /> */}
+            <FamiliesPrivateSection />
           </Tab>
           <Tab key="Géneros" title="Géneros">
             {/* <GeneraPrivateList /> */}

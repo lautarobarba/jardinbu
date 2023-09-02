@@ -1,16 +1,15 @@
-import * as Yup from 'yup';
+"use client";
+import { FormEvent, HTMLAttributes, SyntheticEvent, useEffect, useState } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
+import * as Yup from 'yup';
+import { Button, Modal, ModalContent, Tooltip } from '@nextui-org/react';
+import { ModalThemeWrapper } from '@/wrappers/ModalThemeWrapper';
 import {
-  Alert,
-  Autocomplete,
-  Dialog,
-  Grid,
-  IconButton,
   TextField,
-  Tooltip,
+  Grid,
+  Autocomplete,
+  Alert,
 } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
 import {
   useCreateFamily,
   useDeleteFamily,
@@ -18,17 +17,18 @@ import {
   useGetOrdersTax,
   useUpdateFamily,
 } from '@/services/hooks';
-import { useQueryClient } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-import { PageSubTitle } from '@/components/PageSubTitle';
-import { FormEvent, useEffect, useState } from 'react';
-import { OrderTax, orderTaxToString } from '@/interfaces/order-tax.interface';
 import {
   CreateFamilyDto,
   Family,
   UpdateFamilyDto,
 } from '@/interfaces/family.interface';
+import { OrderTax, orderTaxToString } from '@/interfaces/order-tax.interface';
 import { CreateOrderTaxForm } from './CrudOrderTaxForm';
+import { useQueryClient } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
+import { PageSubTitle } from '@/components/PageSubTitle';
+import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react';
+
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -72,9 +72,6 @@ export const CreateFamilyForm = (props: CreateFamilyFormProps) => {
   const {
     mutate: createFamilyMutate,
     isLoading: createFamilyIsLoading,
-    // isSuccess: createFamilyIsSuccess,
-    // isError: createFamilyIsError,
-    // error: createFamilyError,
   } = useCreateFamily();
 
   const formik = useFormik({
@@ -177,6 +174,13 @@ export const CreateFamilyForm = (props: CreateFamilyFormProps) => {
                 required={true}
               />
             )}
+            renderOption={(props: HTMLAttributes<HTMLLIElement>, orderTax: OrderTax) => {
+              return (
+                <li {...props} key={orderTax.id}>
+                  {orderTaxToString(orderTax)}
+                </li>
+              );
+            }}
             isOptionEqualToValue={(option: any, selection: any) =>
               option.value === selection.value
             }
@@ -198,27 +202,31 @@ export const CreateFamilyForm = (props: CreateFamilyFormProps) => {
           justifyContent={'center'}
           alignItems={'center'}
         >
-          <Tooltip title='Nuevo' arrow>
-            <IconButton
-              type='button'
+          <Tooltip content='Nuevo'>
+            <span
               onClick={() => toggleOpenCreateOrderTaxModal()}
             >
-              <AddIcon className='text-primary' fontSize={'large'} />
-            </IconButton>
+              <PlusIcon className='text-primary' fontSize={'large'} />
+            </span>
           </Tooltip>
 
-          <Dialog
+          <Modal
+            size="5xl"
+            radius="sm"
+            isOpen={openCreateOrderTaxModal}
             onClose={() => setOpenCreateOrderTaxModal(false)}
-            open={openCreateOrderTaxModal}
-            maxWidth={'md'}
-            fullWidth
+            isDismissable={false}
           >
-            <div className='p-5'>
-              <CreateOrderTaxForm
-                toggleVisibility={toggleOpenCreateOrderTaxModal}
-              />
-            </div>
-          </Dialog>
+            <ModalThemeWrapper>
+              <ModalContent>
+                <div className='p-5 bg-light dark:bg-dark'>
+                  <CreateOrderTaxForm
+                    toggleVisibility={toggleOpenCreateOrderTaxModal}
+                  />
+                </div>
+              </ModalContent>
+            </ModalThemeWrapper>
+          </Modal>
         </Grid>
         <Grid item xs={12}>
           <TextField
@@ -250,23 +258,27 @@ export const CreateFamilyForm = (props: CreateFamilyFormProps) => {
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={createFamilyIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
-          color='primary'
+        </Button>
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={createFamilyIsLoading}
         >
           {createFamilyIsLoading ? 'Guardando...' : 'Guardar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -298,20 +310,14 @@ export const UpdateFamilyForm = (props: UpdateFamilyFormProps) => {
 
   // Query
   const {
-    // isLoading: getFamilyIsLoading,
     isSuccess: getFamilyIsSuccess,
     data: getFamilyData,
-    // isError: getFamilyIsError,
-    // error: getFamilyError,
   } = useGetFamily({ id: id }, { keepPreviousData: true });
 
   // Mutación
   const {
     mutate: updateFamilyMutate,
     isLoading: updateFamilyIsLoading,
-    // isSuccess: updateFamilyIsSuccess,
-    // isError: updateFamilyIsError,
-    // error: updateFamilyError,
   } = useUpdateFamily();
 
   const formik = useFormik({
@@ -427,6 +433,13 @@ export const UpdateFamilyForm = (props: UpdateFamilyFormProps) => {
                 required={true}
               />
             )}
+            renderOption={(props: HTMLAttributes<HTMLLIElement>, orderTax: OrderTax) => {
+              return (
+                <li {...props} key={orderTax.id}>
+                  {orderTaxToString(orderTax)}
+                </li>
+              );
+            }}
             isOptionEqualToValue={(option: any, selection: any) =>
               option.value === selection.value
             }
@@ -448,27 +461,31 @@ export const UpdateFamilyForm = (props: UpdateFamilyFormProps) => {
           justifyContent={'center'}
           alignItems={'center'}
         >
-          <Tooltip title='Nuevo' arrow>
-            <IconButton
-              type='button'
+          <Tooltip content='Nuevo'>
+            <span
               onClick={() => toggleOpenCreateOrderTaxModal()}
             >
-              <AddIcon className='text-primary' fontSize={'large'} />
-            </IconButton>
+              <PlusIcon className='text-primary' fontSize={'large'} />
+            </span>
           </Tooltip>
 
-          <Dialog
+          <Modal
+            size="5xl"
+            radius="sm"
+            isOpen={openCreateOrderTaxModal}
             onClose={() => setOpenCreateOrderTaxModal(false)}
-            open={openCreateOrderTaxModal}
-            maxWidth={'md'}
-            fullWidth
+            isDismissable={false}
           >
-            <div className='p-5'>
-              <CreateOrderTaxForm
-                toggleVisibility={toggleOpenCreateOrderTaxModal}
-              />
-            </div>
-          </Dialog>
+            <ModalThemeWrapper>
+              <ModalContent>
+                <div className='p-5 bg-light dark:bg-dark'>
+                  <CreateOrderTaxForm
+                    toggleVisibility={toggleOpenCreateOrderTaxModal}
+                  />
+                </div>
+              </ModalContent>
+            </ModalThemeWrapper>
+          </Modal>
         </Grid>
         <Grid item xs={12}>
           <TextField
@@ -500,23 +517,27 @@ export const UpdateFamilyForm = (props: UpdateFamilyFormProps) => {
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={updateFamilyIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
-          color='primary'
+        </Button>
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={updateFamilyIsLoading}
         >
           {updateFamilyIsLoading ? 'Guardando...' : 'Guardar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -537,20 +558,14 @@ export const DeleteFamilyForm = (props: DeleteFamilyFormProps) => {
 
   // Query
   const {
-    // isLoading: getFamilyIsLoading,
     isSuccess: getFamilyIsSuccess,
     data: getFamilyData,
-    // isError: getFamilyIsError,
-    // error: getFamilyError,
   } = useGetFamily({ id: id }, { keepPreviousData: true });
 
   // Mutación
   const {
     mutate: deleteFamilyMutate,
     isLoading: deleteFamilyIsLoading,
-    // isSuccess: deleteFamilyIsSuccess,
-    // isError: deleteFamilyIsError,
-    // error: deleteFamilyError,
   } = useDeleteFamily();
 
   const deleteFamily = (event: FormEvent<HTMLFormElement>) => {
@@ -669,23 +684,27 @@ export const DeleteFamilyForm = (props: DeleteFamilyFormProps) => {
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
-          color='primary'
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={deleteFamilyIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
+        </Button>
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={deleteFamilyIsLoading}
         >
           {deleteFamilyIsLoading ? 'Eliminando...' : 'Eliminar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -701,43 +720,53 @@ export const ModalCrudFamily = (props: ModalCrudFamilyProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   return (
     <>
-      <div>
-        <MDBIcon
-          icon='pencil-alt'
-          size='lg'
-          className='d-inline mx-2 text-dark'
-          style={{ marginTop: 'auto', marginBottom: 'auto' }}
-          onClick={() => setShowEditModal(true)}
-        />
-        <MDBIcon
-          icon='trash-alt'
-          size='lg'
-          className='d-inline mx-2 text-danger'
-          style={{ marginTop: 'auto', marginBottom: 'auto' }}
-          onClick={() => setShowDeleteModal(true)}
-        />
+      <div className='flex flex-row space-x-2'>
+        <Tooltip content="Editar">
+          <span
+            onClick={() => setShowEditModal(true)}
+          >
+            <PencilIcon className='text-primary' />
+          </span>
+        </Tooltip>
+        <Tooltip content="Eliminar">
+          <span
+            onClick={() => setShowDeleteModal(true)}
+          >
+            <TrashIcon className='text-error' />
+          </span>
+        </Tooltip>
       </div>
       <div>
-        <Dialog
+        <Modal
+          size="5xl"
+          radius="sm"
+          isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
-          open={showEditModal}
-          maxWidth={'md'}
-          fullWidth
+          isDismissable={false}
         >
-          <div className='p-5'>
-            <UpdateFamilyForm toggleVisibility={setShowEditModal} id={id} />
-          </div>
-        </Dialog>
-        <Dialog
+          <ModalThemeWrapper>
+            <ModalContent>
+              <div className='p-5 bg-light dark:bg-dark'>
+                <UpdateFamilyForm toggleVisibility={setShowEditModal} id={id} />
+              </div>
+            </ModalContent>
+          </ModalThemeWrapper>
+        </Modal>
+        <Modal
+          size="5xl"
+          radius="sm"
+          isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
-          open={showDeleteModal}
-          maxWidth={'md'}
-          fullWidth
+          isDismissable={false}
         >
-          <div className='p-5'>
-            <DeleteFamilyForm toggleVisibility={setShowDeleteModal} id={id} />
-          </div>
-        </Dialog>
+          <ModalThemeWrapper>
+            <ModalContent>
+              <div className='p-5 bg-light dark:bg-dark'>
+                <DeleteFamilyForm toggleVisibility={setShowDeleteModal} id={id} />
+              </div>
+            </ModalContent>
+          </ModalThemeWrapper>
+        </Modal>
       </div>
     </>
   );
