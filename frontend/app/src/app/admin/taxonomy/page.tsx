@@ -7,7 +7,7 @@ import { RolRequiredPageWrapper } from "@/wrappers/RolRequiredPageWrapper";
 import { Role } from "@/interfaces/user.interface";
 import { KingdomPrivateSection } from "./sections/kingdom/KingdomPrivateSection";
 import { PhylumPrivateSection } from "./sections/phylum/PhylumPrivateSection";
-// import { ClassesTaxPrivateList } from "./sections/classes-tax/ClassesTaxPrivateList";
+import { ClassesTaxPrivateSection } from "./sections/classes-tax/ClassesTaxPrivateSection";
 // import { OrdersTaxPrivateList } from "./sections/order-tax/OrdersTaxPrivateList";
 // import { FamiliesPrivateList } from "./sections/families/FamiliesPrivateList";
 // import { GeneraPrivateList } from "./sections/genera/GeneraPrivateList";
@@ -31,7 +31,7 @@ const TaxonomyPage = () => {
             <PhylumPrivateSection />
           </Tab>
           <Tab key="Clases" title="Clases">
-            {/* <ClassesTaxPrivateList /> */}
+            <ClassesTaxPrivateSection />
           </Tab>
           <Tab key="Ordenes" title="Órdenes">
             {/* <OrdersTaxPrivateList /> */}

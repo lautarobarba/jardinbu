@@ -384,7 +384,7 @@ export const DeleteKingdomForm = (props: DeleteKingdomFormProps) => {
         <Button
           color='success'
           radius="sm"
-          className="uppercase"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={deleteKingdomIsLoading}
@@ -395,7 +395,7 @@ export const DeleteKingdomForm = (props: DeleteKingdomFormProps) => {
         <Button
           color='danger'
           radius="sm"
-          className="uppercase"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={deleteKingdomIsLoading}

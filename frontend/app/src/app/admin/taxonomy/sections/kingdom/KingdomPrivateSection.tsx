@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from 'react';
-import { PageSubTitle } from '@/components/PageSubTitle';
 import { PageTitle } from '@/components/PageTitle';
+import { PageSubTitle } from '@/components/PageSubTitle';
 import { useGetKingdoms } from '@/services/hooks';
 import { CircularProgress, Modal, ModalContent } from "@nextui-org/react";
 import { ModalThemeWrapper } from '@/wrappers/ModalThemeWrapper';
@@ -16,6 +16,7 @@ import {
 } from '@tanstack/react-table';
 import { Kingdom } from '@/interfaces/kingdom.interface';
 import { columns } from './columns';
+
 
 export const KingdomPrivateSection = () => {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({

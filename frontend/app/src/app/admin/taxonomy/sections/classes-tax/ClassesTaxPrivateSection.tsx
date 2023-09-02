@@ -1,9 +1,12 @@
 "use client";
-import { PageSubTitle } from '@/components/PageSubTitle';
-import { PageTitle } from '@/components/PageTitle';
-import { useGetClassesTax } from '@/services/hooks';
 import { useEffect, useMemo, useState } from 'react';
-import { CircularProgress, Dialog } from '@mui/material';
+import { PageTitle } from '@/components/PageTitle';
+import { PageSubTitle } from '@/components/PageSubTitle';
+import { useGetClassesTax } from '@/services/hooks';
+import { CircularProgress, Modal, ModalContent } from "@nextui-org/react";
+import { ModalThemeWrapper } from '@/wrappers/ModalThemeWrapper';
+import { Button } from '@nextui-org/react';
+import { CreateClassTaxForm } from '../forms/CrudClassTaxForm';
 import { CustomTable } from '../forms/CustomTable';
 import {
   PaginationState,
@@ -11,11 +14,10 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { columns } from './columns';
 import { ClassTax } from '@/interfaces/class-tax.interface';
-import { CreateClassTaxForm } from '../forms/CrudClassTaxForm';
+import { columns } from './columns';
 
-export const ClassesTaxPrivateList = () => {
+export const ClassesTaxPrivateSection = () => {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -86,41 +88,44 @@ export const ClassesTaxPrivateList = () => {
   ]);
 
   return (
-    <div className='bg-white p-3'>
+    <div className='p-3'>
       <PageTitle title='Clases' />
 
-      <div className='d-flex justify-content-between'>
+      <div className='flex flex-row justify-between'>
         <PageSubTitle title='Listado de clases' />
-        <button
-          className={
-            openCreate
-              ? 'btn bg-danger text-white'
-              : 'btn bg-success text-white'
-          }
+        <Button
+          color={openCreate ? 'danger' : 'success'}
+          radius="sm"
+          className="uppercase text-white"
           onClick={toggleCreateForm}
         >
           {openCreate ? 'Cancelar' : 'Crear'}
-        </button>
+        </Button>
       </div>
 
       <br />
 
-      <Dialog
+      <Modal
+        size="5xl"
+        radius="sm"
+        isOpen={openCreate}
         onClose={() => setOpenCreate(false)}
-        open={openCreate}
-        maxWidth={'md'}
-        fullWidth
+        isDismissable={false}
       >
-        <div className='p-5'>
-          <CreateClassTaxForm toggleVisibility={setOpenCreate} />
-        </div>
-      </Dialog>
+        <ModalThemeWrapper>
+          <ModalContent>
+            <div className='p-5 bg-light dark:bg-dark'>
+              <CreateClassTaxForm toggleVisibility={setOpenCreate} />
+            </div>
+          </ModalContent>
+        </ModalThemeWrapper>
+      </Modal>
 
       {getClassesTaxIsError && <p className='text-danger'>Error...</p>}
 
       {getClassesTaxIsLoading && (
-        <div className='text-center'>
-          <CircularProgress />
+        <div className='flex justify-center'>
+          <CircularProgress aria-label="loading" />
         </div>
       )}
 

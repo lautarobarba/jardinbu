@@ -1,5 +1,5 @@
 "use client";
-import { ChangeEventHandler, FormEvent, HTMLAttributes, SyntheticEvent, useEffect, useState } from 'react';
+import { FormEvent, HTMLAttributes, SyntheticEvent, useEffect, useState } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Modal, ModalContent, Tooltip } from '@nextui-org/react';
@@ -27,8 +27,8 @@ import { CreateKingdomForm } from './CrudKingdomForm';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { PageSubTitle } from '@/components/PageSubTitle';
-import { formatTitleCase } from '@/utils/tools';
 import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react';
+
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -567,7 +567,7 @@ export const DeletePhylumForm = (props: DeletePhylumFormProps) => {
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
         <Button
-          color='danger'
+          color='success'
           radius="sm"
           className="uppercase text-white"
           type='button'
@@ -578,7 +578,7 @@ export const DeletePhylumForm = (props: DeletePhylumFormProps) => {
           Cancelar
         </Button>
         <Button
-          color='success'
+          color='danger'
           radius="sm"
           className="uppercase text-white"
           type='submit'
