@@ -5,14 +5,18 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { Genus } from "../genus/genus.entity";
 import { User } from "../user/user.entity";
 import { Specimen } from "../specimen/specimen.entity";
+import { Image } from "../image/image.entity";
 
 export enum OrganismType {
   TREE = "TREE", // ARBOL = "ARBOL",
@@ -140,33 +144,42 @@ export class Species extends BaseEntity {
   })
   presence: Presence;
 
-  // // Relation
-  // @ApiProperty({
-  //   type: () => Picture,
-  // })
-  // @OneToOne(() => Picture, (picture) => picture.speciesExample, {
-  //   cascade: true,
-  //   onDelete: "RESTRICT",
-  //   eager: true,
-  // })
-  // @JoinColumn({
-  //   name: "example_img",
-  // })
-  // exampleImg: Picture;
+  // Relation
+  @ApiProperty({
+    type: () => Image,
+  })
+  @OneToOne(() => Image, () => {}, {
+    cascade: true,
+    onDelete: "RESTRICT",
+    eager: true,
+  })
+  @JoinColumn({
+    name: "example_img_id",
+  })
+  exampleImg: Image;
 
-  // // Relation
-  // @ApiProperty({
-  //   type: () => Picture,
-  // })
-  // @OneToOne(() => Picture, (picture) => picture.speciesFoliage, {
-  //   cascade: true,
-  //   onDelete: "RESTRICT",
-  //   eager: true,
-  // })
-  // @JoinColumn({
-  //   name: "foliage_img",
-  // })
-  // foliageImg: Picture;
+  // Relation
+  @ApiProperty({
+    type: () => Image,
+    isArray: true,
+  })
+  @ManyToMany(() => Image, () => {}, {
+    cascade: true,
+    onDelete: "RESTRICT",
+    eager: true,
+  })
+  @JoinTable({
+    name: "species_galleries",
+    joinColumn: {
+      name: "species_id",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "image_id",
+      referencedColumnName: "id",
+    },
+  })
+  galleryImg: Image;
 
   @ApiProperty()
   @CreateDateColumn({ name: "created_at" })

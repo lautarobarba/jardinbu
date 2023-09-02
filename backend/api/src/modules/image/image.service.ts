@@ -26,7 +26,7 @@ export class ImageService {
 
   async create(createImageDto: CreateImageDto, userId: number): Promise<Image> {
     this._logger.debug("create()");
-    const { fileName, originalPath, saveFolder, mimetype, originalName } =
+    const { uuid, fileName, originalPath, saveFolder, mimetype, originalName } =
       createImageDto;
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -39,6 +39,7 @@ export class ImageService {
 
     // 2° La guardo en la DB
     const image: Image = this._imageRepository.create();
+    image.uuid = uuid;
     image.fileName = fileName;
     image.path = imgDestination;
     image.mimetype = mimetype;

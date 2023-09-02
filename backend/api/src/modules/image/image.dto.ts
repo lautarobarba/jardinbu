@@ -2,6 +2,9 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 export class CreateImageDto {
   @ApiProperty()
+  uuid: string;
+
+  @ApiProperty()
   fileName: string;
 
   @ApiProperty()

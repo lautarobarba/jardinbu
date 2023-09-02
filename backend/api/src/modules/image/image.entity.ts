@@ -19,6 +19,15 @@ export class Image extends BaseEntity {
 
   @ApiProperty()
   @Column({
+    name: "uuid",
+    type: "varchar",
+    nullable: false,
+    unique: false,
+  })
+  uuid: string;
+
+  @ApiProperty()
+  @Column({
     name: "file_name",
     type: "varchar",
     nullable: false,

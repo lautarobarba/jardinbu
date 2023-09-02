@@ -5,9 +5,9 @@
   "author": "Lautaro Barba",
   "private": true,
   "engines": {
-		"npm": ">=9.0.0",
-		"node": ">=18.0.0"
-	},
+    "npm": ">=9.0.0",
+    "node": ">=18.0.0"
+  },
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
@@ -64,6 +64,7 @@
     "source-map-support": "^0.5.21",
     "swagger-ui-express": "^4.5.0",
     "typeorm": "^0.3.10",
+    "uuid": "^9.0.0",
     "yargs": "^17.5.1"
   },
   "devDependencies": {

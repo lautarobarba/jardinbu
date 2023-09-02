@@ -30,31 +30,6 @@ export class CreateSpeciesDto {
   @ApiProperty()
   presence: Presence;
 
-  // @ApiPropertyOptional({
-  //   type: "string",
-  //   format: "binary",
-  // })
-  // exampleImg?: Express.Multer.File;
-
-  // @ApiPropertyOptional({
-  //   type: "string",
-  //   format: "binary",
-  // })
-  // foliageImg?: Express.Multer.File;
-}
-
-export class UpdateSpeciesDto extends CreateSpeciesDto {
-  @ApiProperty()
-  id: number;
-
-  // @ApiPropertyOptional({
-  //   type: "string",
-  //   format: "binary",
-  // })
-  // file?: {
-  //   exampleImg?: Express.Multer.File;
-  // };
-
   @ApiPropertyOptional({
     type: "string",
     format: "binary",
@@ -64,6 +39,12 @@ export class UpdateSpeciesDto extends CreateSpeciesDto {
   @ApiPropertyOptional({
     type: "string",
     format: "binary",
+    isArray: true,
   })
-  foliageImg?: Express.Multer.File;
+  galleryImg?: Express.Multer.File[];
+}
+
+export class UpdateSpeciesDto extends CreateSpeciesDto {
+  @ApiProperty()
+  id: number;
 }

@@ -16,6 +16,7 @@ import {
   Query,
   BadRequestException,
   UploadedFile,
+  UploadedFiles,
 } from "@nestjs/common";
 import { Response, Express } from "express";
 import {
@@ -37,7 +38,8 @@ import { getUserIdFromRequest } from "modules/utils/user.request";
 import { PaginationDto } from "modules/utils/pagination.dto";
 import { Pagination } from "nestjs-typeorm-paginate";
 import { LocalFilesInterceptor } from "modules/utils/localFiles.interceptor";
-// import { PaginatedList, PaginationDto } from "modules/utils/pagination.dto";
+import { AnyFilesInterceptor } from "@nestjs/platform-express";
+import { v1 as uuidv1 } from "uuid";
 
 @ApiTags("Especies")
 @Controller("species")
@@ -101,21 +103,7 @@ export class SpeciesController {
   @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
-  @UseInterceptors(
-    LocalFilesInterceptor({
-      files: [{ name: "exampleImg" }, { name: "foliageImg" }],
-      path: "/temp",
-      fileFilter: (request, file, callback) => {
-        if (!file.mimetype.includes("image")) {
-          return callback(new BadRequestException("Invalid image file"), false);
-        }
-        callback(null, true);
-      },
-      limits: {
-        fileSize: 1024 * 1024 * 10, // 10MB
-      },
-    })
-  )
+  @UseInterceptors(AnyFilesInterceptor())
   @ApiBearerAuth()
   @ApiConsumes("multipart/form-data")
   @ApiBody({
@@ -146,18 +134,29 @@ export class SpeciesController {
     @Req() request: RequestWithUser,
     @Res({ passthrough: true }) response: Response,
     @Body() updateSpeciesDto: UpdateSpeciesDto,
-    @UploadedFile("exampleImg") exampleImg: Express.Multer.File
-    // files: Express.Multer.File[]
-    // @UploadedFile()
-    // files?: {
-    //   exampleImg?: Express.Multer.File;
-    //   foliageImg?: Express.Multer.File;
-    // }
+    @UploadedFiles() files: Array<Express.Multer.File>
   ) {
     this._logger.debug("PATCH: /api/species");
     const userId: number = getUserIdFromRequest(request);
+    // Check files uploaded
+    // console.log(files);
+    files.forEach((file) => {
+      // TODO: check if the image is the same
+      if (file.fieldname === "exampleImg") {
+        updateSpeciesDto.exampleImg = file;
+      }
+      if (file.fieldname === "galleryImg[]") {
+        if (
+          updateSpeciesDto.galleryImg &&
+          updateSpeciesDto.galleryImg.length > 0
+        )
+          updateSpeciesDto.galleryImg = [...updateSpeciesDto.galleryImg, file];
+        else updateSpeciesDto.galleryImg = [file];
+      }
+    });
     console.log(updateSpeciesDto);
-    console.log(exampleImg);
+    if (updateSpeciesDto.exampleImg)
+      console.log(uuidv1(updateSpeciesDto.exampleImg.buffer));
     return true;
     return this._speciesService.update(updateSpeciesDto, userId);
   }

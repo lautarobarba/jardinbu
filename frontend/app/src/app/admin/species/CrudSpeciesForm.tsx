@@ -1,8 +1,8 @@
 "use client";
-import { FormEvent, HTMLAttributes, SyntheticEvent, useEffect, useState } from 'react';
+import { ChangeEventHandler, FormEvent, HTMLAttributes, SyntheticEvent, useEffect, useState } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Button, Modal, ModalContent, Tooltip, Select, SelectItem } from '@nextui-org/react';
+import { Button, Modal, ModalContent, Tooltip, Select, SelectItem, Input } from '@nextui-org/react';
 import {
   Chip,
   TextField,
@@ -38,8 +38,20 @@ import { CreateGenusForm } from '../taxonomy/sections/forms/CrudGenusForm';
 import { formatTitleCase } from '@/utils/tools';
 import { ModalThemeWrapper } from '@/wrappers/ModalThemeWrapper';
 import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react';
+import Axios from "axios";
 
+// TODO: SACAR ESTO
+// Api Url
+const apiBaseUrl: string =
+  process.env.NEXT_PUBLIC_API_ROUTE ?? "http://ERROR/api";
+const axiosClient = Axios.create({
+  baseURL: `${apiBaseUrl}/api/`,
+  timeout: 10 * 1000, // 10 sec
+  withCredentials: true, // Cookies
+});
 
+// TODO: mover esta restriccion a otro lugar mas generico
+const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
 const ValidationSchema = Yup.object().shape({
   scientificName: Yup.string()
@@ -61,7 +73,7 @@ const ValidationSchema = Yup.object().shape({
   exampleImg: Yup.mixed()
     .nullable()
     .notRequired(),
-  foliageImg: Yup.mixed()
+  galleryImg: Yup.mixed()
     .nullable()
     .notRequired(),
 });
@@ -76,8 +88,8 @@ interface Values {
   status: string;
   foliageType: string;
   presence: string;
-  exampleImg?: null,
-  foliageImg?: null,
+  exampleImg?: File,
+  galleryImg?: File[],
 }
 
 interface CreateSpeciesFormProps {
@@ -542,6 +554,9 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
   const [phylum, setPhylum] = useState<string>('');
   const [kingdom, setKingdom] = useState<string>('');
 
+  const [exampleImgPreview, setExampleImgPreview] = useState<any>(null);
+  const [galleryImgPreview, setGalleryImgPreview] = useState<any[]>([]);
+
   const [openCreateGenusModal, setOpenCreateGenusModal] =
     useState<boolean>(false);
 
@@ -593,32 +608,44 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         presence: values.presence as Presence,
 
         exampleImg: values.exampleImg,
+        galleryImg: values.galleryImg
       };
 
-      updateSpeciesMutate(
-        { updateSpeciesDto },
-        {
-          onError: (error: any) => {
-            console.log('ERROR: Error al actualizar especie');
-            console.log(error);
-            enqueueSnackbar('ERROR: Error al actualizar especie', {
-              anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-              variant: 'error',
-            });
+      // TODO: sacar y reemplazar por reactqueryhook
+      const response = await axiosClient
+        .patch("species", updateSpeciesDto, {
+          headers: {
+            "Content-Type": "multipart/form-data",
           },
-          onSuccess: (species: Species) => {
-            console.log('Especie actualizada correctamente');
-            console.log(species);
-            queryClient.invalidateQueries(['species']);
-            queryClient.invalidateQueries([`species-${id}`]);
-            toggleVisibility(false);
-            enqueueSnackbar('Especie actualizada correctamente', {
-              anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-              variant: 'success',
-            });
-          },
-        }
-      );
+        })
+        .then((response) => response.data);
+
+      console.log(response);
+
+      // updateSpeciesMutate(
+      //   { updateSpeciesDto },
+      //   {
+      //     onError: (error: any) => {
+      //       console.log('ERROR: Error al actualizar especie');
+      //       console.log(error);
+      //       enqueueSnackbar('ERROR: Error al actualizar especie', {
+      //         anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+      //         variant: 'error',
+      //       });
+      //     },
+      //     onSuccess: (species: Species) => {
+      //       console.log('Especie actualizada correctamente');
+      //       console.log(species);
+      //       queryClient.invalidateQueries(['species']);
+      //       queryClient.invalidateQueries([`species-${id}`]);
+      //       toggleVisibility(false);
+      //       enqueueSnackbar('Especie actualizada correctamente', {
+      //         anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+      //         variant: 'success',
+      //       });
+      //     },
+      //   }
+      // );
     },
   });
 
@@ -639,9 +666,63 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
     console.log(formik.errors);
   }, [formik.errors]);
 
+  // useEffect(() => {
+  //   console.log(formik.values);
+  // }, [formik.values]);
+
+  // El ejemplo del previe lo saque de aca:
+  // https://blog.logrocket.com/using-filereader-api-preview-images-react/
+
+  // Update exampleImgPreview
   useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
+    if (formik.values.exampleImg) {
+      const fileReader = new FileReader();
+      fileReader.onload = (event: any) => {
+        const { result } = event.target;
+        if (result) {
+          setExampleImgPreview(result);
+        }
+      }
+      fileReader.readAsDataURL(formik.values.exampleImg);
+    }
+    // TODO: investigar como limpiar el filereader creado
+    // return () => {  
+    //   fileReader.abort();
+    // } 
+  }, [formik.values.exampleImg]);
+
+  // Update galleryImgPreview
+  useEffect(() => {
+    console.log(formik.values.galleryImg);
+    if (formik.values.galleryImg && formik.values.galleryImg.length > 0) {
+      const fileReaders: FileReader[] = [];
+      const imagesAux: any[] = [];
+      // formik.values.galleryImg.forEach((image: File) => {
+      //     const fileReader = new FileReader();
+      //     fileReaders.push(fileReader);
+      //     fileReader.onload = (event: any) => {
+      //       const { result } = event.target;
+      //       if (result) {
+      //         imagesAux.push(result);
+      //       }
+      //       if (formik.values.galleryImg && (imagesAux.length === formik.values.galleryImg.length)) {
+      //         setGalleryImgPreview(imagesAux);
+      //       }
+      //     }
+      //     fileReader.readAsDataURL(image);
+      // });
+    }
+
+
+    // TODO: investigar como limpiar el filereader creado
+    // return () => {
+    //   fileReaders.forEach(fileReader => {
+    //     if (fileReader.readyState === 1) {
+    //       fileReader.abort()
+    //     }
+    //   })
+    // }
+  }, [formik.values.galleryImg]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -976,25 +1057,114 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         </Grid>
       </Grid>
 
-      <Grid item xs={12} md={4}>
-        {/* exampleImg?: null,
-  foliageImg?: null, */}
-        {/* <MDBFile
-          // disabled={!editMode}
-          id='exampleImg'
-          name='exampleImg'
-          label='Ejemplar'
-          // value={formik.values.exampleImg}
+      {/* <Grid item xs={12} md={4}>
+        <div className="flex items-center justify-center w-full">
+          <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+              <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+              </svg>
+              <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+            </div>
+            <input id="dropzone-file" type="file" className="hidden" multiple />
+          </label>
+        </div>
+      </Grid> */}
+
+      {/* Example image input */}
+      <Grid item xs={12}>
+        <label
+          className="block m-2 text-sm font-medium text-gray-900 dark:text-white"
+          htmlFor="exampleImg"
+        >Foto principal</label>
+        <input
+          type="file"
+          id="exampleImg"
+          name="exampleImg"
+          accept="image/*"
+          // TODO: agregar control de tipos de archivos imagenes
+          className={`block w-full text-sm focus:outline-none rounded-lg cursor-pointer 
+              border border-gray-300 dark:border-gray-600 
+              text-gray-900 dark:text-gray-400 bg-gray-50 dark:bg-gray-700
+              dark:placeholder-gray-400`}
           onChange={(event: any) => {
-            formik.setFieldValue(
-              'exampleImg',
-              event.target.files[0]
-            );
+            const auxFile: File = event.target.files[0];
+            if (auxFile) {
+              if (auxFile.type.match(imageMimeType)) {
+                formik.setFieldValue('exampleImg', auxFile);
+              } else {
+                formik.setErrors({ exampleImg: 'Error en el tipo de archivo. No es una imagen' });
+                console.log('Error en el tipo de archivo. No es una imagen');
+              }
+            }
           }}
-        // error={formik.touched.exampleImg && Boolean(formik.errors.exampleImg)}
-        // helperText={formik.touched.exampleImg && formik.errors.exampleImg}
-        /> */}
+        />
       </Grid>
+
+      {Boolean(formik.errors.exampleImg) && (
+        <Grid item xs={12}>
+          <p className='text-error'>ERROR:{formik.errors.exampleImg}</p>
+        </Grid>
+      )}
+
+      {/* Example image preview */}
+      {exampleImgPreview && !Boolean(formik.errors.exampleImg) && (
+        <Grid item xs={12}>
+          <div className='flex flex-col items-center'>
+            <img
+              loading='lazy'
+              src={exampleImgPreview}
+              alt="Logo JBU"
+              title="Logo JBU"
+              className="w-60 md:w-80 lg:w-96 mb-6"
+            />
+          </div>
+        </Grid>
+      )}
+
+      <Grid item xs={12} md={4}>
+        <label
+          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          htmlFor="galleryImg"
+        >Galeria (opcional)</label>
+        <input
+          type="file"
+          id="galleryImg"
+          name="galleryImg"
+          className="block w-full text-sm focus:outline-none rounded-lg cursor-pointer 
+            border border-gray-300 dark:border-gray-600 
+            text-gray-900 dark:text-gray-400 bg-gray-50 dark:bg-gray-700
+            dark:placeholder-gray-400"
+          // TODO: cambiar el tipo del event al correcto
+          onChange={(event: any) => {
+            const auxFiles: File[] = event.target.files;
+            formik.setFieldValue('galleryImg', auxFiles);
+          }}
+          multiple
+        />
+      </Grid>
+
+      {/* Example image preview */}
+      {galleryImgPreview && galleryImgPreview.length > 0 && (
+        <>
+          {galleryImgPreview.forEach((imagePreview: any, index: number) => {
+            return (
+              <Grid item xs={12}>
+                <div className='flex flex-col items-center'>
+                  <img
+                    loading='lazy'
+                    src={imagePreview}
+                    alt={`gallery_${index}`}
+                    title={`gallery_${index}`}
+                    className="w-60 md:w-80 lg:w-96 mb-6"
+                  />
+                </div>
+              </Grid>
+            );
+          })}
+        </>
+      )}
 
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
