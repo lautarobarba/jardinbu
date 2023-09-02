@@ -1,16 +1,15 @@
-import * as Yup from 'yup';
+"use client";
+import { FormEvent, HTMLAttributes, SyntheticEvent, useEffect, useState } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
+import * as Yup from 'yup';
+import { Button, Modal, ModalContent, Tooltip } from '@nextui-org/react';
+import { ModalThemeWrapper } from '@/wrappers/ModalThemeWrapper';
 import {
-  Alert,
-  Autocomplete,
-  Dialog,
-  Grid,
-  IconButton,
   TextField,
-  Tooltip,
+  Grid,
+  Autocomplete,
+  Alert,
 } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
 import {
   useCreateOrderTax,
   useDeleteOrderTax,
@@ -18,17 +17,18 @@ import {
   useGetOrderTax,
   useUpdateOrderTax,
 } from '@/services/hooks';
-import { ClassTax, classTaxToString } from '@/interfaces/class-tax.interface';
-import { useQueryClient } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-import { PageSubTitle } from '@/components/PageSubTitle';
-import { FormEvent, useEffect, useState } from 'react';
 import {
   CreateOrderTaxDto,
   OrderTax,
   UpdateOrderTaxDto,
 } from '@/interfaces/order-tax.interface';
+import { ClassTax, classTaxToString } from '@/interfaces/class-tax.interface';
 import { CreateClassTaxForm } from './CrudClassTaxForm';
+import { useQueryClient } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
+import { PageSubTitle } from '@/components/PageSubTitle';
+import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react';
+
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -71,9 +71,6 @@ export const CreateOrderTaxForm = (props: CreateOrderTaxFormProps) => {
   const {
     mutate: createOrderTaxMutate,
     isLoading: createOrderTaxIsLoading,
-    // isSuccess: createOrderTaxIsSuccess,
-    // isError: createOrderTaxIsError,
-    // error: createOrderTaxError,
   } = useCreateOrderTax();
 
   const formik = useFormik({
@@ -176,6 +173,13 @@ export const CreateOrderTaxForm = (props: CreateOrderTaxFormProps) => {
                 required={true}
               />
             )}
+            renderOption={(props: HTMLAttributes<HTMLLIElement>, classTax: ClassTax) => {
+              return (
+                <li {...props} key={classTax.id}>
+                  {classTaxToString(classTax)}
+                </li>
+              );
+            }}
             isOptionEqualToValue={(option: any, selection: any) =>
               option.value === selection.value
             }
@@ -196,27 +200,31 @@ export const CreateOrderTaxForm = (props: CreateOrderTaxFormProps) => {
           justifyContent={'center'}
           alignItems={'center'}
         >
-          <Tooltip title='Nuevo' arrow>
-            <IconButton
-              type='button'
+          <Tooltip content='Nuevo'>
+            <span
               onClick={() => toggleOpenCreateClassTaxModal()}
             >
-              <AddIcon className='text-primary' fontSize={'large'} />
-            </IconButton>
+              <PlusIcon className='text-primary' fontSize={'large'} />
+            </span>
           </Tooltip>
 
-          <Dialog
+          <Modal
+            size="5xl"
+            radius="sm"
+            isOpen={openCreateClassTaxModal}
             onClose={() => setOpenCreateClassTaxModal(false)}
-            open={openCreateClassTaxModal}
-            maxWidth={'md'}
-            fullWidth
+            isDismissable={false}
           >
-            <div className='p-5'>
-              <CreateClassTaxForm
-                toggleVisibility={toggleOpenCreateClassTaxModal}
-              />
-            </div>
-          </Dialog>
+            <ModalThemeWrapper>
+              <ModalContent>
+                <div className='p-5 bg-light dark:bg-dark'>
+                  <CreateClassTaxForm
+                    toggleVisibility={toggleOpenCreateClassTaxModal}
+                  />
+                </div>
+              </ModalContent>
+            </ModalThemeWrapper>
+          </Modal>
         </Grid>
         <Grid item xs={12}>
           <TextField
@@ -239,23 +247,27 @@ export const CreateOrderTaxForm = (props: CreateOrderTaxFormProps) => {
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={createOrderTaxIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
-          color='primary'
+        </Button>
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={createOrderTaxIsLoading}
         >
           {createOrderTaxIsLoading ? 'Guardando...' : 'Guardar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -286,20 +298,14 @@ export const UpdateOrderTaxForm = (props: UpdateOrderTaxFormProps) => {
 
   // Query
   const {
-    // isLoading: getOrderTaxIsLoading,
     isSuccess: getOrderTaxIsSuccess,
     data: getOrderTaxData,
-    // isError: getOrderTaxIsError,
-    // error: getOrderTaxError,
   } = useGetOrderTax({ id: id }, { keepPreviousData: true });
 
   // Mutación
   const {
     mutate: updateOrderTaxMutate,
     isLoading: updateOrderTaxIsLoading,
-    // isSuccess: updateOrderTaxIsSuccess,
-    // isError: updateOrderTaxIsError,
-    // error: updateOrderTaxError,
   } = useUpdateOrderTax();
 
   const formik = useFormik({
@@ -414,6 +420,13 @@ export const UpdateOrderTaxForm = (props: UpdateOrderTaxFormProps) => {
                 required={true}
               />
             )}
+            renderOption={(props: HTMLAttributes<HTMLLIElement>, classTax: ClassTax) => {
+              return (
+                <li {...props} key={classTax.id}>
+                  {classTaxToString(classTax)}
+                </li>
+              );
+            }}
             isOptionEqualToValue={(option: any, selection: any) =>
               option.value === selection.value
             }
@@ -434,27 +447,31 @@ export const UpdateOrderTaxForm = (props: UpdateOrderTaxFormProps) => {
           justifyContent={'center'}
           alignItems={'center'}
         >
-          <Tooltip title='Nuevo' arrow>
-            <IconButton
-              type='button'
+          <Tooltip content='Nuevo'>
+            <span
               onClick={() => toggleOpenCreateClassTaxModal()}
             >
-              <AddIcon className='text-primary' fontSize={'large'} />
-            </IconButton>
+              <PlusIcon className='text-primary' fontSize={'large'} />
+            </span>
           </Tooltip>
 
-          <Dialog
+          <Modal
+            size="5xl"
+            radius="sm"
+            isOpen={openCreateClassTaxModal}
             onClose={() => setOpenCreateClassTaxModal(false)}
-            open={openCreateClassTaxModal}
-            maxWidth={'md'}
-            fullWidth
+            isDismissable={false}
           >
-            <div className='p-5'>
-              <CreateClassTaxForm
-                toggleVisibility={toggleOpenCreateClassTaxModal}
-              />
-            </div>
-          </Dialog>
+            <ModalThemeWrapper>
+              <ModalContent>
+                <div className='p-5 bg-light dark:bg-dark'>
+                  <CreateClassTaxForm
+                    toggleVisibility={toggleOpenCreateClassTaxModal}
+                  />
+                </div>
+              </ModalContent>
+            </ModalThemeWrapper>
+          </Modal>
         </Grid>
         <Grid item xs={12}>
           <TextField
@@ -477,23 +494,27 @@ export const UpdateOrderTaxForm = (props: UpdateOrderTaxFormProps) => {
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={updateOrderTaxIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
-          color='primary'
+        </Button>
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={updateOrderTaxIsLoading}
         >
           {updateOrderTaxIsLoading ? 'Guardando...' : 'Guardar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -513,20 +534,14 @@ export const DeleteOrderTaxForm = (props: DeleteOrderTaxFormProps) => {
 
   // Query
   const {
-    // isLoading: getClassTaxIsLoading,
     isSuccess: getOrderTaxIsSuccess,
     data: getOrderTaxData,
-    // isError: getOrderTaxIsError,
-    // error: getOrderTaxError,
   } = useGetOrderTax({ id: id }, { keepPreviousData: true });
 
   // Mutación
   const {
     mutate: deleteOrderTaxMutate,
     isLoading: deleteOrderTaxIsLoading,
-    // isSuccess: deleteOrderTaxIsSuccess,
-    // isError: deleteOrderTaxIsError,
-    // error: deleteOrderTaxError,
   } = useDeleteOrderTax();
 
   const deleteOrderTax = (event: FormEvent<HTMLFormElement>) => {
@@ -635,23 +650,27 @@ export const DeleteOrderTaxForm = (props: DeleteOrderTaxFormProps) => {
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
-          color='primary'
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={deleteOrderTaxIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
+        </Button>
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={deleteOrderTaxIsLoading}
         >
           {deleteOrderTaxIsLoading ? 'Eliminando...' : 'Eliminar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -667,43 +686,53 @@ export const ModalCrudOrderTax = (props: ModalCrudOrderTaxProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   return (
     <>
-      <div>
-        <MDBIcon
-          icon='pencil-alt'
-          size='lg'
-          className='d-inline mx-2 text-dark'
-          style={{ marginTop: 'auto', marginBottom: 'auto' }}
-          onClick={() => setShowEditModal(true)}
-        />
-        <MDBIcon
-          icon='trash-alt'
-          size='lg'
-          className='d-inline mx-2 text-danger'
-          style={{ marginTop: 'auto', marginBottom: 'auto' }}
-          onClick={() => setShowDeleteModal(true)}
-        />
+      <div className='flex flex-row space-x-2'>
+        <Tooltip content="Editar">
+          <span
+            onClick={() => setShowEditModal(true)}
+          >
+            <PencilIcon className='text-primary' />
+          </span>
+        </Tooltip>
+        <Tooltip content="Eliminar">
+          <span
+            onClick={() => setShowDeleteModal(true)}
+          >
+            <TrashIcon className='text-error' />
+          </span>
+        </Tooltip>
       </div>
       <div>
-        <Dialog
+        <Modal
+          size="5xl"
+          radius="sm"
+          isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
-          open={showEditModal}
-          maxWidth={'md'}
-          fullWidth
+          isDismissable={false}
         >
-          <div className='p-5'>
-            <UpdateOrderTaxForm toggleVisibility={setShowEditModal} id={id} />
-          </div>
-        </Dialog>
-        <Dialog
+          <ModalThemeWrapper>
+            <ModalContent>
+              <div className='p-5 bg-light dark:bg-dark'>
+                <UpdateOrderTaxForm toggleVisibility={setShowEditModal} id={id} />
+              </div>
+            </ModalContent>
+          </ModalThemeWrapper>
+        </Modal>
+        <Modal
+          size="5xl"
+          radius="sm"
+          isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
-          open={showDeleteModal}
-          maxWidth={'md'}
-          fullWidth
+          isDismissable={false}
         >
-          <div className='p-5'>
-            <DeleteOrderTaxForm toggleVisibility={setShowDeleteModal} id={id} />
-          </div>
-        </Dialog>
+          <ModalThemeWrapper>
+            <ModalContent>
+              <div className='p-5 bg-light dark:bg-dark'>
+                <DeleteOrderTaxForm toggleVisibility={setShowDeleteModal} id={id} />
+              </div>
+            </ModalContent>
+          </ModalThemeWrapper>
+        </Modal>
       </div>
     </>
   );
