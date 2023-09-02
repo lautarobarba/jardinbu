@@ -148,7 +148,6 @@ export class SpeciesService {
     species.status = status ? status : null;
     species.foliageType = foliageType ? foliageType : null;
     species.presence = presence ? presence : null;
-    species.createdAt = timestamp;
     species.updatedAt = timestamp;
     species.deleted = false;
     species.userMod = await this._userService.findOne(userId);

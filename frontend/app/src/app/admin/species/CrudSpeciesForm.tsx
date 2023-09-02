@@ -8,7 +8,6 @@ import {
   TextField,
   Grid,
   Autocomplete,
-  Dialog,
   IconButton,
   FormControl,
   InputLabel,
@@ -37,7 +36,9 @@ import { useSnackbar } from 'notistack';
 import { PageSubTitle } from '@/components/PageSubTitle';
 import { CreateGenusForm } from '../taxonomy/sections/forms/CrudGenusForm';
 import { formatTitleCase } from '@/utils/tools';
-import { PlusIcon } from 'lucide-react';
+import { ModalThemeWrapper } from '@/wrappers/ModalThemeWrapper';
+import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react';
+
 
 
 const ValidationSchema = Yup.object().shape({
@@ -101,9 +102,8 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
   };
 
   // Lista de géneros para Select
-  const { isSuccess: getGeneraIsSuccess, data: getGeneraData } = useGetGenera(
-    {}
-  );
+  const { isSuccess: getGeneraIsSuccess, data: getGeneraData } =
+    useGetGenera({});
 
   // Mutación
   const {
@@ -197,11 +197,10 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
             //     <Chip {...getTagProps({ index })} key={option.id} label={option.description} />
             //   ))
             // }}
-            // isOptionEqualToValue={(option: any, selection: any) =>
-            //   option.value === selection.value
-            // }
+            isOptionEqualToValue={(option: any, selection: any) =>
+              option.value === selection.value
+            }
             onChange={(event: SyntheticEvent<Element, Event>, selection: Genus) => {
-              event.preventDefault();
               formik.setFieldValue('genus', selection);
               formik.setFieldValue(
                 'scientificName',
@@ -363,6 +362,11 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
             name='organismType'
             label="Tipo de organismo"
             value={formik.values.organismType}
+            selectedKeys={
+              formik.values.organismType
+                ? new Set([formik.values.organismType])
+                : new Set()
+            }
             onChange={formik.handleChange}
             validationState={
               formik.touched.organismType && Boolean(formik.errors.organismType)
@@ -374,25 +378,25 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
             variant="bordered"
             radius="sm"
           >
-            <SelectItem key={0} value={'TREE'}>
+            <SelectItem key={'TREE'} value={'TREE'}>
               ARBOL
             </SelectItem>
-            <SelectItem key={1} value={'BUSH'}>
+            <SelectItem key={'BUSH'} value={'BUSH'}>
               ARBUSTO
             </SelectItem>
-            <SelectItem key={2} value={'SUBSHRUB'}>
+            <SelectItem key={'SUBSHRUB'} value={'SUBSHRUB'}>
               SUBARBUSTO
             </SelectItem>
-            <SelectItem key={3} value={'FUNGUS'}>
+            <SelectItem key={'FUNGUS'} value={'FUNGUS'}>
               HONGO
             </SelectItem>
-            <SelectItem key={4} value={'GRASS'}>
+            <SelectItem key={'GRASS'} value={'GRASS'}>
               HIERBA
             </SelectItem>
-            <SelectItem key={5} value={'LICHEN'}>
+            <SelectItem key={'LICHEN'} value={'LICHEN'}>
               LIQUEN
             </SelectItem>
-            <SelectItem key={6} value={'HEMIPARASITE_SUBSHRUB'}>
+            <SelectItem key={'HEMIPARASITE_SUBSHRUB'} value={'HEMIPARASITE_SUBSHRUB'}>
               SUBARBUSTO HEMIPARÁSITO
             </SelectItem>
           </Select>
@@ -404,6 +408,11 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
             name='foliageType'
             label="Tipo de follage"
             value={formik.values.foliageType}
+            selectedKeys={
+              formik.values.foliageType
+                ? new Set([formik.values.foliageType])
+                : new Set()
+            }
             onChange={formik.handleChange}
             validationState={
               formik.touched.foliageType && Boolean(formik.errors.foliageType)
@@ -415,10 +424,10 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
             variant="bordered"
             radius="sm"
           >
-            <SelectItem key={0} value={'PERENNIAL'}>
+            <SelectItem key={'PERENNIAL'} value={'PERENNIAL'}>
               PERENNE
             </SelectItem>
-            <SelectItem key={1} value={'DECIDUOUS'}>
+            <SelectItem key={'DECIDUOUS'} value={'DECIDUOUS'}>
               CADUCIFOLIA
             </SelectItem>
           </Select>
@@ -430,6 +439,11 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
             name='status'
             label="Status"
             value={formik.values.status}
+            selectedKeys={
+              formik.values.status
+                ? new Set([formik.values.status])
+                : new Set()
+            }
             onChange={formik.handleChange}
             validationState={
               formik.touched.status && Boolean(formik.errors.status)
@@ -441,13 +455,13 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
             variant="bordered"
             radius="sm"
           >
-            <SelectItem key={0} value={'NATIVE'}>
+            <SelectItem key={'NATIVE'} value={'NATIVE'}>
               NATIVA
             </SelectItem>
-            <SelectItem key={1} value={'ENDEMIC'}>
+            <SelectItem key={'ENDEMIC'} value={'ENDEMIC'}>
               ENDEMICA
             </SelectItem>
-            <SelectItem key={2} value={'INTRODUCED'}>
+            <SelectItem key={'INTRODUCED'} value={'INTRODUCED'}>
               INTRODUCIDA
             </SelectItem>
           </Select>
@@ -459,6 +473,11 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
             name='presence'
             label="Presencia"
             value={formik.values.presence}
+            selectedKeys={
+              formik.values.presence
+                ? new Set([formik.values.presence])
+                : new Set()
+            }
             onChange={formik.handleChange}
             validationState={
               formik.touched.presence && Boolean(formik.errors.presence)
@@ -470,10 +489,10 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
             variant="bordered"
             radius="sm"
           >
-            <SelectItem key={0} value={'PRESENT'}>
+            <SelectItem key={'PRESENT'} value={'PRESENT'}>
               PRESENTE
             </SelectItem>
-            <SelectItem key={1} value={'ABSENT'}>
+            <SelectItem key={'ABSENT'} value={'ABSENT'}>
               AUSENTE
             </SelectItem>
           </Select>
@@ -536,20 +555,14 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
 
   // Query
   const {
-    // isLoading: getOneSpeciesIsLoading,
     isSuccess: getOneSpeciesIsSuccess,
     data: getOneSpeciesData,
-    // isError: getOneSpeciesIsError,
-    // error: getOneSpeciesError,
   } = useGetOneSpecies({ id: id }, { keepPreviousData: true });
 
   // Mutación
   const {
     mutate: updateSpeciesMutate,
     isLoading: updateSpeciesIsLoading,
-    // isSuccess: updateSpeciesIsSuccess,
-    // isError: updateSpeciesIsError,
-    // error: updateSpeciesError,
   } = useUpdateSpecies();
 
   const formik = useFormik({
@@ -580,8 +593,6 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         presence: values.presence as Presence,
 
         exampleImg: values.exampleImg,
-        //   foliageImg: values.foliageImg,
-        // }
       };
 
       updateSpeciesMutate(
@@ -628,6 +639,10 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
     console.log(formik.errors);
   }, [formik.errors]);
 
+  useEffect(() => {
+    console.log(formik.values);
+  }, [formik.values]);
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <Grid container spacing={2} justifyContent={'center'}>
@@ -651,10 +666,17 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
                 required={true}
               />
             )}
+            renderOption={(props: HTMLAttributes<HTMLLIElement>, genus: Genus) => {
+              return (
+                <li {...props} key={genus.id}>
+                  {genusToString(genus)}
+                </li>
+              );
+            }}
             isOptionEqualToValue={(option: any, selection: any) =>
               option.value === selection.value
             }
-            onChange={(e, selection: Genus) => {
+            onChange={(event: SyntheticEvent<Element, Event>, selection: Genus) => {
               formik.setFieldValue('genus', selection);
               formik.setFieldValue(
                 'scientificName',
@@ -680,16 +702,15 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
           justifyContent={'center'}
           alignItems={'center'}
         >
-          {/* <Tooltip title='Nuevo' arrow>
-            <IconButton
-              type='button'
+          <Tooltip content='Nuevo'>
+            <span
               onClick={() => toggleOpenCreateGenusModal()}
             >
-              <AddIcon className='text-primary' fontSize={'large'} />
-            </IconButton>
-          </Tooltip> */}
+              <PlusIcon className='text-primary' fontSize={'large'} />
+            </span>
+          </Tooltip>
 
-          <Dialog
+          {/* <Dialog
             onClose={() => setOpenCreateGenusModal(false)}
             open={openCreateGenusModal}
             maxWidth={'md'}
@@ -698,7 +719,7 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
             <div className='p-5'>
               <CreateGenusForm toggleVisibility={toggleOpenCreateGenusModal} />
             </div>
-          </Dialog>
+          </Dialog> */}
         </Grid>
         <Grid item xs={12} md={4}>
           <TextField
@@ -813,122 +834,145 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         </Grid>
 
         <Grid item xs={12} md={6}>
-          {/* <FormControl fullWidth required>
-            <InputLabel>Tipo de organismo</InputLabel>
-            <Select
-              id='organismType'
-              name='organismType'
-              label='Tipo de organismo'
-              value={formik.values.organismType}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.organismType &&
-                Boolean(formik.errors.organismType)
-              }
-              fullWidth
-              autoComplete='organismType'
-              required
-            >
-              <MenuItem key={0} value={'TREE'}>
-                ARBOL
-              </MenuItem>
-              <MenuItem key={1} value={'BUSH'}>
-                ARBUSTO
-              </MenuItem>
-              <MenuItem key={2} value={'SUBSHRUB'}>
-                SUBARBUSTO
-              </MenuItem>
-              <MenuItem key={3} value={'FUNGUS'}>
-                HONGO
-              </MenuItem>
-              <MenuItem key={4} value={'GRASS'}>
-                HIERBA
-              </MenuItem>
-              <MenuItem key={5} value={'LICHEN'}>
-                LIQUEN
-              </MenuItem>
-              <MenuItem key={6} value={'HEMIPARASITE_SUBSHRUB'}>
-                SUBARBUSTO HEMIPARÁSITO
-              </MenuItem>
-            </Select>
-          </FormControl> */}
+          <Select
+            id='organismType'
+            name='organismType'
+            label="Tipo de organismo"
+            value={formik.values.organismType}
+            selectedKeys={
+              formik.values.organismType
+                ? new Set([formik.values.organismType])
+                : new Set()
+            }
+            onChange={formik.handleChange}
+            validationState={
+              formik.touched.organismType && Boolean(formik.errors.organismType)
+                ? 'invalid'
+                : 'valid'
+            }
+            autoComplete='organismType'
+            isRequired
+            variant="bordered"
+            radius="sm"
+          >
+            <SelectItem key={'TREE'} value={'TREE'}>
+              ARBOL
+            </SelectItem>
+            <SelectItem key={'BUSH'} value={'BUSH'}>
+              ARBUSTO
+            </SelectItem>
+            <SelectItem key={'SUBSHRUB'} value={'SUBSHRUB'}>
+              SUBARBUSTO
+            </SelectItem>
+            <SelectItem key={'FUNGUS'} value={'FUNGUS'}>
+              HONGO
+            </SelectItem>
+            <SelectItem key={'GRASS'} value={'GRASS'}>
+              HIERBA
+            </SelectItem>
+            <SelectItem key={'LICHEN'} value={'LICHEN'}>
+              LIQUEN
+            </SelectItem>
+            <SelectItem key={'HEMIPARASITE_SUBSHRUB'} value={'HEMIPARASITE_SUBSHRUB'}>
+              SUBARBUSTO HEMIPARÁSITO
+            </SelectItem>
+          </Select>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          {/* <FormControl fullWidth required>
-            <InputLabel>Tipo de follage</InputLabel>
-            <Select
-              id='foliageType'
-              name='foliageType'
-              label='Tipo de follage'
-              value={formik.values.foliageType}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.foliageType && Boolean(formik.errors.foliageType)
-              }
-              fullWidth
-              autoComplete='foliageType'
-              required
-            >
-              <MenuItem key={0} value={'PERENNIAL'}>
-                PERENNE
-              </MenuItem>
-              <MenuItem key={1} value={'DECIDUOUS'}>
-                CADUCIFOLIA
-              </MenuItem>
-            </Select>
-          </FormControl> */}
+          <Select
+            id='foliageType'
+            name='foliageType'
+            label="Tipo de follage"
+            value={formik.values.foliageType}
+            selectedKeys={
+              formik.values.foliageType
+                ? new Set([formik.values.foliageType])
+                : new Set()
+            }
+            onChange={formik.handleChange}
+            validationState={
+              formik.touched.foliageType && Boolean(formik.errors.foliageType)
+                ? 'invalid'
+                : 'valid'
+            }
+            autoComplete='foliageType'
+            isRequired
+            variant="bordered"
+            radius="sm"
+          >
+            <SelectItem key={'PERENNIAL'} value={'PERENNIAL'}>
+              PERENNE
+            </SelectItem>
+            <SelectItem key={'DECIDUOUS'} value={'DECIDUOUS'}>
+              CADUCIFOLIA
+            </SelectItem>
+          </Select>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          {/* <FormControl fullWidth required>
-            <InputLabel>Status</InputLabel>
-            <Select
-              id='status'
-              name='status'
-              label='Status'
-              value={formik.values.status}
-              onChange={formik.handleChange}
-              error={formik.touched.status && Boolean(formik.errors.status)}
-              fullWidth
-              autoComplete='status'
-              required
-            >
-              <MenuItem key={0} value={'NATIVE'}>
-                NATIVA
-              </MenuItem>
-              <MenuItem key={1} value={'ENDEMIC'}>
-                ENDEMICA
-              </MenuItem>
-              <MenuItem key={2} value={'INTRODUCED'}>
-                INTRODUCIDA
-              </MenuItem>
-            </Select>
-          </FormControl> */}
+          <Select
+            id='status'
+            name='status'
+            label="Status"
+            value={formik.values.status}
+            selectedKeys={
+              formik.values.status
+                ? new Set([formik.values.status])
+                : new Set()
+            }
+            onChange={formik.handleChange}
+            validationState={
+              formik.touched.status && Boolean(formik.errors.status)
+                ? 'invalid'
+                : 'valid'
+            }
+            autoComplete='status'
+            isRequired
+            variant="bordered"
+            radius="sm"
+          >
+            <SelectItem key={'NATIVE'} value={'NATIVE'}>
+              NATIVA
+            </SelectItem>
+            <SelectItem key={'ENDEMIC'} value={'ENDEMIC'}>
+              ENDEMICA
+            </SelectItem>
+            <SelectItem key={'INTRODUCED'} value={'INTRODUCED'}>
+              INTRODUCIDA
+            </SelectItem>
+          </Select>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          {/* <FormControl fullWidth required>
-            <InputLabel>Presencia</InputLabel>
-            <Select
-              id='presence'
-              name='presence'
-              label='Presencia'
-              value={formik.values.presence}
-              onChange={formik.handleChange}
-              error={formik.touched.presence && Boolean(formik.errors.presence)}
-              fullWidth
-              autoComplete='presence'
-              required
-            >
-              <MenuItem key={0} value={'PRESENT'}>
-                PRESENTE
-              </MenuItem>
-              <MenuItem key={1} value={'ABSENT'}>
-                AUSENTE
-              </MenuItem>
-            </Select>
-          </FormControl> */}
+          <Select
+            id='presence'
+            name='presence'
+            label="Presencia"
+            value={formik.values.presence}
+            selectedKeys={
+              formik.values.presence
+                ? new Set([formik.values.presence])
+                : new Set()
+            }
+            onChange={formik.handleChange}
+            validationState={
+              formik.touched.presence && Boolean(formik.errors.presence)
+                ? 'invalid'
+                : 'valid'
+            }
+            autoComplete='presence'
+            isRequired
+            variant="bordered"
+            radius="sm"
+          >
+            <SelectItem key={'PRESENT'} value={'PRESENT'}>
+              PRESENTE
+            </SelectItem>
+            <SelectItem key={'ABSENT'} value={'ABSENT'}>
+              AUSENTE
+            </SelectItem>
+          </Select>
         </Grid>
       </Grid>
 
@@ -954,23 +998,27 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
 
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        {/* <MDBBtn
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={updateSpeciesIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
-          color='primary'
+        </Button>
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={updateSpeciesIsLoading}
         >
           {updateSpeciesIsLoading ? 'Guardando...' : 'Guardar'}
-        </MDBBtn> */}
+        </Button>
       </Grid>
     </form>
   );
@@ -1261,43 +1309,53 @@ export const ModalCrudSpecies = (props: ModalCrudSpeciesProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   return (
     <>
-      <div>
-        {/* <MDBIcon
-          icon='pencil-alt'
-          size='lg'
-          className='d-inline mx-2 text-dark'
-          style={{ marginTop: 'auto', marginBottom: 'auto' }}
-          onClick={() => setShowEditModal(true)}
-        />
-        <MDBIcon
-          icon='trash-alt'
-          size='lg'
-          className='d-inline mx-2 text-danger'
-          style={{ marginTop: 'auto', marginBottom: 'auto' }}
-          onClick={() => setShowDeleteModal(true)}
-        /> */}
+      <div className='flex flex-row space-x-2'>
+        <Tooltip content="Editar">
+          <span
+            onClick={() => setShowEditModal(true)}
+          >
+            <PencilIcon className='text-primary' />
+          </span>
+        </Tooltip>
+        <Tooltip content="Eliminar">
+          <span
+            onClick={() => setShowDeleteModal(true)}
+          >
+            <TrashIcon className='text-error' />
+          </span>
+        </Tooltip>
       </div>
       <div>
-        <Dialog
+        <Modal
+          size="5xl"
+          radius="sm"
+          isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
-          open={showEditModal}
-          maxWidth={'md'}
-          fullWidth
+          isDismissable={false}
         >
-          <div className='p-5'>
-            <UpdateSpeciesForm toggleVisibility={setShowEditModal} id={id} />
-          </div>
-        </Dialog>
-        <Dialog
+          <ModalThemeWrapper>
+            <ModalContent>
+              <div className='p-5 bg-light dark:bg-dark'>
+                <UpdateSpeciesForm toggleVisibility={setShowEditModal} id={id} />
+              </div>
+            </ModalContent>
+          </ModalThemeWrapper>
+        </Modal>
+        <Modal
+          size="5xl"
+          radius="sm"
+          isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
-          open={showDeleteModal}
-          maxWidth={'md'}
-          fullWidth
+          isDismissable={false}
         >
-          <div className='p-5'>
-            <DeleteSpeciesForm toggleVisibility={setShowDeleteModal} id={id} />
-          </div>
-        </Dialog>
+          <ModalThemeWrapper>
+            <ModalContent>
+              <div className='p-5 bg-light dark:bg-dark'>
+                <DeleteSpeciesForm toggleVisibility={setShowDeleteModal} id={id} />
+              </div>
+            </ModalContent>
+          </ModalThemeWrapper>
+        </Modal>
       </div>
     </>
   );

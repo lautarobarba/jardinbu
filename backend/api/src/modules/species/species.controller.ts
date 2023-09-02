@@ -49,21 +49,21 @@ export class SpeciesController {
   @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
-  // @UseInterceptors(
-  //   LocalFilesInterceptor({
-  //     fieldName: "exampleImg",
-  //     path: "/temp",
-  //     fileFilter: (request, file, callback) => {
-  //       if (!file.mimetype.includes("image")) {
-  //         return callback(new BadRequestException("Invalid image file"), false);
-  //       }
-  //       callback(null, true);
-  //     },
-  //     limits: {
-  //       fileSize: 1024 * 1024 * 10, // 10MB
-  //     },
-  //   })
-  // )
+  @UseInterceptors(
+    LocalFilesInterceptor({
+      files: [{ name: "exampleImg" }, { name: "foliageImg" }],
+      path: "/temp",
+      fileFilter: (request, file, callback) => {
+        if (!file.mimetype.includes("image")) {
+          return callback(new BadRequestException("Invalid image file"), false);
+        }
+        callback(null, true);
+      },
+      limits: {
+        fileSize: 1024 * 1024 * 10, // 10MB
+      },
+    })
+  )
   @ApiBearerAuth()
   @ApiConsumes("multipart/form-data")
   @ApiBody({
@@ -158,6 +158,7 @@ export class SpeciesController {
     const userId: number = getUserIdFromRequest(request);
     console.log(updateSpeciesDto);
     console.log(exampleImg);
+    return true;
     return this._speciesService.update(updateSpeciesDto, userId);
   }
 
