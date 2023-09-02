@@ -11,21 +11,16 @@ import { Repository } from "typeorm";
 import { CreateUserDto, UpdateUserDto } from "./user.dto";
 import { Status, User } from "./user.entity";
 import * as moment from "moment";
-import * as mv from "mv";
-import * as fs from "fs";
 import { validate } from "class-validator";
 import { Role } from "../auth/role.enum";
-// import { IJWTPayload } from 'modules/auth/jwt-payload.interface';
-import { Picture } from "modules/utils/picture.entity";
-import { UtilsService } from "modules/utils/utils.service";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
+import { ImageService } from "modules/image/image.service";
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private readonly _userRepository: Repository<User>,
-    private readonly _utilsService: UtilsService
+    private readonly _userRepository: Repository<User> // private readonly _imageService: ImageService
   ) {}
   private readonly _logger = new Logger(UserService.name);
 
@@ -151,24 +146,24 @@ export class UserService {
     if (role) user.role = role;
     user.updatedAt = timestamp;
 
-    // Actualizo foto de perfil
-    // Primero reviso si existía una foto de perfil previa y la marco como eliminada.
-    if (updateUserDto.profilePicture) {
-      // Si recibí una nueva foto de perfil
-      // 1° Elimino la vieja
-      if (user.profilePicture) {
-        await this._utilsService.deletePicture(user.profilePicture.id);
-      }
+    // // Actualizo foto de perfil
+    // // Primero reviso si existía una foto de perfil previa y la marco como eliminada.
+    // if (updateUserDto.profilePicture) {
+    //   // Si recibí una nueva foto de perfil
+    //   // 1° Elimino la vieja
+    //   if (user.profilePicture) {
+    //     await this._utilsService.deletePicture(user.profilePicture.id);
+    //   }
 
-      // 2° La guardo en la DB
-      const newProfilePicture: Picture =
-        await await this._utilsService.saveProfilePicture(
-          updateUserDto.profilePicture
-        );
+    //   // 2° La guardo en la DB
+    //   const newProfilePicture: Picture =
+    //     await await this._utilsService.saveProfilePicture(
+    //       updateUserDto.profilePicture
+    //     );
 
-      // 3° Asigno la nueva foto al usuario
-      user.profilePicture = newProfilePicture;
-    }
+    //   // 3° Asigno la nueva foto al usuario
+    //   user.profilePicture = newProfilePicture;
+    // }
 
     // Controlo que el modelo no tenga errores antes de guardar
     const errors = await validate(user);
@@ -242,10 +237,5 @@ export class UserService {
     }
 
     return user;
-  }
-
-  async getProfilePicture(id: number): Promise<Picture> {
-    this._logger.debug("getProfilePicture()");
-    return this._utilsService.findOnePicture(id);
   }
 }

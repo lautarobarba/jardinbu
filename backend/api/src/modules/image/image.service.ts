@@ -114,4 +114,21 @@ export class ImageService {
     // Hard Delete
     // await this._imageRepository.remove(image);
   }
+
+  async deleteUselessImages() {
+    this._logger.debug("deleteUselessImages()");
+    const images: Image[] = await this._imageRepository.find({
+      where: { deleted: true, fileDeleted: false },
+    });
+
+    images.forEach(async (image: Image) => {
+      const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
+      fs.unlink(image.path, (err: Error) => {
+        if (err) console.log(err);
+      });
+      image.fileDeleted = true;
+      image.updatedAt = timestamp;
+      await this._imageRepository.save(image);
+    });
+  }
 }

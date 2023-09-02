@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -12,7 +13,7 @@ import {
 import { Exclude } from "class-transformer";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Role } from "../auth/role.enum";
-import { Picture } from "../utils/picture.entity";
+import { Image } from "../image/image.entity";
 
 export enum Status {
   ACTIVE = "ACTIVE",
@@ -65,13 +66,17 @@ export class User extends BaseEntity {
 
   // Relation
   @ApiProperty({
-    type: () => Picture,
+    type: () => Image,
   })
-  @OneToOne(() => Picture, (picture) => picture.user)
+  @OneToOne(() => Image, () => {}, {
+    cascade: true,
+    onDelete: "RESTRICT",
+    eager: true,
+  })
   @JoinColumn({
     name: "profile_picture_id",
   })
-  profilePicture: Picture;
+  profilePicture: Image;
 
   @Exclude()
   @Column({
@@ -129,4 +134,20 @@ export class User extends BaseEntity {
     default: false,
   })
   deleted: boolean;
+
+  // Relation
+  @ApiProperty({
+    type: () => User,
+    isArray: false,
+  })
+  @ManyToOne(() => User, () => {}, {
+    nullable: true,
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
+    eager: false,
+  })
+  @JoinColumn({
+    name: "user_mod_id",
+  })
+  userMod: User;
 }
