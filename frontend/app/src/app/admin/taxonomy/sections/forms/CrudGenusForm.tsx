@@ -1,16 +1,15 @@
-import * as Yup from 'yup';
+"use client";
+import { FormEvent, HTMLAttributes, SyntheticEvent, useEffect, useState } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
+import * as Yup from 'yup';
+import { Button, Modal, ModalContent, Tooltip } from '@nextui-org/react';
+import { ModalThemeWrapper } from '@/wrappers/ModalThemeWrapper';
 import {
-  Alert,
-  Autocomplete,
-  Dialog,
-  Grid,
-  IconButton,
   TextField,
-  Tooltip,
+  Grid,
+  Autocomplete,
+  Alert,
 } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
 import {
   useCreateGenus,
   useDeleteGenus,
@@ -18,17 +17,18 @@ import {
   useGetGenus,
   useUpdateGenus,
 } from '@/services/hooks';
-import { useQueryClient } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-import { PageSubTitle } from '@/components/PageSubTitle';
-import { FormEvent, useEffect, useState } from 'react';
-import { Family, familyToString } from '@/interfaces/family.interface';
 import {
   CreateGenusDto,
   Genus,
   UpdateGenusDto,
 } from '@/interfaces/genus.interface';
+import { Family, familyToString } from '@/interfaces/family.interface';
 import { CreateFamilyForm } from './CrudFamilyForm';
+import { useQueryClient } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
+import { PageSubTitle } from '@/components/PageSubTitle';
+import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react';
+
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -73,9 +73,6 @@ export const CreateGenusForm = (props: CreateGenusFormProps) => {
   const {
     mutate: createGenusMutate,
     isLoading: createGenusIsLoading,
-    // isSuccess: createGenusIsSuccess,
-    // isError: createGenusIsError,
-    // error: createGenusError,
   } = useCreateGenus();
 
   const formik = useFormik({
@@ -106,7 +103,7 @@ export const CreateGenusForm = (props: CreateGenusFormProps) => {
           onSuccess: (genus: Genus) => {
             console.log('Género creado correctamente');
             console.log(genus);
-            queryClient.invalidateQueries(['genera-tax']);
+            queryClient.invalidateQueries(['genera']);
             toggleVisibility(false);
             enqueueSnackbar('Género creado correctamente', {
               anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
@@ -176,6 +173,13 @@ export const CreateGenusForm = (props: CreateGenusFormProps) => {
                 required={true}
               />
             )}
+            renderOption={(props: HTMLAttributes<HTMLLIElement>, family: Family) => {
+              return (
+                <li {...props} key={family.id}>
+                  {familyToString(family)}
+                </li>
+              );
+            }}
             isOptionEqualToValue={(option: any, selection: any) =>
               option.value === selection.value
             }
@@ -200,27 +204,30 @@ export const CreateGenusForm = (props: CreateGenusFormProps) => {
           justifyContent={'center'}
           alignItems={'center'}
         >
-          <Tooltip title='Nuevo' arrow>
-            <IconButton
-              type='button'
+          <Tooltip content='Nuevo'>
+            <span
               onClick={() => toggleOpenCreateFamilyModal()}
             >
-              <AddIcon className='text-primary' fontSize={'large'} />
-            </IconButton>
+              <PlusIcon className='text-primary' fontSize={'large'} />
+            </span>
           </Tooltip>
-
-          <Dialog
+          <Modal
+            size="5xl"
+            radius="sm"
+            isOpen={openCreateFamilyModal}
             onClose={() => setOpenCreateFamilyModal(false)}
-            open={openCreateFamilyModal}
-            maxWidth={'md'}
-            fullWidth
+            isDismissable={false}
           >
-            <div className='p-5'>
-              <CreateFamilyForm
-                toggleVisibility={toggleOpenCreateFamilyModal}
-              />
-            </div>
-          </Dialog>
+            <ModalThemeWrapper>
+              <ModalContent>
+                <div className='p-5 bg-light dark:bg-dark'>
+                  <CreateFamilyForm
+                    toggleVisibility={toggleOpenCreateFamilyModal}
+                  />
+                </div>
+              </ModalContent>
+            </ModalThemeWrapper>
+          </Modal>
         </Grid>
         <Grid item xs={12}>
           <TextField
@@ -261,23 +268,27 @@ export const CreateGenusForm = (props: CreateGenusFormProps) => {
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={createGenusIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
-          color='primary'
+        </Button>
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={createGenusIsLoading}
         >
           {createGenusIsLoading ? 'Guardando...' : 'Guardar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -310,20 +321,14 @@ export const UpdateGenusForm = (props: UpdateGenusFormProps) => {
 
   // Query
   const {
-    // isLoading: getGenusIsLoading,
     isSuccess: getGenusIsSuccess,
     data: getGenusData,
-    // isError: getGenusIsError,
-    // error: getGenusError,
   } = useGetGenus({ id: id }, { keepPreviousData: true });
 
   // Mutación
   const {
     mutate: updateGenusMutate,
     isLoading: updateGenusIsLoading,
-    // isSuccess: updateGenusIsSuccess,
-    // isError: updateGenusIsError,
-    // error: updateGenusError,
   } = useUpdateGenus();
 
   const formik = useFormik({
@@ -356,8 +361,8 @@ export const UpdateGenusForm = (props: UpdateGenusFormProps) => {
           onSuccess: (genus: Genus) => {
             console.log('Género actualizado correctamente');
             console.log(genus);
-            queryClient.invalidateQueries(['genera-tax']);
-            queryClient.invalidateQueries([`genus-tax-${id}`]);
+            queryClient.invalidateQueries(['genera']);
+            queryClient.invalidateQueries([`genus-${id}`]);
             toggleVisibility(false);
             enqueueSnackbar('Género actualizado correctamente', {
               anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
@@ -441,6 +446,13 @@ export const UpdateGenusForm = (props: UpdateGenusFormProps) => {
                 required={true}
               />
             )}
+            renderOption={(props: HTMLAttributes<HTMLLIElement>, family: Family) => {
+              return (
+                <li {...props} key={family.id}>
+                  {familyToString(family)}
+                </li>
+              );
+            }}
             isOptionEqualToValue={(option: any, selection: any) =>
               option.value === selection.value
             }
@@ -465,27 +477,30 @@ export const UpdateGenusForm = (props: UpdateGenusFormProps) => {
           justifyContent={'center'}
           alignItems={'center'}
         >
-          <Tooltip title='Nuevo' arrow>
-            <IconButton
-              type='button'
+          <Tooltip content='Nuevo'>
+            <span
               onClick={() => toggleOpenCreateFamilyModal()}
             >
-              <AddIcon className='text-primary' fontSize={'large'} />
-            </IconButton>
+              <PlusIcon className='text-primary' fontSize={'large'} />
+            </span>
           </Tooltip>
-
-          <Dialog
+          <Modal
+            size="5xl"
+            radius="sm"
+            isOpen={openCreateFamilyModal}
             onClose={() => setOpenCreateFamilyModal(false)}
-            open={openCreateFamilyModal}
-            maxWidth={'md'}
-            fullWidth
+            isDismissable={false}
           >
-            <div className='p-5'>
-              <CreateFamilyForm
-                toggleVisibility={toggleOpenCreateFamilyModal}
-              />
-            </div>
-          </Dialog>
+            <ModalThemeWrapper>
+              <ModalContent>
+                <div className='p-5 bg-light dark:bg-dark'>
+                  <CreateFamilyForm
+                    toggleVisibility={toggleOpenCreateFamilyModal}
+                  />
+                </div>
+              </ModalContent>
+            </ModalThemeWrapper>
+          </Modal>
         </Grid>
         <Grid item xs={12}>
           <TextField
@@ -526,23 +541,27 @@ export const UpdateGenusForm = (props: UpdateGenusFormProps) => {
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={updateGenusIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
-          color='primary'
+        </Button>
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={updateGenusIsLoading}
         >
           {updateGenusIsLoading ? 'Guardando...' : 'Guardar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -564,20 +583,14 @@ export const DeleteGenusForm = (props: DeleteGenusFormProps) => {
 
   // Query
   const {
-    // isLoading: getGenusIsLoading,
     isSuccess: getGenusIsSuccess,
     data: getGenusData,
-    // isError: getGenusIsError,
-    // error: getGenusError,
   } = useGetGenus({ id: id }, { keepPreviousData: true });
 
   // Mutación
   const {
     mutate: deleteGenusMutate,
     isLoading: deleteGenusIsLoading,
-    // isSuccess: deleteGenusIsSuccess,
-    // isError: deleteGenusIsError,
-    // error: deleteGenusError,
   } = useDeleteGenus();
 
   const deleteGenus = (event: FormEvent<HTMLFormElement>) => {
@@ -595,8 +608,8 @@ export const DeleteGenusForm = (props: DeleteGenusFormProps) => {
         },
         onSuccess: () => {
           console.log('Género eliminado correctamente');
-          queryClient.invalidateQueries(['genera-tax']);
-          queryClient.invalidateQueries([`genus-tax-${id}`]);
+          queryClient.invalidateQueries(['genera']);
+          queryClient.invalidateQueries([`genus-${id}`]);
           toggleVisibility(false);
           enqueueSnackbar('Género eliminado correctamente', {
             anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
@@ -660,7 +673,9 @@ export const DeleteGenusForm = (props: DeleteGenusFormProps) => {
             name='family'
             label='Familia'
             value={
-              getGenusData?.family ? familyToString(getGenusData.family) : ''
+              getGenusData?.family
+                ? familyToString(getGenusData.family)
+                : ''
             }
             fullWidth
             autoComplete='family'
@@ -707,23 +722,27 @@ export const DeleteGenusForm = (props: DeleteGenusFormProps) => {
       </Grid>
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
-        <MDBBtn
-          color='primary'
+        <Button
+          color='success'
+          radius="sm"
+          className="uppercase text-white"
           type='button'
           style={{ margin: '1rem' }}
           disabled={deleteGenusIsLoading}
           onClick={() => toggleVisibility(false)}
         >
           Cancelar
-        </MDBBtn>
-        <MDBBtn
+        </Button>
+        <Button
           color='danger'
+          radius="sm"
+          className="uppercase text-white"
           type='submit'
           style={{ margin: '1rem' }}
           disabled={deleteGenusIsLoading}
         >
           {deleteGenusIsLoading ? 'Eliminando...' : 'Eliminar'}
-        </MDBBtn>
+        </Button>
       </Grid>
     </form>
   );
@@ -739,43 +758,53 @@ export const ModalCrudGenus = (props: ModalCrudGenusProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   return (
     <>
-      <div>
-        <MDBIcon
-          icon='pencil-alt'
-          size='lg'
-          className='d-inline mx-2 text-dark'
-          style={{ marginTop: 'auto', marginBottom: 'auto' }}
-          onClick={() => setShowEditModal(true)}
-        />
-        <MDBIcon
-          icon='trash-alt'
-          size='lg'
-          className='d-inline mx-2 text-danger'
-          style={{ marginTop: 'auto', marginBottom: 'auto' }}
-          onClick={() => setShowDeleteModal(true)}
-        />
+      <div className='flex flex-row space-x-2'>
+        <Tooltip content="Editar">
+          <span
+            onClick={() => setShowEditModal(true)}
+          >
+            <PencilIcon className='text-primary' />
+          </span>
+        </Tooltip>
+        <Tooltip content="Eliminar">
+          <span
+            onClick={() => setShowDeleteModal(true)}
+          >
+            <TrashIcon className='text-error' />
+          </span>
+        </Tooltip>
       </div>
       <div>
-        <Dialog
+        <Modal
+          size="5xl"
+          radius="sm"
+          isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
-          open={showEditModal}
-          maxWidth={'md'}
-          fullWidth
+          isDismissable={false}
         >
-          <div className='p-5'>
-            <UpdateGenusForm toggleVisibility={setShowEditModal} id={id} />
-          </div>
-        </Dialog>
-        <Dialog
+          <ModalThemeWrapper>
+            <ModalContent>
+              <div className='p-5 bg-light dark:bg-dark'>
+                <UpdateGenusForm toggleVisibility={setShowEditModal} id={id} />
+              </div>
+            </ModalContent>
+          </ModalThemeWrapper>
+        </Modal>
+        <Modal
+          size="5xl"
+          radius="sm"
+          isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
-          open={showDeleteModal}
-          maxWidth={'md'}
-          fullWidth
+          isDismissable={false}
         >
-          <div className='p-5'>
-            <DeleteGenusForm toggleVisibility={setShowDeleteModal} id={id} />
-          </div>
-        </Dialog>
+          <ModalThemeWrapper>
+            <ModalContent>
+              <div className='p-5 bg-light dark:bg-dark'>
+                <DeleteGenusForm toggleVisibility={setShowDeleteModal} id={id} />
+              </div>
+            </ModalContent>
+          </ModalThemeWrapper>
+        </Modal>
       </div>
     </>
   );
