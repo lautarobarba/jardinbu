@@ -157,11 +157,11 @@ export class SpeciesController {
         }
       });
     }
-    console.log(updateSpeciesDto.exampleImg);
-    if (updateSpeciesDto.exampleImg)
-      console.log({
-        uuid: `${updateSpeciesDto.exampleImg.size}_${updateSpeciesDto.exampleImg.mimetype}_${updateSpeciesDto.exampleImg.originalname}`,
-      });
+    // console.log(updateSpeciesDto.exampleImg);
+    // if (updateSpeciesDto.exampleImg)
+    //   console.log({
+    //     uuid: `${updateSpeciesDto.exampleImg.size}_${updateSpeciesDto.exampleImg.mimetype}_${updateSpeciesDto.exampleImg.originalname}`,
+    //   });
     // throw new Error();
     return this._speciesService.update(updateSpeciesDto, userId);
   }

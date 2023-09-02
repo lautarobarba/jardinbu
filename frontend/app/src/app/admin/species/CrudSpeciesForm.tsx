@@ -1,5 +1,5 @@
 "use client";
-import { ChangeEventHandler, FormEvent, HTMLAttributes, SyntheticEvent, useEffect, useState } from 'react';
+import { ChangeEventHandler, FormEvent, HTMLAttributes, SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Modal, ModalContent, Tooltip, Select, SelectItem, Input } from '@nextui-org/react';
@@ -37,7 +37,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { PageSubTitle } from '@/components/PageSubTitle';
 import { formatTitleCase, getUrlForImageByUUID } from '@/utils/tools';
-import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react';
+import { PlusIcon, PencilIcon, TrashIcon, DeleteIcon } from 'lucide-react';
 import { EmblaOptionsType } from 'embla-carousel-react'
 import useEmblaCarousel from 'embla-carousel-react'
 import "./CrudSpeciesForm.css";
@@ -541,6 +541,9 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
   const [phylum, setPhylum] = useState<string>('');
   const [kingdom, setKingdom] = useState<string>('');
 
+  const exampleImgInputRef = useRef<HTMLInputElement>(null);
+  const galleryImgInputRef = useRef<HTMLInputElement>(null);
+
   const [exampleImgPreview, setExampleImgPreview] = useState<any>(null);
   const [galleryImgPreview, setGalleryImgPreview] = useState<any[]>([]);
 
@@ -649,6 +652,12 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
       const blob = await response.blob();
       const file = new File([blob], getOneSpeciesData.exampleImg.originalName, { type: blob.type });
       formik.setFieldValue('exampleImg', file);
+
+      if (exampleImgInputRef.current) {
+        const dataTransfer = new DataTransfer();
+        [file].forEach((file) => dataTransfer.items.add(file));
+        exampleImgInputRef.current.files = dataTransfer.files;
+      }
     }
     // Recupero todas las imagenes de la galleryImg
     if (getOneSpeciesData && getOneSpeciesData.galleryImg && getOneSpeciesData.galleryImg.length > 0) {
@@ -661,6 +670,12 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         arrayFiles.push(file);
       }
       formik.setFieldValue('galleryImg', arrayFiles);
+
+      if (galleryImgInputRef.current) {
+        const dataTransfer = new DataTransfer();
+        arrayFiles.forEach((file) => dataTransfer.items.add(file));
+        galleryImgInputRef.current.files = dataTransfer.files;
+      }
     }
   }
 
@@ -685,8 +700,8 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
   }, [formik.errors]);
 
   // useEffect(() => {
-  //   console.log(formik.values);
-  // }, [formik.values]);
+  //   console.log(galleryImgPreview);
+  // }, [galleryImgPreview]);
 
   // El ejemplo del previe lo saque de aca:
   // https://blog.logrocket.com/using-filereader-api-preview-images-react/
@@ -743,6 +758,20 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
     //   })
     // }
   }, [formik.values.galleryImg]);
+
+
+  const handleRemoveExampleImage = () => {
+    formik.setFieldValue('exampleImg', null);
+    setExampleImgPreview(null);
+  }
+
+  const handleRemoveGalleryImage = (index: number) => {
+    console.log('Quitando prev', index);
+    const tempGalleryImgPrevie = galleryImgPreview.filter((item: any, itemIndex: number) => itemIndex !== index);
+    setGalleryImgPreview(tempGalleryImgPrevie);
+    const tempFormikGalleryValue = formik.values.galleryImg?.filter((item: any, itemIndex: number) => itemIndex !== index);
+    formik.setFieldValue('galleryImg', tempFormikGalleryValue);
+  }
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -1101,6 +1130,7 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
           >Foto principal</label>
           <input
             type="file"
+            ref={exampleImgInputRef}
             id="exampleImg"
             name="exampleImg"
             accept="image/*"
@@ -1137,9 +1167,14 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
               src={exampleImgPreview}
               alt="Logo JBU"
               title="Logo JBU"
-              width={300}
-              className="m-auto"
+              className="h-96 m-auto"
             />
+            <div
+              className='flex flex-row justify-center text-error mt-1 align-middle'
+              onClick={handleRemoveExampleImage}
+            >
+              <TrashIcon className='mr-2' />Quitar
+            </div>
           </Grid>
         )}
       </Grid>
@@ -1153,6 +1188,7 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         >Galeria (opcional)</label>
         <input
           type="file"
+          ref={galleryImgInputRef}
           id="galleryImg"
           name="galleryImg"
           className="block w-full text-sm focus:outline-none rounded-lg cursor-pointer 
@@ -1206,6 +1242,12 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
                   src={imagePreview}
                   alt="Your alt text"
                 />
+                <div
+                  className='flex flex-row justify-center text-error mt-1 align-middle'
+                  onClick={() => handleRemoveGalleryImage(index)}
+                >
+                  <TrashIcon className='mr-2' />Quitar
+                </div>
               </div>
             ))}
           </div>

@@ -201,6 +201,12 @@ export class SpeciesService {
         );
         species.exampleImg = newExampleImg;
       }
+    } else {
+      // Se quito la exampleImg y no se envió nada
+      if (species.exampleImg) {
+        await this._imageService.delete(species.exampleImg.id, userId);
+        species.exampleImg = null;
+      }
     }
 
     // console.log(galleryImg);
