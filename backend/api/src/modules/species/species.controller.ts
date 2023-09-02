@@ -39,7 +39,6 @@ import { PaginationDto } from "modules/utils/pagination.dto";
 import { Pagination } from "nestjs-typeorm-paginate";
 import { LocalFilesInterceptor } from "modules/utils/localFiles.interceptor";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
-import { v1 as uuidv1 } from "uuid";
 
 @ApiTags("Especies")
 @Controller("species")
@@ -103,7 +102,7 @@ export class SpeciesController {
   @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
-  @UseInterceptors(AnyFilesInterceptor())
+  @UseInterceptors(AnyFilesInterceptor({ dest: "uploads/temp" }))
   @ApiBearerAuth()
   @ApiConsumes("multipart/form-data")
   @ApiBody({
@@ -139,25 +138,29 @@ export class SpeciesController {
     this._logger.debug("PATCH: /api/species");
     const userId: number = getUserIdFromRequest(request);
     // Check files uploaded
-    // console.log(files);
-    files.forEach((file) => {
-      // TODO: check if the image is the same
-      if (file.fieldname === "exampleImg") {
-        updateSpeciesDto.exampleImg = file;
-      }
-      if (file.fieldname === "galleryImg[]") {
-        if (
-          updateSpeciesDto.galleryImg &&
-          updateSpeciesDto.galleryImg.length > 0
-        )
-          updateSpeciesDto.galleryImg = [...updateSpeciesDto.galleryImg, file];
-        else updateSpeciesDto.galleryImg = [file];
-      }
-    });
+    if (files && files.length > 0) {
+      files.forEach((file) => {
+        // TODO: check if the image is the same
+        if (file.fieldname === "exampleImg") {
+          updateSpeciesDto.exampleImg = file;
+        }
+        if (file.fieldname === "galleryImg[]") {
+          if (
+            updateSpeciesDto.galleryImg &&
+            updateSpeciesDto.galleryImg.length > 0
+          )
+            updateSpeciesDto.galleryImg = [
+              ...updateSpeciesDto.galleryImg,
+              file,
+            ];
+          else updateSpeciesDto.galleryImg = [file];
+        }
+      });
+    }
     console.log(updateSpeciesDto);
-    if (updateSpeciesDto.exampleImg)
-      console.log(uuidv1(updateSpeciesDto.exampleImg.buffer));
-    return true;
+    // if (updateSpeciesDto.exampleImg)
+    //   console.log(uuidv1(updateSpeciesDto.exampleImg.buffer));
+    // return true;
     return this._speciesService.update(updateSpeciesDto, userId);
   }
 

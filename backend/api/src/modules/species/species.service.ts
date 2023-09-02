@@ -19,15 +19,22 @@ import {
   paginate,
 } from "nestjs-typeorm-paginate";
 import { UserService } from "modules/user/user.service";
-// import { PaginatedList, PaginationDto } from "modules/utils/pagination.dto";
+import { ImageService } from "modules/image/image.service";
+import { v1 as uuidv1 } from "uuid";
+import { Image } from "modules/image/image.entity";
+import { CreateImageDto } from "modules/image/image.dto";
+
+const SPECIES_EXAMPLE_IMAGE_PATH = "species/example_images";
+const SPECIES_GALLERY_IMAGE_PATH = "species/galleries_images";
 
 @Injectable()
 export class SpeciesService {
   constructor(
     @InjectRepository(Species)
     private readonly _speciesRepository: Repository<Species>,
+    private readonly _userService: UserService,
     private readonly _genusService: GenusService,
-    private readonly _userService: UserService
+    private readonly _imageService: ImageService
   ) {}
   private readonly _logger = new Logger(SpeciesService.name);
 
@@ -107,8 +114,8 @@ export class SpeciesService {
       status,
       foliageType,
       presence,
-      // exampleImg,
-      // foliageImg,
+      exampleImg,
+      galleryImg,
     } = updateSpeciesDto;
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -151,6 +158,46 @@ export class SpeciesService {
     species.updatedAt = timestamp;
     species.deleted = false;
     species.userMod = await this._userService.findOne(userId);
+
+    // Actualizo las imágenes recibidas
+    // TODO: LA MISMA IMAGEN DEVUELVE DISTINTOS UUID. NO ME SIRVE PARA CHECKEAR SI YA ESTABA SUBIDA.
+    if (exampleImg) {
+      // Primero reviso imágenes existentes y si no coincide el hash debo eliminarlas
+      const newImgUUID: string = uuidv1(exampleImg.buffer);
+      if (species.exampleImg) {
+        if (species.exampleImg.uuid !== newImgUUID) {
+          // Tenía una imagen previa. Reemplazo
+          await this._imageService.delete(species.exampleImg.id, userId);
+          const newExampleImg: Image = await this._imageService.create(
+            {
+              uuid: newImgUUID,
+              fileName: exampleImg.originalname,
+              originalPath: exampleImg.path,
+              saveFolder: SPECIES_EXAMPLE_IMAGE_PATH,
+              mimetype: exampleImg.mimetype,
+              originalName: exampleImg.originalname,
+            } as CreateImageDto,
+            userId
+          );
+          species.exampleImg = newExampleImg;
+        }
+        // Tenía una imagen previa pero es la misma.
+      } else {
+        // No tenía imagen previa. Creo nueva y guardo
+        const newExampleImg: Image = await this._imageService.create(
+          {
+            uuid: newImgUUID,
+            fileName: exampleImg.originalname,
+            originalPath: exampleImg.path,
+            saveFolder: SPECIES_EXAMPLE_IMAGE_PATH,
+            mimetype: exampleImg.mimetype,
+            originalName: exampleImg.originalname,
+          } as CreateImageDto,
+          userId
+        );
+        species.exampleImg = newExampleImg;
+      }
+    }
 
     // Controlo que el modelo no tenga errores antes de guardar
     const errors = await validate(species);

@@ -201,7 +201,7 @@ export const useGetClassesTax = (
 ) => {
   const { pagination } = params;
   return useQuery(
-    ["class-tax", pagination],
+    ["classes-tax", pagination],
     () => getClassesTax(params),
     config
   );

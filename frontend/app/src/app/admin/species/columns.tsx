@@ -43,48 +43,64 @@ export const columns: any = [
   // Accessor Column
   columnHelper.accessor('genus', {
     id: 'genus',
-    header: 'Género',
-    cell: (props) => genusToString(props.getValue()),
+    // header: 'Género',
+    // cell: (props) => genusToString(props.getValue()),
+    header: 'Taxonomía',
+    cell: (props) => (
+      <>
+        <strong>Género:</strong> {genusToString(props.getValue())}.
+        <br />
+        <strong>Familia:</strong> {familyToString(props.getValue().family)}.
+        <br />
+        <strong>Orden:</strong> {orderTaxToString(props.getValue().family.orderTax)}.
+        <br />
+        <strong>Clase:</strong> {classTaxToString(props.getValue().family.orderTax.classTax)}.
+        <br />
+        <strong>Filo:</strong> {phylumToString(props.getValue().family.orderTax.classTax.phylum)}.
+        <br />
+        <strong>Reino:</strong> {kingdomToString(props.getValue().family.orderTax.classTax.phylum.kingdom)}.
+      </>
+    ),
     enableSorting: false,
   }),
-  // Accessor Column
-  columnHelper.accessor('genus', {
-    id: 'family',
-    header: 'Familia',
-    cell: (props) => familyToString(props.getValue().family),
-    enableSorting: false,
-  }),
-  // Accessor Column
-  columnHelper.accessor('genus', {
-    id: 'orderTax',
-    header: 'Orden',
-    cell: (props) => orderTaxToString(props.getValue().family.orderTax),
-    enableSorting: false,
-  }),
-  // Accessor Column
-  columnHelper.accessor('genus', {
-    id: 'classTax',
-    header: 'Clase',
-    cell: (props) =>
-      classTaxToString(props.getValue().family.orderTax.classTax),
-    enableSorting: false,
-  }),
-  // Accessor Column
-  columnHelper.accessor('genus', {
-    id: 'phylum',
-    header: 'Filo',
-    cell: (props) =>
-      phylumToString(props.getValue().family.orderTax.classTax.phylum),
-    enableSorting: false,
-  }),
-  // Accessor Column
-  columnHelper.accessor('genus', {
-    id: 'kingdom',
-    header: 'Reino',
-    cell: (props) =>
-      kingdomToString(props.getValue().family.orderTax.classTax.phylum.kingdom),
-    enableSorting: false,
-  }),
+  // // Accessor Column
+  // columnHelper.accessor('genus', {
+  //   id: 'family',
+  //   header: 'Familia',
+  //   cell: (props) => familyToString(props.getValue().family),
+  //   enableSorting: false,
+  // }),
+  // // Accessor Column
+  // columnHelper.accessor('genus', {
+  //   id: 'orderTax',
+  //   header: 'Orden',
+  //   cell: (props) => orderTaxToString(props.getValue().family.orderTax),
+  //   enableSorting: false,
+  // }),
+  // // Accessor Column
+  // columnHelper.accessor('genus', {
+  //   id: 'classTax',
+  //   header: 'Clase',
+  //   cell: (props) =>
+  //     classTaxToString(props.getValue().family.orderTax.classTax),
+  //   enableSorting: false,
+  // }),
+  // // Accessor Column
+  // columnHelper.accessor('genus', {
+  //   id: 'phylum',
+  //   header: 'Filo',
+  //   cell: (props) =>
+  //     phylumToString(props.getValue().family.orderTax.classTax.phylum),
+  //   enableSorting: false,
+  // }),
+  // // Accessor Column
+  // columnHelper.accessor('genus', {
+  //   id: 'kingdom',
+  //   header: 'Reino',
+  //   cell: (props) =>
+  //     kingdomToString(props.getValue().family.orderTax.classTax.phylum.kingdom),
+  //   enableSorting: false,
+  // }),
   // Accessor Column
   columnHelper.accessor('createdAt', {
     id: 'createdAt',
