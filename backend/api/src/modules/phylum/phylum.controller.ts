@@ -30,7 +30,7 @@ import { Pagination } from "nestjs-typeorm-paginate";
 import { PaginationDto } from "modules/utils/pagination.dto";
 import { ENV_VAR } from "config";
 
-@ApiTags("Filo")
+@ApiTags("Filos")
 @Controller("phylum")
 export class PhylumController {
   constructor(private readonly _phylumService: PhylumService) {}

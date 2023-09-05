@@ -30,7 +30,7 @@ import { Pagination } from "nestjs-typeorm-paginate";
 import { PaginationDto } from "modules/utils/pagination.dto";
 import { ENV_VAR } from "config";
 
-@ApiTags("Orden")
+@ApiTags("Ordenes")
 @Controller("order-tax")
 export class OrderTaxController {
   constructor(private readonly _orderTaxService: OrderTaxService) {}

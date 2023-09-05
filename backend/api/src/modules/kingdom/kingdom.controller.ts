@@ -30,7 +30,7 @@ import { Pagination } from "nestjs-typeorm-paginate";
 import { PaginationDto } from "modules/utils/pagination.dto";
 import { ENV_VAR } from "config";
 
-@ApiTags("Reino")
+@ApiTags("Reinos")
 @Controller("kingdom")
 export class KingdomController {
   constructor(private readonly _kingdomService: KingdomService) {}

@@ -29,7 +29,8 @@ import { getUserIdFromRequest } from "modules/utils/user.request";
 import { Pagination } from "nestjs-typeorm-paginate";
 import { PaginationDto } from "modules/utils/pagination.dto";
 import { ENV_VAR } from "config";
-@ApiTags("Familia")
+
+@ApiTags("Familias")
 @Controller("family")
 export class FamilyController {
   constructor(private readonly _familyService: FamilyService) {}

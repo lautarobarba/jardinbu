@@ -32,7 +32,7 @@ import { PaginationDto } from "modules/utils/pagination.dto";
 import { ENV_VAR } from "config";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
 
-@ApiTags("Post")
+@ApiTags("Posts")
 @Controller("post")
 export class PostController {
   constructor(private readonly _postService: PostService) {}
