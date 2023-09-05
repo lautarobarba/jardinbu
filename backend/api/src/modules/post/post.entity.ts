@@ -8,72 +8,41 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Species } from "../species/species.entity";
 import { User } from "../user/user.entity";
-import { Image } from "../image/image.entity";
+import { Tag } from "../tag/tag.entity";
 import { Link } from "../link/link.entity";
+import { Image } from "../image/image.entity";
 
-@Entity("specimens")
-export class Specimen extends BaseEntity {
+@Entity("posts")
+export class Post extends BaseEntity {
   @ApiProperty()
   @PrimaryGeneratedColumn("increment")
   id: number;
 
   @ApiProperty()
   @Column({
-    name: "code",
+    name: "spanish_title",
     type: "varchar",
     nullable: false,
-    unique: true,
+    unique: false,
     length: 255,
   })
-  code: string;
+  spanishTitle: string;
 
   @ApiProperty()
   @Column({
-    name: "description",
-    type: "text",
-    nullable: true,
-    unique: false,
-  })
-  description: string;
-
-  // Relation
-  @ApiProperty({
-    type: () => Species,
-  })
-  @ManyToOne(() => Species, (species) => species.specimens, {
-    nullable: false,
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
-    eager: true,
-  })
-  @JoinColumn({
-    name: "species_id",
-  })
-  species: Species;
-
-  @ApiProperty()
-  @Column({
-    name: "coord_lat",
+    name: "english_title",
     type: "varchar",
     nullable: true,
     unique: false,
+    length: 255,
   })
-  coordLat: string;
-
-  @ApiProperty()
-  @Column({
-    name: "coord_lon",
-    type: "varchar",
-    nullable: true,
-    unique: false,
-  })
-  coordLon: string;
+  englishTitle: string;
 
   // Relation
   @ApiProperty({
@@ -89,6 +58,47 @@ export class Specimen extends BaseEntity {
   })
   coverImg: Image;
 
+  @ApiProperty()
+  @Column({
+    name: "spanish_content",
+    type: "text",
+    nullable: false,
+    unique: false,
+  })
+  spanishContent: string;
+
+  @ApiProperty()
+  @Column({
+    name: "english_content",
+    type: "text",
+    nullable: true,
+    unique: false,
+  })
+  englishContent: string;
+
+  // Relation
+  @ApiProperty({
+    type: () => Tag,
+    isArray: true,
+  })
+  @ManyToMany(() => Tag, () => {}, {
+    cascade: true,
+    onDelete: "RESTRICT",
+    eager: true,
+  })
+  @JoinTable({
+    name: "posts_tags",
+    joinColumn: {
+      name: "post_id",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "tag_id",
+      referencedColumnName: "id",
+    },
+  })
+  tags: Tag[];
+
   // Relation
   @ApiProperty({
     type: () => Image,
@@ -100,9 +110,9 @@ export class Specimen extends BaseEntity {
     eager: true,
   })
   @JoinTable({
-    name: "specimens_galleries",
+    name: "posts_galleries",
     joinColumn: {
-      name: "specimen_id",
+      name: "post_id",
       referencedColumnName: "id",
     },
     inverseJoinColumn: {
@@ -123,9 +133,9 @@ export class Specimen extends BaseEntity {
     eager: true,
   })
   @JoinTable({
-    name: "specimens_links",
+    name: "posts_links",
     joinColumn: {
-      name: "specimen_id",
+      name: "post_id",
       referencedColumnName: "id",
     },
     inverseJoinColumn: {

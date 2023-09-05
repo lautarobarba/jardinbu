@@ -1,7 +1,7 @@
 import {
   Controller,
   Get,
-  Post,
+  Post as PostDecorator,
   Body,
   Patch,
   Param,
@@ -14,40 +14,43 @@ import {
   Logger,
   UseGuards,
   Query,
+  UploadedFiles,
 } from "@nestjs/common";
 import { Response } from "express";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { IsEmailConfirmedGuard } from "modules/auth/guards/is-email-confirmed.guard";
 import { RoleGuard } from "modules/auth/guards/role.guard";
 import { Role } from "modules/auth/role.enum";
-import { CreateGenusDto, UpdateGenusDto } from "./genus.dto";
-import { Genus } from "./genus.entity";
-import { GenusService } from "./genus.service";
+import { CreatePostDto, UpdatePostDto } from "./post.dto";
+import { Post } from "./post.entity";
+import { PostService } from "./post.service";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
 import { RequestWithUser } from "modules/auth/request-with-user.interface";
 import { getUserIdFromRequest } from "modules/utils/user.request";
 import { Pagination } from "nestjs-typeorm-paginate";
 import { PaginationDto } from "modules/utils/pagination.dto";
 import { ENV_VAR } from "config";
+import { AnyFilesInterceptor } from "@nestjs/platform-express";
 
-@ApiTags("Géneros")
-@Controller("genus")
-export class GenusController {
-  constructor(private readonly _genusService: GenusService) {}
-  private readonly _logger = new Logger(GenusController.name);
+@ApiTags("Post")
+@Controller("post")
+export class PostController {
+  constructor(private readonly _postService: PostService) {}
+  private readonly _logger = new Logger(PostController.name);
 
-  @Post()
+  @PostDecorator()
   @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(AnyFilesInterceptor({ dest: "uploads/temp" }))
   @ApiBearerAuth()
   @ApiBody({
-    description: "Atributos del género",
-    type: CreateGenusDto,
+    description: "Atributos del post",
+    type: CreatePostDto,
   })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    type: Genus,
+    type: Post,
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
@@ -64,25 +67,41 @@ export class GenusController {
   async create(
     @Req() request: RequestWithUser,
     @Res({ passthrough: true }) response: Response,
-    @Body() createGenusDto: CreateGenusDto
-  ): Promise<Genus> {
-    this._logger.debug("POST: /api/genus");
+    @Body() createPostDto: CreatePostDto,
+    @UploadedFiles() files: Array<Express.Multer.File>
+  ): Promise<Post> {
+    this._logger.debug("POST: /api/post");
     const userId: number = getUserIdFromRequest(request);
-    return this._genusService.create(createGenusDto, userId);
+    // Check files uploaded
+    if (files && files.length > 0) {
+      files.forEach((file) => {
+        // TODO: check if the image is the same
+        if (file.fieldname === "coverImg") {
+          createPostDto.coverImg = file;
+        }
+        if (file.fieldname === "galleryImg[]") {
+          if (createPostDto.galleryImg && createPostDto.galleryImg.length > 0)
+            createPostDto.galleryImg = [...createPostDto.galleryImg, file];
+          else createPostDto.galleryImg = [file];
+        }
+      });
+    }
+    return this._postService.create(createPostDto, userId);
   }
 
   @Patch()
   @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(AnyFilesInterceptor({ dest: "uploads/temp" }))
   @ApiBearerAuth()
   @ApiBody({
-    description: "Atributos del género",
-    type: UpdateGenusDto,
+    description: "Atributos del post",
+    type: UpdatePostDto,
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: Genus,
+    type: Post,
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
@@ -103,34 +122,49 @@ export class GenusController {
   async update(
     @Req() request: RequestWithUser,
     @Res({ passthrough: true }) response: Response,
-    @Body() updateGenusDto: UpdateGenusDto
-  ): Promise<Genus> {
-    this._logger.debug("PATCH: /api/genus");
+    @Body() updatePostDto: UpdatePostDto,
+    @UploadedFiles() files: Array<Express.Multer.File>
+  ): Promise<Post> {
+    this._logger.debug("PATCH: /api/post");
     const userId: number = getUserIdFromRequest(request);
-    return this._genusService.update(updateGenusDto, userId);
+    // Check files uploaded
+    if (files && files.length > 0) {
+      files.forEach((file) => {
+        // TODO: check if the image is the same
+        if (file.fieldname === "coverImg") {
+          updatePostDto.coverImg = file;
+        }
+        if (file.fieldname === "galleryImg[]") {
+          if (updatePostDto.galleryImg && updatePostDto.galleryImg.length > 0)
+            updatePostDto.galleryImg = [...updatePostDto.galleryImg, file];
+          else updatePostDto.galleryImg = [file];
+        }
+      });
+    }
+    return this._postService.update(updatePostDto, userId);
   }
 
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiResponse({
     status: HttpStatus.OK,
-    type: Genus,
+    type: Post,
     isArray: true,
   })
   async findAll(
     @Query() paginationDto: PaginationDto
-  ): Promise<Pagination<Genus> | Genus[]> {
-    this._logger.debug("GET: /api/genus");
+  ): Promise<Pagination<Post> | Post[]> {
+    this._logger.debug("GET: /api/post");
     if (paginationDto.page && paginationDto.limit) {
-      return this._genusService.findPaginated({
+      return this._postService.findPaginated({
         page: paginationDto.page,
         limit: paginationDto.limit,
         orderBy: paginationDto.orderBy,
         orderDirection: paginationDto.orderDirection,
-        route: `${ENV_VAR.EXTERNAL_LINK}/api/genus`,
+        route: `${ENV_VAR.EXTERNAL_LINK}/api/post`,
       });
     } else {
-      return this._genusService.findAll();
+      return this._postService.findAll();
     }
   }
 
@@ -138,7 +172,7 @@ export class GenusController {
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiResponse({
     status: HttpStatus.OK,
-    type: Genus,
+    type: Post,
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
@@ -147,10 +181,10 @@ export class GenusController {
   async findOne(
     @Res({ passthrough: true }) response: Response,
     @Param("id") id: number
-  ): Promise<Genus> {
-    this._logger.debug("GET: /api/genus/:id");
+  ): Promise<Post> {
+    this._logger.debug("GET: /api/post/:id");
     response.status(HttpStatus.OK);
-    return this._genusService.findOne(id);
+    return this._postService.findOne(id);
   }
 
   @Delete(":id")
@@ -174,8 +208,8 @@ export class GenusController {
     @Res({ passthrough: true }) response: Response,
     @Param("id") id: number
   ): Promise<void> {
-    this._logger.debug("DELETE: /api/genus/:id");
+    this._logger.debug("DELETE: /api/post/:id");
     const userId: number = getUserIdFromRequest(request);
-    return this._genusService.delete(id, userId);
+    return this._postService.delete(id, userId);
   }
 }

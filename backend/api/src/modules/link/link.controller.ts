@@ -20,9 +20,9 @@ import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { IsEmailConfirmedGuard } from "modules/auth/guards/is-email-confirmed.guard";
 import { RoleGuard } from "modules/auth/guards/role.guard";
 import { Role } from "modules/auth/role.enum";
-import { CreateGenusDto, UpdateGenusDto } from "./genus.dto";
-import { Genus } from "./genus.entity";
-import { GenusService } from "./genus.service";
+import { CreateLinkDto, UpdateLinkDto } from "./link.dto";
+import { Link } from "./link.entity";
+import { LinkService } from "./link.service";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
 import { RequestWithUser } from "modules/auth/request-with-user.interface";
 import { getUserIdFromRequest } from "modules/utils/user.request";
@@ -30,11 +30,11 @@ import { Pagination } from "nestjs-typeorm-paginate";
 import { PaginationDto } from "modules/utils/pagination.dto";
 import { ENV_VAR } from "config";
 
-@ApiTags("Géneros")
-@Controller("genus")
-export class GenusController {
-  constructor(private readonly _genusService: GenusService) {}
-  private readonly _logger = new Logger(GenusController.name);
+@ApiTags("Link")
+@Controller("link")
+export class LinkController {
+  constructor(private readonly _linkService: LinkService) {}
+  private readonly _logger = new Logger(LinkController.name);
 
   @Post()
   @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
@@ -42,12 +42,12 @@ export class GenusController {
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiBearerAuth()
   @ApiBody({
-    description: "Atributos del género",
-    type: CreateGenusDto,
+    description: "Atributos del link",
+    type: CreateLinkDto,
   })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    type: Genus,
+    type: Link,
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
@@ -64,11 +64,11 @@ export class GenusController {
   async create(
     @Req() request: RequestWithUser,
     @Res({ passthrough: true }) response: Response,
-    @Body() createGenusDto: CreateGenusDto
-  ): Promise<Genus> {
-    this._logger.debug("POST: /api/genus");
+    @Body() createLinkDto: CreateLinkDto
+  ): Promise<Link> {
+    this._logger.debug("POST: /api/link");
     const userId: number = getUserIdFromRequest(request);
-    return this._genusService.create(createGenusDto, userId);
+    return this._linkService.create(createLinkDto, userId);
   }
 
   @Patch()
@@ -77,12 +77,12 @@ export class GenusController {
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiBearerAuth()
   @ApiBody({
-    description: "Atributos del género",
-    type: UpdateGenusDto,
+    description: "Atributos del link",
+    type: UpdateLinkDto,
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: Genus,
+    type: Link,
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
@@ -103,34 +103,34 @@ export class GenusController {
   async update(
     @Req() request: RequestWithUser,
     @Res({ passthrough: true }) response: Response,
-    @Body() updateGenusDto: UpdateGenusDto
-  ): Promise<Genus> {
-    this._logger.debug("PATCH: /api/genus");
+    @Body() updateLinkDto: UpdateLinkDto
+  ): Promise<Link> {
+    this._logger.debug("PATCH: /api/link");
     const userId: number = getUserIdFromRequest(request);
-    return this._genusService.update(updateGenusDto, userId);
+    return this._linkService.update(updateLinkDto, userId);
   }
 
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiResponse({
     status: HttpStatus.OK,
-    type: Genus,
+    type: Link,
     isArray: true,
   })
   async findAll(
     @Query() paginationDto: PaginationDto
-  ): Promise<Pagination<Genus> | Genus[]> {
-    this._logger.debug("GET: /api/genus");
+  ): Promise<Pagination<Link> | Link[]> {
+    this._logger.debug("GET: /api/link");
     if (paginationDto.page && paginationDto.limit) {
-      return this._genusService.findPaginated({
+      return this._linkService.findPaginated({
         page: paginationDto.page,
         limit: paginationDto.limit,
         orderBy: paginationDto.orderBy,
         orderDirection: paginationDto.orderDirection,
-        route: `${ENV_VAR.EXTERNAL_LINK}/api/genus`,
+        route: `${ENV_VAR.EXTERNAL_LINK}/api/link`,
       });
     } else {
-      return this._genusService.findAll();
+      return this._linkService.findAll();
     }
   }
 
@@ -138,7 +138,7 @@ export class GenusController {
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiResponse({
     status: HttpStatus.OK,
-    type: Genus,
+    type: Link,
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
@@ -147,10 +147,10 @@ export class GenusController {
   async findOne(
     @Res({ passthrough: true }) response: Response,
     @Param("id") id: number
-  ): Promise<Genus> {
-    this._logger.debug("GET: /api/genus/:id");
+  ): Promise<Link> {
+    this._logger.debug("GET: /api/link/:id");
     response.status(HttpStatus.OK);
-    return this._genusService.findOne(id);
+    return this._linkService.findOne(id);
   }
 
   @Delete(":id")
@@ -174,8 +174,8 @@ export class GenusController {
     @Res({ passthrough: true }) response: Response,
     @Param("id") id: number
   ): Promise<void> {
-    this._logger.debug("DELETE: /api/genus/:id");
+    this._logger.debug("DELETE: /api/link/:id");
     const userId: number = getUserIdFromRequest(request);
-    return this._genusService.delete(id, userId);
+    return this._linkService.delete(id, userId);
   }
 }

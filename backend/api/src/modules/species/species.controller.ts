@@ -39,6 +39,7 @@ import { PaginationDto } from "modules/utils/pagination.dto";
 import { Pagination } from "nestjs-typeorm-paginate";
 import { LocalFilesInterceptor } from "modules/utils/localFiles.interceptor";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
+import { ENV_VAR } from "config";
 
 @ApiTags("Especies")
 @Controller("species")
@@ -50,21 +51,7 @@ export class SpeciesController {
   @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
-  @UseInterceptors(
-    LocalFilesInterceptor({
-      files: [{ name: "exampleImg" }, { name: "foliageImg" }],
-      path: "/temp",
-      fileFilter: (request, file, callback) => {
-        if (!file.mimetype.includes("image")) {
-          return callback(new BadRequestException("Invalid image file"), false);
-        }
-        callback(null, true);
-      },
-      limits: {
-        fileSize: 1024 * 1024 * 10, // 10MB
-      },
-    })
-  )
+  @UseInterceptors(AnyFilesInterceptor({ dest: "uploads/temp" }))
   @ApiBearerAuth()
   @ApiConsumes("multipart/form-data")
   @ApiBody({
@@ -90,11 +77,31 @@ export class SpeciesController {
   async create(
     @Req() request: RequestWithUser,
     @Res({ passthrough: true }) response: Response,
-    @Body() createSpeciesDto: CreateSpeciesDto
+    @Body() createSpeciesDto: CreateSpeciesDto,
+    @UploadedFiles() files: Array<Express.Multer.File>
   ): Promise<Species> {
     this._logger.debug("POST: /api/species");
-    console.log({ createSpeciesDto });
     const userId: number = getUserIdFromRequest(request);
+    // Check files uploaded
+    if (files && files.length > 0) {
+      files.forEach((file) => {
+        // TODO: check if the image is the same
+        if (file.fieldname === "exampleImg") {
+          createSpeciesDto.exampleImg = file;
+        }
+        if (file.fieldname === "galleryImg[]") {
+          if (
+            createSpeciesDto.galleryImg &&
+            createSpeciesDto.galleryImg.length > 0
+          )
+            createSpeciesDto.galleryImg = [
+              ...createSpeciesDto.galleryImg,
+              file,
+            ];
+          else createSpeciesDto.galleryImg = [file];
+        }
+      });
+    }
     return this._speciesService.create(createSpeciesDto, userId);
   }
 
@@ -157,12 +164,6 @@ export class SpeciesController {
         }
       });
     }
-    // console.log(updateSpeciesDto.exampleImg);
-    // if (updateSpeciesDto.exampleImg)
-    //   console.log({
-    //     uuid: `${updateSpeciesDto.exampleImg.size}_${updateSpeciesDto.exampleImg.mimetype}_${updateSpeciesDto.exampleImg.originalname}`,
-    //   });
-    // throw new Error();
     return this._speciesService.update(updateSpeciesDto, userId);
   }
 
@@ -183,7 +184,7 @@ export class SpeciesController {
         limit: paginationDto.limit,
         orderBy: paginationDto.orderBy,
         orderDirection: paginationDto.orderDirection,
-        route: `${process.env.API_URL}/api/species`,
+        route: `${ENV_VAR.EXTERNAL_LINK}/api/species`,
       });
     } else {
       return this._speciesService.findAll();

@@ -14,6 +14,7 @@ import {
   Logger,
   UseGuards,
   Query,
+  UploadedFiles,
 } from "@nestjs/common";
 import { Response, Express } from "express";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
@@ -26,7 +27,10 @@ import { SpecimenService } from "./specimen.service";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
 import { getUserIdFromRequest } from "modules/utils/user.request";
 import { RequestWithUser } from "modules/auth/request-with-user.interface";
-// import { PaginatedList, PaginationDto } from "modules/utils/pagination.dto";
+import { AnyFilesInterceptor } from "@nestjs/platform-express";
+import { PaginationDto } from "modules/utils/pagination.dto";
+import { Pagination } from "nestjs-typeorm-paginate";
+import { ENV_VAR } from "config";
 
 @ApiTags("Ejemplares")
 @Controller("specimen")
@@ -38,6 +42,7 @@ export class SpecimenController {
   @UseGuards(RoleGuard([Role.ADMIN]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(AnyFilesInterceptor({ dest: "uploads/temp" }))
   @ApiBearerAuth()
   @ApiBody({
     description: "Atributos del ejemplar",
@@ -62,10 +67,31 @@ export class SpecimenController {
   async create(
     @Req() request: RequestWithUser,
     @Res({ passthrough: true }) response: Response,
-    @Body() createSpecimenDto: CreateSpecimenDto
+    @Body() createSpecimenDto: CreateSpecimenDto,
+    @UploadedFiles() files: Array<Express.Multer.File>
   ): Promise<Specimen> {
     this._logger.debug("POST: /api/specimen");
     const userId: number = getUserIdFromRequest(request);
+    // Check files uploaded
+    if (files && files.length > 0) {
+      files.forEach((file) => {
+        // TODO: check if the image is the same
+        if (file.fieldname === "coverImg") {
+          createSpecimenDto.coverImg = file;
+        }
+        if (file.fieldname === "galleryImg[]") {
+          if (
+            createSpecimenDto.galleryImg &&
+            createSpecimenDto.galleryImg.length > 0
+          )
+            createSpecimenDto.galleryImg = [
+              ...createSpecimenDto.galleryImg,
+              file,
+            ];
+          else createSpecimenDto.galleryImg = [file];
+        }
+      });
+    }
     return this._specimenService.create(createSpecimenDto, userId);
   }
 
@@ -73,6 +99,7 @@ export class SpecimenController {
   @UseGuards(RoleGuard([Role.ADMIN]))
   @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(AnyFilesInterceptor({ dest: "uploads/temp" }))
   @ApiBearerAuth()
   @ApiBody({
     description: "Atributos del ejemplar",
@@ -101,26 +128,57 @@ export class SpecimenController {
   update(
     @Req() request: RequestWithUser,
     @Res({ passthrough: true }) response: Response,
-    @Body() updateSpecimenDto: UpdateSpecimenDto
-  ) {
+    @Body() updateSpecimenDto: UpdateSpecimenDto,
+    @UploadedFiles() files: Array<Express.Multer.File>
+  ): Promise<Specimen> {
     this._logger.debug("PATCH: /api/specimen");
     const userId: number = getUserIdFromRequest(request);
+    // Check files uploaded
+    if (files && files.length > 0) {
+      files.forEach((file) => {
+        // TODO: check if the image is the same
+        if (file.fieldname === "coverImg") {
+          updateSpecimenDto.coverImg = file;
+        }
+        if (file.fieldname === "galleryImg[]") {
+          if (
+            updateSpecimenDto.galleryImg &&
+            updateSpecimenDto.galleryImg.length > 0
+          )
+            updateSpecimenDto.galleryImg = [
+              ...updateSpecimenDto.galleryImg,
+              file,
+            ];
+          else updateSpecimenDto.galleryImg = [file];
+        }
+      });
+    }
     return this._specimenService.update(updateSpecimenDto, userId);
   }
 
-  // @Get()
-  // @UseInterceptors(ClassSerializerInterceptor)
-  // @ApiResponse({
-  //   status: HttpStatus.OK,
-  //   type: Specimen,
-  //   isArray: true,
-  // })
-  // async findAll(
-  //   @Query() paginationDto: PaginationDto
-  // ): Promise<PaginatedList<Specimen>> {
-  //   this._logger.debug("GET: /api/specimen");
-  //   return this._specimenService.findAll(paginationDto);
-  // }
+  @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: Post,
+    isArray: true,
+  })
+  async findAll(
+    @Query() paginationDto: PaginationDto
+  ): Promise<Pagination<Specimen> | Specimen[]> {
+    this._logger.debug("GET: /api/post");
+    if (paginationDto.page && paginationDto.limit) {
+      return this._specimenService.findPaginated({
+        page: paginationDto.page,
+        limit: paginationDto.limit,
+        orderBy: paginationDto.orderBy,
+        orderDirection: paginationDto.orderDirection,
+        route: `${ENV_VAR.EXTERNAL_LINK}/api/post`,
+      });
+    } else {
+      return this._specimenService.findAll();
+    }
+  }
 
   @Get(":id")
   @UseInterceptors(ClassSerializerInterceptor)
@@ -142,7 +200,7 @@ export class SpecimenController {
   }
 
   @Delete(":id")
-  @UseGuards(RoleGuard([Role.ADMIN]))
+  @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
   @UseGuards(IsEmailConfirmedGuard())
   @ApiBearerAuth()
   @ApiResponse({
@@ -152,6 +210,10 @@ export class SpecimenController {
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
     description: ERROR_MESSAGE.NO_ENCONTRADO,
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: ERROR_MESSAGE.OBJETO_REFERENCIADO,
   })
   async delete(
     @Req() request: RequestWithUser,

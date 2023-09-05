@@ -1,27 +1,29 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Express } from "express";
 
-export class CreateSpecimenDto {
+export class CreatePostDto {
   @ApiProperty()
-  code: string;
+  spanishTitle: string;
 
   @ApiPropertyOptional()
-  description?: string;
-
-  @ApiProperty()
-  speciesId: number;
-
-  @ApiPropertyOptional()
-  coordLat?: string;
-
-  @ApiPropertyOptional()
-  coordLon?: string;
+  englishTitle?: string;
 
   @ApiPropertyOptional({
     type: "string",
     format: "binary",
   })
   coverImg?: Express.Multer.File;
+
+  @ApiProperty()
+  spanishContent: string;
+
+  @ApiPropertyOptional()
+  englishContent?: string;
+
+  @ApiPropertyOptional({
+    type: "number",
+    isArray: true,
+  })
+  tagsIds: number;
 
   @ApiPropertyOptional({
     type: "string",
@@ -37,30 +39,33 @@ export class CreateSpecimenDto {
   linksIds: number;
 }
 
-export class UpdateSpecimenDto {
+export class UpdatePostDto {
   @ApiProperty()
   id: number;
 
   @ApiProperty()
-  code: string;
+  spanishTitle: string;
 
   @ApiPropertyOptional()
-  description?: string;
-
-  @ApiProperty()
-  speciesId: number;
-
-  @ApiPropertyOptional()
-  coordLat?: string;
-
-  @ApiPropertyOptional()
-  coordLon?: string;
+  englishTitle?: string;
 
   @ApiPropertyOptional({
     type: "string",
     format: "binary",
   })
   coverImg?: Express.Multer.File;
+
+  @ApiProperty()
+  spanishContent: string;
+
+  @ApiPropertyOptional()
+  englishContent?: string;
+
+  @ApiPropertyOptional({
+    type: "number",
+    isArray: true,
+  })
+  tagsIds: number;
 
   @ApiPropertyOptional({
     type: "string",

@@ -28,6 +28,7 @@ import { RequestWithUser } from "modules/auth/request-with-user.interface";
 import { getUserIdFromRequest } from "modules/utils/user.request";
 import { Pagination } from "nestjs-typeorm-paginate";
 import { PaginationDto } from "modules/utils/pagination.dto";
+import { ENV_VAR } from "config";
 
 @ApiTags("Reino")
 @Controller("kingdom")
@@ -126,7 +127,7 @@ export class KingdomController {
         limit: paginationDto.limit,
         orderBy: paginationDto.orderBy,
         orderDirection: paginationDto.orderDirection,
-        route: `${process.env.API_URL}/api/kingdom`,
+        route: `${ENV_VAR.EXTERNAL_LINK}/api/kingdom`,
       });
     } else {
       return this._kingdomService.findAll();

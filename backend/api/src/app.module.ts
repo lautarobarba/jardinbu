@@ -20,6 +20,9 @@ import { PhylumModule } from "modules/phylum/phylum.module";
 import { ClassTaxModule } from "modules/class-tax/class-tax.module";
 import { OrderTaxModule } from "modules/order-tax/order-tax.module";
 import { ImageModule } from "modules/image/image.module";
+import { TagModule } from "modules/tag/tag.module";
+import { LinkModule } from "modules/link/link.module";
+import { PostModule } from "modules/post/post.module";
 
 @Module({
   imports: [
@@ -50,8 +53,11 @@ import { ImageModule } from "modules/image/image.module";
     OrderTaxModule,
     FamilyModule,
     GenusModule,
+    TagModule,
+    LinkModule,
     SpeciesModule,
     SpecimenModule,
+    PostModule,
     QRCodeModule,
     AdministrationModule,
   ],

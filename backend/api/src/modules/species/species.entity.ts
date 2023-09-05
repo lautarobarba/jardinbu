@@ -17,6 +17,7 @@ import { Genus } from "../genus/genus.entity";
 import { User } from "../user/user.entity";
 import { Specimen } from "../specimen/specimen.entity";
 import { Image } from "../image/image.entity";
+import { Link } from "../link/link.entity";
 
 export enum OrganismType {
   TREE = "TREE", // ARBOL = "ARBOL",
@@ -180,6 +181,29 @@ export class Species extends BaseEntity {
     },
   })
   galleryImg: Image[];
+
+  // Relation
+  @ApiProperty({
+    type: () => Link,
+    isArray: true,
+  })
+  @ManyToMany(() => Link, () => {}, {
+    cascade: true,
+    onDelete: "RESTRICT",
+    eager: true,
+  })
+  @JoinTable({
+    name: "species_links",
+    joinColumn: {
+      name: "species_id",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "link_id",
+      referencedColumnName: "id",
+    },
+  })
+  links: Link[];
 
   @ApiProperty()
   @CreateDateColumn({ name: "created_at" })

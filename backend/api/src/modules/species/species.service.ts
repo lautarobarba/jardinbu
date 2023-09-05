@@ -52,8 +52,9 @@ export class SpeciesService {
       status,
       foliageType,
       presence,
-      // exampleImg,
-      // foliageImg,
+      exampleImg,
+      galleryImg,
+      linksIds,
     } = createSpeciesDto;
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -87,6 +88,58 @@ export class SpeciesService {
     species.deleted = false;
     species.userMod = await this._userService.findOne(userId);
 
+    // Guardo las imágenes recibidas
+    if (exampleImg) {
+      // Primero reviso imágenes existentes y si no coincide el hash debo eliminarlas
+      const newImgUUID: string =
+        `${exampleImg.size}_${exampleImg.mimetype}_${exampleImg.originalname}`.replace(
+          "/",
+          "_"
+        );
+
+      const newExampleImg: Image = await this._imageService.create(
+        {
+          uuid: newImgUUID,
+          fileName: exampleImg.filename,
+          originalPath: exampleImg.path,
+          saveFolder: SPECIES_EXAMPLE_IMAGE_PATH,
+          mimetype: exampleImg.mimetype,
+          originalName: exampleImg.originalname,
+        } as CreateImageDto,
+        userId
+      );
+      species.exampleImg = newExampleImg;
+    }
+
+    if (galleryImg && galleryImg.length > 0) {
+      // Buscar todas las imagenes que ya se encuentran en la galeria.
+      const newGallery: Image[] = [];
+      for (let i = 0; i < galleryImg.length; i++) {
+        const imageReceived: Express.Multer.File = galleryImg[i];
+        const newImgUUID: string =
+          `${imageReceived.size}_${imageReceived.mimetype}_${imageReceived.originalname}`.replace(
+            "/",
+            "_"
+          );
+
+        const newImg: Image = await this._imageService.create(
+          {
+            uuid: newImgUUID,
+            fileName: imageReceived.filename,
+            originalPath: imageReceived.path,
+            saveFolder: SPECIES_GALLERY_IMAGE_PATH,
+            mimetype: imageReceived.mimetype,
+            originalName: imageReceived.originalname,
+          } as CreateImageDto,
+          userId
+        );
+        newGallery.push(newImg);
+      }
+      species.galleryImg = newGallery;
+    }
+
+    // TODO: Falta enlazar los tags con TagsIDS
+
     // Controlo que el modelo no tenga errores antes de guardar
     const errors = await validate(species);
     if (errors && errors.length > 0) {
@@ -115,6 +168,7 @@ export class SpeciesService {
       presence,
       exampleImg,
       galleryImg,
+      linksIds,
     } = updateSpeciesDto;
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -159,8 +213,6 @@ export class SpeciesService {
     species.userMod = await this._userService.findOne(userId);
 
     // Actualizo las imágenes recibidas
-    // TODO: LA MISMA IMAGEN DEVUELVE DISTINTOS UUID. NO ME SIRVE PARA CHECKEAR SI YA ESTABA SUBIDA.
-    // Se deberia enviar del front la misma que existe y si no elimnar y dejar vacio
     if (exampleImg) {
       // Primero reviso imágenes existentes y si no coincide el hash debo eliminarlas
       const newImgUUID: string =
@@ -209,9 +261,8 @@ export class SpeciesService {
       }
     }
 
-    // console.log(galleryImg);
     if (galleryImg && galleryImg.length > 0) {
-      // // Buscar todas las imagenes que ya se encuentran en la galeria.
+      // Buscar todas las imagenes que ya se encuentran en la galeria.
       const gallery: Image[] = species.galleryImg;
       const newGallery: Image[] = [];
       const prevImagesUUIDS: string[] = gallery.map(
@@ -259,6 +310,8 @@ export class SpeciesService {
       }
       species.galleryImg = [...cleanGallery, ...newGallery];
     }
+
+    // TODO: Falta enlazar los tags con TagsIDS
 
     // Controlo que el modelo no tenga errores antes de guardar
     const errors = await validate(species);
@@ -317,7 +370,7 @@ export class SpeciesService {
 
     const species: Species = await this._speciesRepository.findOne({
       where: { id },
-      relations: ["specimens"],
+      relations: ["specimens", "exampleImg"],
     });
 
     if (!species) {
@@ -330,6 +383,11 @@ export class SpeciesService {
       this._logger.debug(ERROR_MESSAGE.OBJETO_REFERENCIADO);
       throw new NotFoundException(ERROR_MESSAGE.OBJETO_REFERENCIADO);
     }
+
+    // Elimino los objetos relacionados (fuertemente dependientes)
+    // DELETE species.exampleImg
+    // DELETE species.galleryImg
+    // DELETE species.links
 
     // Soft Delete
     species.deleted = true;

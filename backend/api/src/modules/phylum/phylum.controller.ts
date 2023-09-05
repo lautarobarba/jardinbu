@@ -28,6 +28,7 @@ import { RequestWithUser } from "modules/auth/request-with-user.interface";
 import { getUserIdFromRequest } from "modules/utils/user.request";
 import { Pagination } from "nestjs-typeorm-paginate";
 import { PaginationDto } from "modules/utils/pagination.dto";
+import { ENV_VAR } from "config";
 
 @ApiTags("Filo")
 @Controller("phylum")
@@ -126,7 +127,7 @@ export class PhylumController {
         limit: paginationDto.limit,
         orderBy: paginationDto.orderBy,
         orderDirection: paginationDto.orderDirection,
-        route: `${process.env.API_URL}/api/phylum`,
+        route: `${ENV_VAR.EXTERNAL_LINK}/api/phylum`,
       });
     } else {
       return this._phylumService.findAll();
