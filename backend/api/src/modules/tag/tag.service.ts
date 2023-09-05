@@ -30,7 +30,7 @@ export class TagService {
 
   async create(createTagDto: CreateTagDto, userId: number): Promise<Tag> {
     this._logger.debug("create()");
-    const { name } = createTagDto;
+    const { name, bgColor } = createTagDto;
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
 
     // Controlo que la clave no esté en uso
@@ -47,6 +47,7 @@ export class TagService {
     // Si no existe entonces creo uno nuevo
     const tag: Tag = this._tagRepository.create();
     tag.name = name.toLowerCase();
+    tag.bgColor = bgColor ? bgColor : null;
     tag.createdAt = timestamp;
     tag.updatedAt = timestamp;
     tag.deleted = false;
@@ -64,7 +65,7 @@ export class TagService {
 
   async update(updateTagDto: UpdateTagDto, userId: number): Promise<Tag> {
     this._logger.debug("update()");
-    const { id, name } = updateTagDto;
+    const { id, name, bgColor } = updateTagDto;
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
 
     const tag: Tag = await this._tagRepository.findOne({
@@ -89,6 +90,7 @@ export class TagService {
 
     // Si no hay problemas actualizo los atributos
     tag.name = name.toLowerCase();
+    tag.bgColor = bgColor ? bgColor : null;
     tag.createdAt = timestamp;
     tag.updatedAt = timestamp;
     tag.deleted = false;

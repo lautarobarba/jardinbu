@@ -1,8 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { BGColor } from "./tag.entity";
 
 export class CreateTagDto {
   @ApiProperty()
   name: string;
+
+  @ApiProperty()
+  bgColor: BGColor;
 }
 
 export class UpdateTagDto {
@@ -11,4 +15,7 @@ export class UpdateTagDto {
 
   @ApiProperty()
   name: string;
+
+  @ApiProperty()
+  bgColor: BGColor;
 }

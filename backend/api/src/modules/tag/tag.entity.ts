@@ -11,6 +11,18 @@ import {
 } from "typeorm";
 import { User } from "../user/user.entity";
 
+export enum BGColor {
+  tagBgGreen = "tagBgGreen",
+  tagBgBlue = "tagBgBlue",
+  tagBgJade = "tagBgJade",
+  tagBgLima = "tagBgLima",
+  tagBgPink = "tagBgPink",
+  tagBgYellow = "tagBgYellow",
+  tagBgRed = "tagBgRed",
+  tagBgGrey = "tagBgGrey",
+  tagBgPurple = "tagBgPurple",
+}
+
 @Entity("tags")
 export class Tag extends BaseEntity {
   @ApiProperty()
@@ -26,6 +38,16 @@ export class Tag extends BaseEntity {
     length: 255,
   })
   name: string;
+
+  @ApiProperty()
+  @Column({
+    name: "bg_color",
+    type: "enum",
+    enum: BGColor,
+    default: BGColor.tagBgGreen,
+    nullable: true,
+  })
+  bgColor: BGColor;
 
   @ApiProperty()
   @CreateDateColumn({ name: "created_at" })
