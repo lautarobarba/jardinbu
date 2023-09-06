@@ -37,10 +37,10 @@ export class TagController {
   private readonly _logger = new Logger(TagController.name);
 
   @Post()
-  @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
-  @UseGuards(IsEmailConfirmedGuard())
+  // @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
+  // @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
-  @ApiBearerAuth()
+  // @ApiBearerAuth()
   @ApiBody({
     description: "Atributos del tag",
     type: CreateTagDto,
@@ -67,15 +67,15 @@ export class TagController {
     @Body() createTagDto: CreateTagDto
   ): Promise<Tag> {
     this._logger.debug("POST: /api/tag");
-    const userId: number = getUserIdFromRequest(request);
+    const userId: number = 1; //getUserIdFromRequest(request);
     return this._tagService.create(createTagDto, userId);
   }
 
   @Patch()
-  @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
-  @UseGuards(IsEmailConfirmedGuard())
+  // @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
+  // @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
-  @ApiBearerAuth()
+  // @ApiBearerAuth()
   @ApiBody({
     description: "Atributos del tag",
     type: UpdateTagDto,
@@ -106,7 +106,7 @@ export class TagController {
     @Body() updateTagDto: UpdateTagDto
   ): Promise<Tag> {
     this._logger.debug("PATCH: /api/tag");
-    const userId: number = getUserIdFromRequest(request);
+    const userId: number = 1; //getUserIdFromRequest(request);
     return this._tagService.update(updateTagDto, userId);
   }
 

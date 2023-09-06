@@ -18,19 +18,23 @@ import { CreateLinkDto, UpdateLinkDto } from "./link.dto";
 import { Link } from "./link.entity";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
 import { UserService } from "modules/user/user.service";
+import { Tag } from "modules/tag/tag.entity";
+import { TagService } from "modules/tag/tag.service";
+import { CreateTagDto } from "modules/tag/tag.dto";
 
 @Injectable()
 export class LinkService {
   constructor(
     @InjectRepository(Link)
     private readonly _linkRepository: Repository<Link>,
-    private readonly _userService: UserService
+    private readonly _userService: UserService,
+    private readonly _tagService: TagService,
   ) {}
   private readonly _logger = new Logger(LinkService.name);
 
-  async create(createLinkDto: CreateLinkDto, userId: number): Promise<Link> {
+  async create(createLinkDto: CreateLinkDto, userId: number): Promise<any> {
     this._logger.debug("create()");
-    const { url, description, tagsIds } = createLinkDto;
+    const { url, description, tags } = createLinkDto;
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
 
     // Si no existe entonces creo uno nuevo
@@ -42,7 +46,25 @@ export class LinkService {
     link.deleted = false;
     link.userMod = await this._userService.findOne(userId);
 
-    // TODO: Falta enlazar los tags con TagsIDS
+    // Creo relaciones
+    const linkTags: Tag[] = [];
+    if(tags && tags.length > 0){
+      for(let i=0; i<tags.length; i++){
+        const tagReceived: any = tags[i];
+        let tagAux: Tag = null;
+        if(tagReceived.id && tagReceived.id !== 0){
+          // Es un tag existente
+          tagAux = await this._tagService.findOne(tagReceived.id);
+        } else {
+          // Es necesario crear un nuevo tag
+          const createTagDto: CreateTagDto = {...tagReceived};
+          tagAux = await this._tagService.create(createTagDto, userId);
+          tagAux.save();
+        }
+        linkTags.push(tagAux);
+      }
+    }
+    link.tags = linkTags;
 
     // Controlo que el modelo no tenga errores antes de guardar
     const errors = await validate(link);
@@ -56,7 +78,7 @@ export class LinkService {
 
   async update(updateLinkDto: UpdateLinkDto, userId: number): Promise<Link> {
     this._logger.debug("update()");
-    const { id, url, description, tagsIds } = updateLinkDto;
+    const { id, url, description, tags } = updateLinkDto;
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
 
     const link: Link = await this._linkRepository.findOne({
@@ -76,7 +98,39 @@ export class LinkService {
     link.deleted = false;
     link.userMod = await this._userService.findOne(userId);
 
-    // TODO: Falta enlazar los tags con TagsIDS
+    // Actualizo las relaciones
+    const prevTags: Tag[] = link.tags;
+    const newTags: Tag[] = [];
+    const newTagsIDS: number[] = [];
+    if(tags && tags.length > 0){
+      // Armo el nuevo conjunto de tags
+      for(let i=0; i<tags.length; i++){
+        const tagReceived: any = tags[i];
+        let tagAux: Tag = null;
+        if(tagReceived.id && tagReceived.id !== 0){
+          // Es un tag existente
+          tagAux = await this._tagService.findOne(tagReceived.id);
+        } else {
+          // Es necesario crear un nuevo tag
+          const createTagDto: CreateTagDto = {...tagReceived};
+          tagAux = await this._tagService.create(createTagDto, userId);
+          tagAux.save();
+        }
+        newTags.push(tagAux);
+        newTagsIDS.push(tagAux.id);
+      }
+    }
+    // Limpio las relaciones
+    link.tags = newTags;
+
+    // Limpio aquellos tags huerfanos
+    for(let i=0; i<prevTags.length; i++){
+      const oldTag: Tag = prevTags[i];
+      if(!(newTagsIDS.indexOf(oldTag.id) > -1)){
+        console.log(`Eliminando tag: ${oldTag.id}`)
+        await this._tagService.delete(oldTag.id, userId);
+      }
+    }
 
     // Controlo que el modelo no tenga errores antes de guardar
     const errors = await validate(link);

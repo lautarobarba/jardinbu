@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Tag } from "modules/tag/tag.entity";
 
 export class CreateLinkDto {
   @ApiProperty()
@@ -8,10 +9,10 @@ export class CreateLinkDto {
   description?: string;
 
   @ApiPropertyOptional({
-    type: "number",
+    type: Tag,
     isArray: true,
   })
-  tagsIds: number;
+  tags: Tag[];
 }
 
 export class UpdateLinkDto {
@@ -25,8 +26,8 @@ export class UpdateLinkDto {
   description?: string;
 
   @ApiPropertyOptional({
-    type: "number",
+    type: Tag,
     isArray: true,
   })
-  tagsIds: number;
+  tags: Tag[];;
 }

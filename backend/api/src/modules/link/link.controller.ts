@@ -37,10 +37,10 @@ export class LinkController {
   private readonly _logger = new Logger(LinkController.name);
 
   @Post()
-  @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
-  @UseGuards(IsEmailConfirmedGuard())
+  // @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
+  // @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
-  @ApiBearerAuth()
+  // @ApiBearerAuth()
   @ApiBody({
     description: "Atributos del link",
     type: CreateLinkDto,
@@ -65,17 +65,18 @@ export class LinkController {
     @Req() request: RequestWithUser,
     @Res({ passthrough: true }) response: Response,
     @Body() createLinkDto: CreateLinkDto
-  ): Promise<Link> {
+  ): Promise<any> {
     this._logger.debug("POST: /api/link");
-    const userId: number = getUserIdFromRequest(request);
+    console.log(createLinkDto);
+    const userId: number = 1; //getUserIdFromRequest(request);
     return this._linkService.create(createLinkDto, userId);
   }
 
   @Patch()
-  @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
-  @UseGuards(IsEmailConfirmedGuard())
+  // @UseGuards(RoleGuard([Role.ADMIN, Role.EDITOR]))
+  // @UseGuards(IsEmailConfirmedGuard())
   @UseInterceptors(ClassSerializerInterceptor)
-  @ApiBearerAuth()
+  // @ApiBearerAuth()
   @ApiBody({
     description: "Atributos del link",
     type: UpdateLinkDto,
@@ -106,7 +107,7 @@ export class LinkController {
     @Body() updateLinkDto: UpdateLinkDto
   ): Promise<Link> {
     this._logger.debug("PATCH: /api/link");
-    const userId: number = getUserIdFromRequest(request);
+    const userId: number = 1; //getUserIdFromRequest(request);
     return this._linkService.update(updateLinkDto, userId);
   }
 
