@@ -25,6 +25,6 @@ export interface UpdateGenusDto extends CreateGenusDto {
 
 export const genusToString = (genus: Genus) => {
   if (genus.description)
-    return `${genus.id}. ${formatTitleCase(genus.name)} (${genus.description})`;
-  return `${genus.id}. ${formatTitleCase(genus.name)}`;
+    return `${formatTitleCase(genus.name)} (${genus.description})`;
+  return `${formatTitleCase(genus.name)}`;
 };

@@ -1,10 +1,9 @@
 "use client";
 import { createColumnHelper } from '@tanstack/react-table';
 import { Tag } from '@/interfaces/tag.interface';
-import { formatDate, formatTitleCase } from '@/utils/tools';
+import { formatDate } from '@/utils/tools';
 import { CustomChip } from '@/components/CustomChip';
 import { ModalCrudTag } from './CrudTagForm';
-// import { ModalCrudKingdom } from '../forms/CrudKingdomForm';
 
 const columnHelper = createColumnHelper<Tag>();
 
@@ -31,8 +30,8 @@ export const columns = [
         header: 'Modificaciones',
         cell: (props) => (
             <div className='w-56'>
-                <p><strong>Últ. act.:</strong>{formatDate(props.row.original.updatedAt)}</p>
-                <p><strong>Creado:</strong>{formatDate(props.row.original.createdAt)}</p>
+                <p><strong>Últ. act.: </strong>{formatDate(props.row.original.updatedAt)}</p>
+                <p><strong>Creado: </strong>{formatDate(props.row.original.createdAt)}</p>
             </div>
         ),
     }),

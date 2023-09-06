@@ -36,16 +36,15 @@ export const columns = [
     enableSorting: false,
   }),
   // Accessor Column
-  columnHelper.accessor('createdAt', {
-    id: 'createdAt',
-    header: 'Registrado',
-    cell: (props) => formatDate(props.getValue()),
-  }),
-  // Accessor Column
-  columnHelper.accessor('updatedAt', {
-    id: 'updatedAt',
-    header: 'Última modificación',
-    cell: (props) => formatDate(props.getValue()),
+  columnHelper.display({
+    id: 'edit',
+    header: 'Modificaciones',
+    cell: (props) => (
+      <div className='w-56'>
+        <p><strong>Últ. act.: </strong>{formatDate(props.row.original.updatedAt)}</p>
+        <p><strong>Creado: </strong>{formatDate(props.row.original.createdAt)}</p>
+      </div>
+    ),
   }),
   // Display Column
   columnHelper.display({

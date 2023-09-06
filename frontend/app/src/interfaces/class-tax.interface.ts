@@ -25,8 +25,6 @@ export interface UpdateClassTaxDto extends CreateClassTaxDto {
 
 export const classTaxToString = (classTax: ClassTax) => {
   if (classTax.description)
-    return `${classTax.id}. ${formatTitleCase(classTax.name)} (${
-      classTax.description
-    })`;
-  return `${classTax.id}. ${formatTitleCase(classTax.name)}`;
+    return `${formatTitleCase(classTax.name)} (${classTax.description})`;
+  return `${formatTitleCase(classTax.name)}`;
 };

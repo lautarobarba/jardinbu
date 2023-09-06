@@ -29,45 +29,28 @@ export const columns = [
   // Accessor Column
   columnHelper.accessor('classTax', {
     id: 'classTax',
-    // header: 'Clase',
-    // cell: (props) => classTaxToString(props.getValue()),
     header: 'Taxonomía',
     cell: (props) => (
-      <>
+      <div className='w-96'>
         <strong>Clase:</strong> {classTaxToString(props.getValue())}.
         <br />
         <strong>Filo:</strong> {phylumToString(props.getValue().phylum)}.
-        <br />
+        {' - '}
         <strong>Reino:</strong> {kingdomToString(props.getValue().phylum.kingdom)}.
-      </>
+      </div>
     ),
     enableSorting: false,
   }),
-  // // Accessor Column
-  // columnHelper.accessor('classTax', {
-  //   id: 'phylum',
-  //   header: 'Filo',
-  //   cell: (props) => phylumToString(props.getValue().phylum),
-  //   enableSorting: false,
-  // }),
-  // // Accessor Column
-  // columnHelper.accessor('classTax', {
-  //   id: 'kingdom',
-  //   header: 'Reino',
-  //   cell: (props) => kingdomToString(props.getValue().phylum.kingdom),
-  //   enableSorting: false,
-  // }),
   // Accessor Column
-  columnHelper.accessor('createdAt', {
-    id: 'createdAt',
-    header: 'Registrado',
-    cell: (props) => formatDate(props.getValue()),
-  }),
-  // Accessor Column
-  columnHelper.accessor('updatedAt', {
-    id: 'updatedAt',
-    header: 'Última modificación',
-    cell: (props) => formatDate(props.getValue()),
+  columnHelper.display({
+    id: 'edit',
+    header: 'Modificaciones',
+    cell: (props) => (
+      <div className='w-56'>
+        <p><strong>Últ. act.: </strong>{formatDate(props.row.original.updatedAt)}</p>
+        <p><strong>Creado: </strong>{formatDate(props.row.original.createdAt)}</p>
+      </div>
+    ),
   }),
   // Display Column
   columnHelper.display({

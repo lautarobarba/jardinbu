@@ -30,54 +30,30 @@ export const columns = [
   // Accessor Column
   columnHelper.accessor('orderTax', {
     id: 'orderTax',
-    // header: 'Orden',
-    // cell: (props) => orderTaxToString(props.getValue()),
     header: 'Taxonomía',
     cell: (props) => (
-      <>
+      <div className='w-96'>
         <strong>Orden:</strong> {orderTaxToString(props.getValue())}.
         <br />
         <strong>Clase:</strong> {classTaxToString(props.getValue().classTax)}.
         <br />
         <strong>Filo:</strong> {phylumToString(props.getValue().classTax.phylum)}.
-        <br />
+        {' - '}
         <strong>Reino:</strong> {kingdomToString(props.getValue().classTax.phylum.kingdom)}.
-      </>
+      </div>
     ),
     enableSorting: false,
   }),
-  // // Accessor Column
-  // columnHelper.accessor('orderTax', {
-  //   id: 'classTax',
-  //   header: 'Clase',
-  //   cell: (props) => classTaxToString(props.getValue().classTax),
-  //   enableSorting: false,
-  // }),
-  // // Accessor Column
-  // columnHelper.accessor('orderTax', {
-  //   id: 'phylum',
-  //   header: 'Filo',
-  //   cell: (props) => phylumToString(props.getValue().classTax.phylum),
-  //   enableSorting: false,
-  // }),
-  // // Accessor Column
-  // columnHelper.accessor('orderTax', {
-  //   id: 'kingdom',
-  //   header: 'Reino',
-  //   cell: (props) => kingdomToString(props.getValue().classTax.phylum.kingdom),
-  //   enableSorting: false,
-  // }),
   // Accessor Column
-  columnHelper.accessor('createdAt', {
-    id: 'createdAt',
-    header: 'Registrado',
-    cell: (props) => formatDate(props.getValue()),
-  }),
-  // Accessor Column
-  columnHelper.accessor('updatedAt', {
-    id: 'updatedAt',
-    header: 'Última modificación',
-    cell: (props) => formatDate(props.getValue()),
+  columnHelper.display({
+    id: 'edit',
+    header: 'Modificaciones',
+    cell: (props) => (
+      <div className='w-56'>
+        <p><strong>Últ. act.: </strong>{formatDate(props.row.original.updatedAt)}</p>
+        <p><strong>Creado: </strong>{formatDate(props.row.original.createdAt)}</p>
+      </div>
+    ),
   }),
   // Display Column
   columnHelper.display({

@@ -25,8 +25,6 @@ export interface UpdateFamilyDto extends CreateFamilyDto {
 
 export const familyToString = (family: Family) => {
   if (family.description)
-    return `${family.id}. ${formatTitleCase(family.name)} (${
-      family.description
-    })`;
-  return `${family.id}. ${formatTitleCase(family.name)}`;
+    return `${formatTitleCase(family.name)} (${family.description})`;
+  return `${formatTitleCase(family.name)}`;
 };

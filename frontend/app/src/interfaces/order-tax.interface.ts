@@ -25,8 +25,6 @@ export interface UpdateOrderTaxDto extends CreateOrderTaxDto {
 
 export const orderTaxToString = (orderTax: OrderTax) => {
   if (orderTax.description)
-    return `${orderTax.id}. ${formatTitleCase(orderTax.name)} (${
-      orderTax.description
-    })`;
-  return `${orderTax.id}. ${formatTitleCase(orderTax.name)}`;
+    return `${formatTitleCase(orderTax.name)} (${orderTax.description})`;
+  return `${formatTitleCase(orderTax.name)}`;
 };
