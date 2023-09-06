@@ -47,6 +47,7 @@ import {
   OrderTax,
   UpdateOrderTaxDto,
 } from "../interfaces/order-tax.interface";
+import { CreateTagDto, Tag, UpdateTagDto } from "@/interfaces/tag.interface";
 
 // Api Url
 const apiBaseUrl: string =
@@ -282,6 +283,30 @@ export const deleteGenus = async (params: { id: number }): Promise<void> => {
   return axiosClient.delete(`genus/${id}`).then((response) => response.data);
 };
 
+// ## Tags
+export const createTag = async (params: {
+  createTagDto: CreateTagDto;
+}): Promise<Tag> => {
+  const { createTagDto } = params;
+  return axiosClient
+    .post("tag", createTagDto)
+    .then((response) => response.data);
+};
+
+export const updateTag = async (params: {
+  updateTagDto: UpdateTagDto;
+}): Promise<Tag> => {
+  const { updateTagDto } = params;
+  return axiosClient
+    .patch("tag", updateTagDto)
+    .then((response) => response.data);
+};
+
+export const deleteTag = async (params: { id: number }): Promise<void> => {
+  const { id } = params;
+  return axiosClient.delete(`tag/${id}`).then((response) => response.data);
+};
+
 // ## Species
 export const createSpecies = async (params: {
   createSpeciesDto: CreateSpeciesDto;
@@ -451,6 +476,23 @@ export const getGenera = async (params: {
 export const getGenus = async (params: { id: number }): Promise<Genus> => {
   const { id } = params;
   return axiosClient.get(`genus/${id}`).then((response) => response.data);
+};
+
+// ## Tags
+export const getTags = async (params: {
+  pagination?: Pagination;
+}): Promise<PaginatedList<Tag>> => {
+  const { pagination } = params;
+  return axiosClient
+    .get(`tag`, {
+      params: pagination,
+    })
+    .then((response) => response.data);
+};
+
+export const getTag = async (params: { id: number }): Promise<Tag> => {
+  const { id } = params;
+  return axiosClient.get(`tag/${id}`).then((response) => response.data);
 };
 
 // ## Species

@@ -43,6 +43,11 @@ import {
   deleteOrderTax,
   getOrdersTax,
   getOrderTax,
+  createTag,
+  updateTag,
+  deleteTag,
+  getTags,
+  getTag,
 } from "./fetchers";
 import { Pagination } from "../interfaces/pagination.interface";
 
@@ -130,6 +135,19 @@ export const useDeleteGenus = () => {
   return useMutation(deleteGenus);
 };
 
+// ## Tags
+export const useCreateTag = () => {
+  return useMutation(createTag);
+};
+
+export const useUpdateTag = () => {
+  return useMutation(updateTag);
+};
+
+export const useDeleteTag = () => {
+  return useMutation(deleteTag);
+};
+
 // ## Species
 export const useCreateSpecies = () => {
   return useMutation(createSpecies);
@@ -143,7 +161,7 @@ export const useDeleteSpecies = () => {
   return useMutation(deleteSpecies);
 };
 
-// ## Species
+// ## Specimens
 export const useCreateSpecimen = () => {
   return useMutation(createSpecimen);
 };
@@ -266,6 +284,21 @@ export const useGetGenera = (
 
 export const useGetGenus = (params: { id: number }, config?: any) => {
   return useQuery([`genus-${params.id}`], () => getGenus(params), config);
+};
+
+// ## Tags
+export const useGetTags = (
+  params: {
+    pagination?: Pagination;
+  },
+  config?: any
+) => {
+  const { pagination } = params;
+  return useQuery(["tags", pagination], () => getTags(params), config);
+};
+
+export const useGetTag = (params: { id: number }, config?: any) => {
+  return useQuery([`tag-${params.id}`], () => getTag(params), config);
 };
 
 // ## Species

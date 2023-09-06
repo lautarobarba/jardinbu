@@ -606,17 +606,6 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         galleryImg: values.galleryImg
       };
 
-      // TODO: sacar y reemplazar por reactqueryhook
-      // const response = await axiosClient
-      //   .patch("species", updateSpeciesDto, {
-      //     headers: {
-      //       "Content-Type": "multipart/form-data",
-      //     },
-      //   })
-      //   .then((response) => response.data);
-
-      // console.log(response);
-
       updateSpeciesMutate(
         { updateSpeciesDto },
         {

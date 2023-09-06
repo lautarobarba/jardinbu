@@ -53,7 +53,16 @@ module.exports = {
         'info': '#8DC6FF',
         'warning': '#FFC93C',
         'error': '#FD5959',
-        'danger': '#FD5959'
+        'danger': '#FD5959',
+        'tagBgGreen': '#1dd1a1',
+        'tagBgBlue': '#48dbfb',
+        'tagBgJade': '#00d2d3',
+        'tagBgLima': '#b8e994',
+        'tagBgPink': '#ff9ff3',
+        'tagBgYellow': '#feca57',
+        'tagBgRed': '#ff6b6b',
+        'tagBgGrey': '#c8d6e5',
+        'tagBgPurple': '#a29bfe'
       }
     },
   },
