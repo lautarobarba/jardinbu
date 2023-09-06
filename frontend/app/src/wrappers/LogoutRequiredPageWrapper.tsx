@@ -1,7 +1,7 @@
 "use client";
-import { ReactNode, useContext } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/providers/AuthProvider";
-import { redirect } from 'next/navigation'
+import { redirect, useSearchParams } from 'next/navigation';
 
 type LogoutRequiredPageWrapperProps = {
   children?: ReactNode;
@@ -10,11 +10,18 @@ type LogoutRequiredPageWrapperProps = {
 export const LogoutRequiredPageWrapper = (props: LogoutRequiredPageWrapperProps) => {
   const { children } = props;
   const { status } = useContext(AuthContext);
+  // const searchParams = useSearchParams();
+  // const [nextRoute, setNextRoute] = useState<string>("/admin");
+
 
   const redirectDashboard = () => {
     console.log('Usuario loggeado. Redireccionando...');
-    redirect(`/admin`);
+    redirect('/admin');
   }
+
+  // useEffect(() => {
+  //   setNextRoute(searchParams.get('next') ?? '/admin');
+  // }, []);
 
   if (status === 'authenticated') redirectDashboard();
   else return (<>{children}</>);

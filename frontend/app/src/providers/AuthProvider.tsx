@@ -1,13 +1,12 @@
 "use client";
 import { CreateUserDto, User } from "@/interfaces/user.interface";
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { getAuthUser, registerUser, login, logout } from "@/services/fetchers";
+import { registerUser, login, logout } from "@/services/fetchers";
+import { useGetAuthUser } from "@/services/hooks";
 import { LoginUserDto } from "@/interfaces/auth.interface";
-import { redirect, useRouter, useSearchParams } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import Axios from 'axios';
 import { useSnackbar } from 'notistack';
-import { useGetAuthUser } from "@/services/hooks";
-
 
 type AuthContextType = {
     status: "authenticated" | "unauthenticated" | "loading";
@@ -17,7 +16,6 @@ type AuthContextType = {
     logout: (params?: { redirectHREF?: string }) => void;
     hasRole: (roles: string[]) => boolean;
 };
-
 
 export const AuthContext = createContext<AuthContextType>({
     status: "loading",
@@ -35,7 +33,6 @@ type AuthProviderProps = {
 export const AuthProvider = (props: AuthProviderProps) => {
     const { children } = props;
     const router = useRouter();
-    const searchParams = useSearchParams();
     const { enqueueSnackbar } = useSnackbar();
 
     // Queries
@@ -60,9 +57,6 @@ export const AuthProvider = (props: AuthProviderProps) => {
             });
             refetchAuthUser();
             setStatus("authenticated");
-            console.log(searchParams.get('next'));
-            const nextRoute: string | null = searchParams.get('next');
-            if (nextRoute) router.push(nextRoute);
         } catch (error) {
             setStatus("unauthenticated");
             console.log('ERROR al registrar usuario');
@@ -93,16 +87,13 @@ export const AuthProvider = (props: AuthProviderProps) => {
             });
             refetchAuthUser();
             setStatus("authenticated");
-            console.log(searchParams.get('next'));
-            const nextRoute: string | null = searchParams.get('next');
-            if (nextRoute) redirect(nextRoute);
         } catch (error) {
             setStatus("unauthenticated");
-            console.log('ERROR al iniciar sesion');
-            // enqueueSnackbar('ERROR: Error al iniciar sesion.', {
-            //     anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-            //     variant: 'error',
-            // });
+            console.log('ERROR al iniciar sesión');
+            enqueueSnackbar('ERROR: Error al iniciar sesión.', {
+                anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+                variant: 'error',
+            });
             if (Axios.isAxiosError(error)) {
                 const errorCode = error.response?.status;
                 if (Number(errorCode) === 404) {
@@ -123,10 +114,8 @@ export const AuthProvider = (props: AuthProviderProps) => {
 
         try {
             await logout();
-            setStatus("unauthenticated");
             console.log('Sesion cerrada correctamente');
-            if (params && params.redirectHREF) redirect(params.redirectHREF);
-            else redirect("/garden")
+            setStatus("unauthenticated");
         } catch (error) {
             setStatus("unauthenticated");
             console.log('ERROR al cerrar sesión');

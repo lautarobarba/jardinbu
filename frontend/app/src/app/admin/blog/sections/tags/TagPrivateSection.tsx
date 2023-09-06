@@ -20,7 +20,6 @@ import { columns } from './columns';
 import { SearchIcon } from 'lucide-react';
 
 
-
 interface TagPrivateSectionProps {
     updateTitle: Dispatch<SetStateAction<string>>;
 }

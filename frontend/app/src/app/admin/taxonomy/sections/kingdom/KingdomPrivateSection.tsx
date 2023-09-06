@@ -1,6 +1,5 @@
 "use client";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { PageTitle } from '@/components/PageTitle';
 import { PageSubTitle } from '@/components/PageSubTitle';
 import { useGetKingdoms } from '@/services/hooks';
 import { CircularProgress, Input, Modal, ModalContent } from "@nextui-org/react";
@@ -61,6 +60,7 @@ export const KingdomPrivateSection = (props: KingdomPrivateSectionProps) => {
         orderBy: sorting.length === 1 ? sorting[0].id : undefined,
         orderDirection:
           sorting.length === 1 ? (sorting[0].desc ? 'DESC' : 'ASC') : undefined,
+        searchKey: searchKey
       },
     },
     { keepPreviousData: true }
