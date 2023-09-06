@@ -127,10 +127,15 @@ export class TagController {
         limit: paginationDto.limit,
         orderBy: paginationDto.orderBy,
         orderDirection: paginationDto.orderDirection,
+        searchKey: paginationDto.searchKey,
         route: `${ENV_VAR.EXTERNAL_LINK}/api/tag`,
       });
     } else {
-      return this._tagService.findAll();
+      if (paginationDto.searchKey && paginationDto.searchKey !== "") {
+        return this._tagService.search(paginationDto.searchKey);
+      } else {
+        return this._tagService.findAll();
+      }
     }
   }
 

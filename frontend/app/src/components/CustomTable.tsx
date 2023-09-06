@@ -5,10 +5,11 @@ import { ArrowDownAZIcon, ArrowUpAZIcon, ArrowUpDownIcon } from 'lucide-react';
 
 interface ICustomTableProps {
   table: RTable<any>;
+  totalItems?: number;
 }
 
 export const CustomTable = (props: ICustomTableProps) => {
-  const { table } = props;
+  const { table, totalItems } = props;
 
   const handlePageChange = (page: number) => {
     table.setPageIndex(page - 1);
@@ -74,8 +75,13 @@ export const CustomTable = (props: ICustomTableProps) => {
 
       <div className='flex flex-col md:flex-row justify-center items-center md:justify-between align-center m-2 space-y-2'>
         <div>
-          <p className="text-dark dark:text-light">
-            Página &nbsp;
+          {totalItems && (
+            <p className="text-dark dark:text-light text-center md:text-left">
+              Registros&nbsp;<strong>{totalItems}</strong>
+            </p>
+          )}
+          <p className="text-dark dark:text-light text-center md:text-left">
+            Página&nbsp;
             <strong>
               {table.getState().pagination.pageIndex + 1} de{' '}
               {table.getPageCount()}
@@ -107,11 +113,11 @@ export const CustomTable = (props: ICustomTableProps) => {
             onChange={handlePaginationSizeChange}
             value={table.getState().pagination.pageSize}
           >
-            <option value="5">5&nbsp;&nbsp;&nbsp;Resultados</option>
-            <option value="10">10&nbsp;&nbsp;Resultados</option>
-            <option value="25">25&nbsp;&nbsp;Resultados</option>
-            <option value="50">50&nbsp;&nbsp;Resultados</option>
-            <option value="100">100&nbsp;Resultados</option>
+            <option value="5">Mostrar&nbsp;&nbsp;&nbsp;5</option>
+            <option value="10">Mostrar&nbsp;&nbsp;10</option>
+            <option value="25">Mostrar&nbsp;&nbsp;25</option>
+            <option value="50">Mostrar&nbsp;&nbsp;50</option>
+            <option value="100">Mostrar&nbsp;100</option>
           </select>
         </div>
       </div>

@@ -9,6 +9,7 @@ export interface Pagination {
   limit?: number;
   orderBy?: string;
   orderDirection?: string;
+  searchKey?: string;
 }
 
 export interface PaginatedList<T> {

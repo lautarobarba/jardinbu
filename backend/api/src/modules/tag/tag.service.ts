@@ -107,14 +107,25 @@ export class TagService {
   }
 
   async findPaginated(
-    options: IPaginationOptions & { orderBy?: string; orderDirection?: string }
+    options: IPaginationOptions & {
+      orderBy?: string;
+      orderDirection?: string;
+      searchKey?: string;
+    }
   ): Promise<Pagination<Tag>> {
     this._logger.debug("findPaginated()");
-
-    return paginate<Tag>(this._tagRepository, options, {
-      where: { deleted: false },
-      order: { [options.orderBy]: options.orderDirection },
-    });
+    if (options.searchKey && options.searchKey !== "") {
+      return paginate<Tag>(this._tagRepository, options, {
+        where: { deleted: false, name: ILike(`%${options.searchKey}%`) },
+        order: { [options.orderBy]: options.orderDirection },
+      });
+    } else {
+      console.log("Search vacio");
+      return paginate<Tag>(this._tagRepository, options, {
+        where: { deleted: false },
+        order: { [options.orderBy]: options.orderDirection },
+      });
+    }
   }
 
   async findAll(): Promise<Tag[]> {
@@ -139,6 +150,7 @@ export class TagService {
 
     return this._tagRepository.find({
       where: [{ name: ILike(`%${value}%`) }],
+      order: { name: "ASC" },
     });
   }
 
