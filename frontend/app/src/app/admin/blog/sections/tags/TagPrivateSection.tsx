@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { PageTitle } from '@/components/PageTitle';
 import { PageSubTitle } from '@/components/PageSubTitle';
 import { useGetTags } from '@/services/hooks';
@@ -20,7 +20,13 @@ import { columns } from './columns';
 import { SearchIcon } from 'lucide-react';
 
 
-export const TagPrivateSection = () => {
+
+interface TagPrivateSectionProps {
+    updateTitle: Dispatch<SetStateAction<string>>;
+}
+
+export const TagPrivateSection = (props: TagPrivateSectionProps) => {
+    const { updateTitle } = props;
     const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
@@ -97,10 +103,12 @@ export const TagPrivateSection = () => {
         getTagsError,
     ]);
 
+    useEffect(() => {
+        updateTitle('Blog - Tags');
+    }, []);
+
     return (
         <div className='p-3'>
-            <PageTitle title='Tags' />
-
             <div className='flex flex-row justify-left'>
                 <PageSubTitle title='Ejemplos' />
             </div>
