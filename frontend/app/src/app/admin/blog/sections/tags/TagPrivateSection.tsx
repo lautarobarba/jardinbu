@@ -150,6 +150,7 @@ export const TagPrivateSection = (props: TagPrivateSectionProps) => {
                         startContent={<SearchIcon size={18} />}
                     />
                 </div>
+
                 <div className="col-span-12 md:col-span-4 order-2 md:order-3 flex justify-center md:justify-end items-center">
                     <Button
                         color={openCreate ? 'danger' : 'success'}

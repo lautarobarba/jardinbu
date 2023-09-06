@@ -11,21 +11,20 @@ import { ClassesTaxPrivateSection } from "./sections/classes-tax/ClassesTaxPriva
 import { OrdersTaxPrivateSection } from "./sections/order-tax/OrdersTaxPrivateSection";
 import { FamiliesPrivateSection } from "./sections/families/FamiliesPrivateSection";
 import { GeneraPrivateSection } from "./sections/genera/GeneraPrivateSection";
+import { useState } from "react";
 
 
 const TaxonomyPage = () => {
+  const [title, setTitle] = useState<string>("Taxonomía");
+
   return (
     <RolRequiredPageWrapper roles={[Role.ADMIN, Role.EDITOR]}>
       <section id="taxonomy" className="flex w-full flex-col">
-        <PageTitle title="Taxonomía" />
+        <PageTitle title={title} />
 
         <Tabs aria-label="Options" radius="sm" color="primary" classNames={{ tabList: "bg-white dark:bg-gray-800", tab: "bg-none" }}>
-          {/* <Tab key="Example" title="Example">
-            <PageSubTitle title="Ejemplo" />
-            <ExamplePrivateSection />
-          </Tab> */}
           <Tab key="Reinos" title="Reinos">
-            <KingdomPrivateSection />
+            <KingdomPrivateSection updateTitle={setTitle} />
           </Tab>
           <Tab key="Filos" title="Filos">
             <PhylumPrivateSection />

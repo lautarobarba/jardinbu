@@ -5,7 +5,7 @@ import { ArrowDownAZIcon, ArrowUpAZIcon, ArrowUpDownIcon } from 'lucide-react';
 
 interface ICustomTableProps {
   table: RTable<any>;
-  totalItems?: number;
+  totalItems: number;
 }
 
 export const CustomTable = (props: ICustomTableProps) => {
@@ -75,11 +75,9 @@ export const CustomTable = (props: ICustomTableProps) => {
 
       <div className='flex flex-col md:flex-row justify-center items-center md:justify-between align-center m-2 space-y-2'>
         <div>
-          {totalItems && (
-            <p className="text-dark dark:text-light text-center md:text-left">
-              Registros&nbsp;<strong>{totalItems}</strong>
-            </p>
-          )}
+          <p className="text-dark dark:text-light text-center md:text-left">
+            Registros&nbsp;<strong>{totalItems}</strong>
+          </p>
           <p className="text-dark dark:text-light text-center md:text-left">
             Página&nbsp;
             <strong>
