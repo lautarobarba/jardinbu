@@ -3,6 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { Tag } from '@/interfaces/tag.interface';
 import { formatDate, formatTitleCase } from '@/utils/tools';
 import { CustomChip } from '@/components/CustomChip';
+import { ModalCrudTag } from './CrudTagForm';
 // import { ModalCrudKingdom } from '../forms/CrudKingdomForm';
 
 const columnHelper = createColumnHelper<Tag>();
@@ -29,16 +30,16 @@ export const columns = [
         id: 'edit',
         header: 'Modificaciones',
         cell: (props) => (
-            <>
+            <div className='w-56'>
                 <p><strong>Últ. act.:</strong>{formatDate(props.row.original.updatedAt)}</p>
                 <p><strong>Creado:</strong>{formatDate(props.row.original.createdAt)}</p>
-            </>
+            </div>
         ),
     }),
-    // // Display Column
-    // columnHelper.display({
-    //     id: 'actions',
-    //     header: 'Acciones',
-    //     cell: (props) => <ModalCrudKingdom id={Number(props.row.original.id)} />,
-    // }),
+    // Display Column
+    columnHelper.display({
+        id: 'actions',
+        header: 'Acciones',
+        cell: (props) => <ModalCrudTag id={Number(props.row.original.id)} />,
+    }),
 ];
