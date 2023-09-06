@@ -193,7 +193,7 @@ export const TagPrivateSection = (props: TagPrivateSectionProps) => {
 
             {getTagsIsSuccess && (
                 <section id='tags' className='tags'>
-                    <CustomTable table={table} totalItems={getTagsData.meta.totalItems} />
+                    <CustomTable table={table} totalItems={getTagsData.meta.totalItems ?? 0} />
                 </section>
             )}
         </div>

@@ -1,5 +1,5 @@
 
-import { Pagination, Select, SelectItem } from '@nextui-org/react';
+import { Pagination } from '@nextui-org/react';
 import { Table as RTable, flexRender } from '@tanstack/react-table';
 import { ArrowDownAZIcon, ArrowUpAZIcon, ArrowUpDownIcon } from 'lucide-react';
 

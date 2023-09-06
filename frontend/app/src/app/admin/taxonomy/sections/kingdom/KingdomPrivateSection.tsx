@@ -171,7 +171,7 @@ export const KingdomPrivateSection = (props: KingdomPrivateSectionProps) => {
 
       {getKingdomsIsSuccess && (
         <section id='kingdoms' className='kingdoms'>
-          <CustomTable table={table} totalItems={getKingdomsData.meta.totalItems} />
+          <CustomTable table={table} totalItems={getKingdomsData.meta.totalItems ?? 0} />
         </section>
       )}
     </div>
