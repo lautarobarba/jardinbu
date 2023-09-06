@@ -82,7 +82,7 @@ export const CustomTable = (props: ICustomTableProps) => {
             Página&nbsp;
             <strong>
               {table.getState().pagination.pageIndex + 1} de{' '}
-              {table.getPageCount()}
+              {table.getPageCount() > 0 ? table.getPageCount() : 1}
             </strong>
           </p>
         </div>
@@ -91,7 +91,7 @@ export const CustomTable = (props: ICustomTableProps) => {
           <Pagination
             isCompact
             showControls
-            total={table.getPageCount()}
+            total={table.getPageCount() > 0 ? table.getPageCount() : 1}
             page={table.getState().pagination.pageIndex + 1}
             onChange={handlePageChange}
             classNames={{

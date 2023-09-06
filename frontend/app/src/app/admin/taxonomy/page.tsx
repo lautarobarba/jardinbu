@@ -48,13 +48,13 @@ const TaxonomyPage = () => {
             <ClassesTaxPrivateSection updateTitle={setTitle} />
           </Tab>
           <Tab key="Ordenes" title="Órdenes">
-            <OrdersTaxPrivateSection />
+            <OrdersTaxPrivateSection updateTitle={setTitle} />
           </Tab>
           <Tab key="Familias" title="Familias">
-            <FamiliesPrivateSection />
+            <FamiliesPrivateSection updateTitle={setTitle} />
           </Tab>
           <Tab key="Géneros" title="Géneros">
-            <GeneraPrivateSection />
+            <GeneraPrivateSection updateTitle={setTitle} />
           </Tab>
         </Tabs>
       </section>
