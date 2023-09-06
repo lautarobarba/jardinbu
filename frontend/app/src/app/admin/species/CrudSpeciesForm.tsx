@@ -378,7 +378,7 @@ export const CreateSpeciesForm = (props: CreateSpeciesFormProps) => {
             radius="sm"
           >
             <SelectItem key={'TREE'} value={'TREE'}>
-              ARBOL
+              ÁRBOL
             </SelectItem>
             <SelectItem key={'BUSH'} value={'BUSH'}>
               ARBUSTO

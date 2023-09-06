@@ -1,5 +1,5 @@
 import { createColumnHelper } from '@tanstack/react-table';
-import { Species } from '@/interfaces/species.interface';
+import { OrganismType, Species } from '@/interfaces/species.interface';
 import { formatDate, formatTitleCase, getUrlForImageById, getUrlForImageByUUID } from '@/utils/tools';
 import { genusToString } from '@/interfaces/genus.interface';
 import { familyToString } from '@/interfaces/family.interface';
@@ -40,6 +40,23 @@ export const columns: any = [
     id: 'description',
     header: 'Descripción',
     cell: (props) => formatTitleCase(props.getValue()),
+  }),
+  // Accessor Column
+  columnHelper.accessor('organismType', {
+    id: 'organismType',
+    header: 'Tipo de organismo',
+    cell: (props) => {
+      switch (props.getValue()) {
+        case OrganismType.TREE: return <span>ÁRBOL</span>
+        case OrganismType.BUSH: return <span>ARBUSTO</span>
+        case OrganismType.SUBSHRUB: return <span>SUBARBUSTO</span>
+        case OrganismType.FUNGUS: return <span>HONGO</span>
+        case OrganismType.GRASS: return <span>HIERBA</span>
+        case OrganismType.LICHEN: return <span>LIQUEN</span>
+        case OrganismType.HEMIPARASITE_SUBSHRUB: return <span>SUBARBUSTO HEMIPARÁSITO</span>
+        default: return <span>Error</span>
+      }
+    },
   }),
   // Accessor Column
   columnHelper.accessor('genus', {
