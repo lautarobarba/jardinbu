@@ -96,12 +96,12 @@ export const CustomTable = (props: ICustomTableProps) => {
             total={table.getPageCount()}
             page={table.getState().pagination.pageIndex + 1}
             onChange={handlePageChange}
-            color={"primary"}
             classNames={{
               wrapper: "shadow-md",
               prev: "bg-white dark:bg-gray-800 text-gray-900 dark:text-white",
               next: "bg-white dark:bg-gray-800 text-gray-900 dark:text-white",
-              item: "bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              item: "bg-white dark:bg-gray-800 text-gray-900 dark:text-white",
+              cursor: "bg-navbar-bg text-white"
             }}
           />
         </div>
