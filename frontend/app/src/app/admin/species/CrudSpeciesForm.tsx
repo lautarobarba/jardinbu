@@ -20,6 +20,7 @@ import {
   useDeleteSpecies,
   useGetGenera,
   useGetOneSpecies,
+  useGetTags,
   useUpdateSpecies
 } from '@/services/hooks';
 import { Genus, genusToString } from '@/interfaces/genus.interface';
@@ -37,10 +38,14 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { PageSubTitle } from '@/components/PageSubTitle';
 import { formatTitleCase, getUrlForImageByUUID } from '@/utils/tools';
-import { PlusIcon, PencilIcon, TrashIcon, DeleteIcon } from 'lucide-react';
+import { PlusIcon, PencilIcon, TrashIcon, DeleteIcon, PlusCircleIcon } from 'lucide-react';
 import { EmblaOptionsType } from 'embla-carousel-react'
 import useEmblaCarousel from 'embla-carousel-react'
 import "./CrudSpeciesForm.css";
+import { CreateLinkDto, Link, UpdateLinkDto } from '@/interfaces/link.interface';
+import { BGColor, Tag, tagToString } from '@/interfaces/tag.interface';
+import { CreateTagForm } from '../blog/sections/tags/CrudTagForm';
+import { CustomChip } from '@/components/CustomChip';
 
 // TODO: mover esta restriccion a otro lugar mas generico
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
@@ -68,6 +73,9 @@ const ValidationSchema = Yup.object().shape({
   galleryImg: Yup.mixed()
     .nullable()
     .notRequired(),
+  links: Yup.mixed()
+    .nullable()
+    .notRequired(),
 });
 
 interface Values {
@@ -82,6 +90,7 @@ interface Values {
   presence: string;
   exampleImg?: File,
   galleryImg?: File[],
+  links?: (Link | CreateLinkDto)[],
 }
 
 interface CreateSpeciesFormProps {
@@ -540,6 +549,7 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
   const [classTax, setClassTax] = useState<string>('');
   const [phylum, setPhylum] = useState<string>('');
   const [kingdom, setKingdom] = useState<string>('');
+  const [links, setLinks] = useState<(CreateLinkDto | UpdateLinkDto)[]>([]);
 
   const exampleImgInputRef = useRef<HTMLInputElement>(null);
   const galleryImgInputRef = useRef<HTMLInputElement>(null);
@@ -559,9 +569,20 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
     setOpenCreateGenusModal(!openCreateGenusModal);
   };
 
+  const [openCreateTagModal, setOpenCreateTagModal] =
+    useState<boolean>(false);
+
+  const toggleOpenCreateTagModal = () => {
+    setOpenCreateTagModal(!openCreateTagModal);
+  };
+
   // Lista de géneros para Select
   const { isSuccess: getGeneraIsSuccess, data: getGeneraData } =
     useGetGenera({});
+
+  // Lista de tags para Select
+  const { isSuccess: getTagsIsSuccess, data: getTagsData } =
+    useGetTags({});
 
   // Query
   const {
@@ -603,33 +624,36 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         presence: values.presence as Presence,
 
         exampleImg: values.exampleImg,
-        galleryImg: values.galleryImg
+        galleryImg: values.galleryImg,
+
+        links: links
       };
 
-      updateSpeciesMutate(
-        { updateSpeciesDto },
-        {
-          onError: (error: any) => {
-            console.log('ERROR: Error al actualizar especie');
-            console.log(error);
-            enqueueSnackbar('ERROR: Error al actualizar especie', {
-              anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-              variant: 'error',
-            });
-          },
-          onSuccess: (species: Species) => {
-            console.log('Especie actualizada correctamente');
-            console.log(species);
-            queryClient.invalidateQueries(['species']);
-            queryClient.invalidateQueries([`species-${id}`]);
-            toggleVisibility(false);
-            enqueueSnackbar('Especie actualizada correctamente', {
-              anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-              variant: 'success',
-            });
-          },
-        }
-      );
+      console.log(updateSpeciesDto);
+      // updateSpeciesMutate(
+      //   { updateSpeciesDto },
+      //   {
+      //     onError: (error: any) => {
+      //       console.log('ERROR: Error al actualizar especie');
+      //       console.log(error);
+      //       enqueueSnackbar('ERROR: Error al actualizar especie', {
+      //         anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+      //         variant: 'error',
+      //       });
+      //     },
+      //     onSuccess: (species: Species) => {
+      //       console.log('Especie actualizada correctamente');
+      //       console.log(species);
+      //       queryClient.invalidateQueries(['species']);
+      //       queryClient.invalidateQueries([`species-${id}`]);
+      //       toggleVisibility(false);
+      //       enqueueSnackbar('Especie actualizada correctamente', {
+      //         anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+      //         variant: 'success',
+      //       });
+      //     },
+      //   }
+      // );
     },
   });
 
@@ -762,11 +786,175 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
     formik.setFieldValue('galleryImg', tempFormikGalleryValue);
   }
 
+  const handleAddLinkInput = () => {
+    console.log('Agregando nuevo CreateLinkDto');
+    setLinks([...links, { url: "", description: "", tags: [] } as CreateLinkDto]);
+  }
+
+  const handleUpdateLinkUrlInput = (event: any, indexR: number) => {
+    console.log('Actualizando Link url en lista');
+    setLinks(links.map((link, index) => index === indexR ? { ...link, url: event.target.value } : link));
+  }
+
+  const handleUpdateLinkDescriptionInput = (event: any, indexR: number) => {
+    console.log('Actualizando Link description en lista');
+    setLinks(links.map((link, index) => index === indexR ? { ...link, description: event.target.value } : link));
+  }
+
+  const handleUpdateLinkTagInput = (tagsSelected: any[], indexR: number) => {
+    console.log('Actualizando Link tags en lista');
+    // setLinks(links.map((link, index) => index === indexR ? { ...link, tags: tagsSelected } : link));
+    // ERROR: a "key" prop is being spread into JSX
+    const cleanTags = tagsSelected.map(tag => { if (tag.key) delete tag.key; return tag; })
+    console.log({ cleanTags });
+    const tagTest: Tag = {
+      name: 'tagDEMO',
+      bgColor: BGColor.tagBgBlue,
+    } as Tag;
+    setLinks(links.map((link, index) => index === indexR ? { ...link, tags: [tagTest] } : link));
+  }
+
+  useEffect(() => {
+    console.log({ links });
+  }, [links]);
+
   return (
     <form onSubmit={formik.handleSubmit}>
+      <br />
+      <br />
+      <div className="grid grid-cols-12 gap-4">
+        <div className="col-span-6 p-1">
+          <span><strong>Enlaces</strong></span>
+        </div>
+        <div className="col-span-6 flex justify-end">
+          <span onClick={handleAddLinkInput}><PlusCircleIcon className='m-0 b-inline' /></span>
+        </div>
+      </div>
+
+      {links.map((link, index) => (
+        <div key={index} className="grid grid-cols-12 gap-4">
+          <div className="col-span-12 md:col-span-6">
+            <Input
+              // Value
+              type="text"
+              id="linkUrl[]"
+              name="linkUrl[]"
+              label="URL"
+              placeholder="Ej: https://es.wikipedia.org/wiki/Nothofagus_pumilio..."
+              value={link.url}
+              onChange={(event: any) => handleUpdateLinkUrlInput(event, index)}
+              // Validations
+              isRequired={true}
+              autoComplete="off"
+              // Style
+              fullWidth={true}
+              variant="bordered"
+              radius="sm"
+              className="text-dark dark:text-light"
+            />
+          </div>
+          <div className="col-span-12 md:col-span-6">
+            <Input
+              // Value
+              type="text"
+              id="linkDescription[]"
+              name="linkDescription[]"
+              label="Título"
+              placeholder="Ej: Nothofagus pumilio - Wikipedia"
+              value={link.description}
+              onChange={(event: any) => handleUpdateLinkDescriptionInput(event, index)}
+              // Validations
+              isRequired={true}
+              autoComplete="off"
+              // Style
+              fullWidth={true}
+              variant="bordered"
+              radius="sm"
+              className="text-dark dark:text-light"
+            />
+          </div>
+          <div className="col-span-11">
+            <Autocomplete
+              multiple
+              id='linkTags'
+              options={(getTagsData ?? []) as Tag[]}
+              getOptionLabel={(tag: Tag) => tagToString(tag)}
+              // value={link.tags as Tag[]}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  name='linkTags'
+                  label='Tags'
+                  placeholder='Tag...'
+                // error={formik.touched.genus && Boolean(formik.errors.genus)}
+                // required={true}
+                />
+              )}
+              renderOption={(props: HTMLAttributes<HTMLLIElement>, tag: Tag) => {
+                return (
+                  <li {...props} key={tag.id}>
+                    {tagToString(tag)}
+                  </li>
+                );
+              }}
+              renderTags={(tags: Tag[]) => (
+                <>
+                  {tags.map((tag: Tag) => <CustomChip key={tag.id} tag={tag} />)}
+                </>
+              )}
+            // isOptionEqualToValue={(option: any, selection: any) =>
+            //   option.value === selection.value
+            // }
+            // onChange={(event: SyntheticEvent<Element, Event>, tagsSelected: Tag[]) => handleUpdateLinkTagInput(tagsSelected, index)}
+            // fullWidth
+            // disableClearable={false}
+            // autoSelect={true}
+            />
+          </div>
+
+          <div className="col-span-1 flex justify-center items-center">
+            <Tooltip content='Nuevo'>
+              <span
+                onClick={() => toggleOpenCreateTagModal()}
+              >
+                <PlusIcon className='text-primary' fontSize={'large'} />
+              </span>
+            </Tooltip>
+
+            <Modal
+              size="5xl"
+              radius="sm"
+              isOpen={openCreateTagModal}
+              onClose={() => setOpenCreateTagModal(false)}
+              isDismissable={false}
+              scrollBehavior="outside"
+            >
+              <ModalThemeWrapper>
+                <ModalContent>
+                  <div className='p-5 bg-light dark:bg-dark'>
+                    <CreateTagForm
+                      toggleVisibility={toggleOpenCreateTagModal}
+                    />
+                  </div>
+                </ModalContent>
+              </ModalThemeWrapper>
+            </Modal>
+          </div>
+
+          {/* <label>Tags: </label><input value={link.tags?.map(tag => tag.name)} multiple /> */}
+        </div>
+      ))}
+      <br />
+      <br />
+
       <Grid container spacing={2} justifyContent={'center'}>
         <Grid container item xs={12} justifyContent={'center'}>
           <PageSubTitle title={`Actualizar especie N° ${id}`} />
+        </Grid>
+
+
+        <Grid container item xs={12} flex="row">
+          <div className='my-4'>&nbsp;</div>
         </Grid>
 
         <Grid item xs={11}>

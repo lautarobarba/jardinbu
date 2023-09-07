@@ -1,6 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Express } from "express";
 import { FoliageType, OrganismType, Presence, Status } from "./species.entity";
+import { Link } from "modules/link/link.entity";
+import { CreateLinkDto } from "modules/link/link.dto";
 
 export class CreateSpeciesDto {
   @ApiProperty()
@@ -44,10 +46,10 @@ export class CreateSpeciesDto {
   galleryImg?: Express.Multer.File[];
 
   @ApiPropertyOptional({
-    type: "number",
+    type: Link,
     isArray: true,
   })
-  linksIds: number;
+  links: (Link | CreateLinkDto)[];
 }
 
 export class UpdateSpeciesDto {
@@ -94,8 +96,8 @@ export class UpdateSpeciesDto {
   galleryImg?: Express.Multer.File[];
 
   @ApiPropertyOptional({
-    type: "number",
+    type: Link,
     isArray: true,
   })
-  linksIds: number;
+  links: (Link | CreateLinkDto)[];
 }

@@ -120,7 +120,6 @@ export class TagService {
         order: { [options.orderBy]: options.orderDirection },
       });
     } else {
-      console.log("Search vacio");
       return paginate<Tag>(this._tagRepository, options, {
         where: { deleted: false },
         order: { [options.orderBy]: options.orderDirection },

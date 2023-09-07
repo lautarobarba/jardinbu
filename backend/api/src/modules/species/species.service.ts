@@ -54,7 +54,7 @@ export class SpeciesService {
       presence,
       exampleImg,
       galleryImg,
-      linksIds,
+      links,
     } = createSpeciesDto;
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -168,7 +168,7 @@ export class SpeciesService {
       presence,
       exampleImg,
       galleryImg,
-      linksIds,
+      links,
     } = updateSpeciesDto;
     const timestamp: any = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -324,14 +324,29 @@ export class SpeciesService {
   }
 
   async findPaginated(
-    options: IPaginationOptions & { orderBy?: string; orderDirection?: string }
+    options: IPaginationOptions & {
+      orderBy?: string;
+      orderDirection?: string;
+      searchKey?: string;
+    }
   ): Promise<Pagination<Species>> {
     this._logger.debug("findPaginated()");
-
-    return paginate<Species>(this._speciesRepository, options, {
-      where: { deleted: false },
-      order: { [options.orderBy]: options.orderDirection },
-    });
+    if (options.searchKey && options.searchKey !== "") {
+      return paginate<Species>(this._speciesRepository, options, {
+        where: [
+          { deleted: false, scientificName: ILike(`%${options.searchKey}%`) },
+          { deleted: false, commonName: ILike(`%${options.searchKey}%`) },
+          { deleted: false, englishName: ILike(`%${options.searchKey}%`) },
+          { deleted: false, description: ILike(`%${options.searchKey}%`) },
+        ],
+        order: { [options.orderBy]: options.orderDirection },
+      });
+    } else {
+      return paginate<Species>(this._speciesRepository, options, {
+        where: { deleted: false },
+        order: { [options.orderBy]: options.orderDirection },
+      });
+    }
   }
 
   async findAll(): Promise<Species[]> {

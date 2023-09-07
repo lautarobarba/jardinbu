@@ -164,6 +164,8 @@ export class SpeciesController {
         }
       });
     }
+    console.log(updateSpeciesDto);
+    throw new Error("CORTE");
     return this._speciesService.update(updateSpeciesDto, userId);
   }
 
@@ -184,10 +186,15 @@ export class SpeciesController {
         limit: paginationDto.limit,
         orderBy: paginationDto.orderBy,
         orderDirection: paginationDto.orderDirection,
+        searchKey: paginationDto.searchKey,
         route: `${ENV_VAR.EXTERNAL_LINK}/api/species`,
       });
     } else {
-      return this._speciesService.findAll();
+      if (paginationDto.searchKey && paginationDto.searchKey !== "") {
+        return this._speciesService.search(paginationDto.searchKey);
+      } else {
+        return this._speciesService.findAll();
+      }
     }
   }
 

@@ -1,6 +1,7 @@
 import { formatTitleCase } from "../utils/tools";
 import { Genus } from "./genus.interface";
 import { Image } from "./image.interface";
+import { CreateLinkDto, Link, UpdateLinkDto } from "./link.interface";
 import { User } from "./user.interface";
 
 export enum OrganismType {
@@ -42,6 +43,7 @@ export interface Species {
   presence: Presence;
   exampleImg?: Image;
   galleryImg?: Image[];
+  links?: Link[];
   createdAt: Date;
   updatedAt: Date;
   deleted: boolean;
@@ -60,6 +62,7 @@ export interface CreateSpeciesDto {
   presence: Presence;
   exampleImg?: File | null;
   galleryImg?: File[] | null;
+  links?: (CreateLinkDto | UpdateLinkDto)[];
 }
 
 export interface UpdateSpeciesDto extends CreateSpeciesDto {

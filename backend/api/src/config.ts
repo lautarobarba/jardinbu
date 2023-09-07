@@ -48,14 +48,14 @@ export const ENV_VAR: {
   DB_NAME: process.env.DB_NAME ?? "postgres",
   DB_USER: process.env.DB_USER ?? "postgres",
   DB_PASSWORD: process.env.DB_PASSWORD,
-  DB_LOGGING: Boolean(process.env.DB_LOGGING ?? true),
+  DB_LOGGING: (process.env.DB_LOGGING ?? "").toLowerCase() === "true",
   // JWT Token
   JWT_SECRET: process.env.JWT_SECRET ?? "secret",
   JWT_EXPIRATION_TIME: process.env.JWT_EXPIRATION_TIME ?? "1d",
   // Servicio de correos
   SMTP_HOST: process.env.SMTP_HOST ?? "smtp.host.com",
   SMTP_PORT: Number(process.env.SMTP_PORT ?? 25),
-  SMTP_SECURE: Boolean(process.env.SMTP_SECURE ?? false),
+  SMTP_SECURE: (process.env.SMTP_SECURE ?? "").toLowerCase() === "true",
   SMTP_USER: process.env.SMTP_USER ?? "smpt_user",
   SMTP_PASSWORD: process.env.SMTP_PASSWORD ?? "smpt_password",
   // FRONTEND ROUTES

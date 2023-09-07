@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { CreateTagDto } from "modules/tag/tag.dto";
 import { Tag } from "modules/tag/tag.entity";
 
 export class CreateLinkDto {
@@ -12,7 +13,7 @@ export class CreateLinkDto {
     type: Tag,
     isArray: true,
   })
-  tags: Tag[];
+  tags: (Tag | CreateTagDto)[];
 }
 
 export class UpdateLinkDto {
@@ -29,5 +30,5 @@ export class UpdateLinkDto {
     type: Tag,
     isArray: true,
   })
-  tags: Tag[];;
+  tags: (Tag | CreateTagDto)[];
 }

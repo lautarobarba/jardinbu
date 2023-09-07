@@ -28,7 +28,7 @@ export class LinkService {
     @InjectRepository(Link)
     private readonly _linkRepository: Repository<Link>,
     private readonly _userService: UserService,
-    private readonly _tagService: TagService,
+    private readonly _tagService: TagService
   ) {}
   private readonly _logger = new Logger(LinkService.name);
 
@@ -48,16 +48,16 @@ export class LinkService {
 
     // Creo relaciones
     const linkTags: Tag[] = [];
-    if(tags && tags.length > 0){
-      for(let i=0; i<tags.length; i++){
+    if (tags && tags.length > 0) {
+      for (let i = 0; i < tags.length; i++) {
         const tagReceived: any = tags[i];
         let tagAux: Tag = null;
-        if(tagReceived.id && tagReceived.id !== 0){
+        if (tagReceived.id && tagReceived.id !== 0) {
           // Es un tag existente
           tagAux = await this._tagService.findOne(tagReceived.id);
         } else {
           // Es necesario crear un nuevo tag
-          const createTagDto: CreateTagDto = {...tagReceived};
+          const createTagDto: CreateTagDto = { ...tagReceived };
           tagAux = await this._tagService.create(createTagDto, userId);
           tagAux.save();
         }
@@ -102,17 +102,17 @@ export class LinkService {
     const prevTags: Tag[] = link.tags;
     const newTags: Tag[] = [];
     const newTagsIDS: number[] = [];
-    if(tags && tags.length > 0){
+    if (tags && tags.length > 0) {
       // Armo el nuevo conjunto de tags
-      for(let i=0; i<tags.length; i++){
+      for (let i = 0; i < tags.length; i++) {
         const tagReceived: any = tags[i];
         let tagAux: Tag = null;
-        if(tagReceived.id && tagReceived.id !== 0){
+        if (tagReceived.id && tagReceived.id !== 0) {
           // Es un tag existente
           tagAux = await this._tagService.findOne(tagReceived.id);
         } else {
           // Es necesario crear un nuevo tag
-          const createTagDto: CreateTagDto = {...tagReceived};
+          const createTagDto: CreateTagDto = { ...tagReceived };
           tagAux = await this._tagService.create(createTagDto, userId);
           tagAux.save();
         }
@@ -123,14 +123,14 @@ export class LinkService {
     // Limpio las relaciones
     link.tags = newTags;
 
-    // Limpio aquellos tags huerfanos
-    for(let i=0; i<prevTags.length; i++){
-      const oldTag: Tag = prevTags[i];
-      if(!(newTagsIDS.indexOf(oldTag.id) > -1)){
-        console.log(`Eliminando tag: ${oldTag.id}`)
-        await this._tagService.delete(oldTag.id, userId);
-      }
-    }
+    // // Elimino tags huerfanos
+    // for (let i = 0; i < prevTags.length; i++) {
+    //   const oldTag: Tag = prevTags[i];
+    //   if (!(newTagsIDS.indexOf(oldTag.id) > -1)) {
+    //     console.log(`Eliminando tag: ${oldTag.id}`);
+    //     await this._tagService.delete(oldTag.id, userId);
+    //   }
+    // }
 
     // Controlo que el modelo no tenga errores antes de guardar
     const errors = await validate(link);
