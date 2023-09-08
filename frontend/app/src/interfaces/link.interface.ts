@@ -16,7 +16,7 @@ export interface Link {
 export interface CreateLinkDto {
   url: string;
   description: string;
-  tags?: (Tag | CreateTagDto)[] | null;
+  tags?: Tag[] | null;
 }
 
 export interface UpdateLinkDto extends CreateLinkDto {

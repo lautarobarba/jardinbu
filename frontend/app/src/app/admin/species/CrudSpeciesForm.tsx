@@ -788,7 +788,7 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
 
   const handleAddLinkInput = () => {
     console.log('Agregando nuevo CreateLinkDto');
-    setLinks([...links, { url: "", description: "", tags: [] } as CreateLinkDto]);
+    setLinks([...links, { url: "", description: "", tags: ([]) as Tag[] } as CreateLinkDto]);
   }
 
   const handleUpdateLinkUrlInput = (event: any, indexR: number) => {
@@ -803,15 +803,19 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
 
   const handleUpdateLinkTagInput = (tagsSelected: any[], indexR: number) => {
     console.log('Actualizando Link tags en lista');
-    // setLinks(links.map((link, index) => index === indexR ? { ...link, tags: tagsSelected } : link));
+    setLinks(links.map((link, index) => index === indexR ? { ...link, tags: tagsSelected } : link));
     // ERROR: a "key" prop is being spread into JSX
-    const cleanTags = tagsSelected.map(tag => { if (tag.key) delete tag.key; return tag; })
-    console.log({ cleanTags });
-    const tagTest: Tag = {
-      name: 'tagDEMO',
-      bgColor: BGColor.tagBgBlue,
-    } as Tag;
-    setLinks(links.map((link, index) => index === indexR ? { ...link, tags: [tagTest] } : link));
+    // const cleanTags = tagsSelected.map(tag => { if (tag.key) delete tag.key; return tag; })
+    // console.log({ cleanTags });
+    // const tagTest: Tag = {
+    //   name: 'tagDEMO',
+    //   bgColor: BGColor.tagBgBlue,
+    // } as Tag;
+    // setLinks(links.map((link, index) => index === indexR ? { ...link, tags: [tagTest] } : link));
+  }
+
+  const handleRemoveLingTag = (tagId: number, indexR: number) => {
+    setLinks(links.map((link, index) => index === indexR ? { ...link, tags: link.tags ? link.tags.filter(tag => tag.id !== tagId) : [] } : link));
   }
 
   useEffect(() => {
@@ -879,15 +883,14 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
               id='linkTags'
               options={(getTagsData ?? []) as Tag[]}
               getOptionLabel={(tag: Tag) => tagToString(tag)}
-              // value={link.tags as Tag[]}
+              value={link.tags as Tag[]}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   name='linkTags'
                   label='Tags'
                   placeholder='Tag...'
-                // error={formik.touched.genus && Boolean(formik.errors.genus)}
-                // required={true}
+                  required={false}
                 />
               )}
               renderOption={(props: HTMLAttributes<HTMLLIElement>, tag: Tag) => {
@@ -899,13 +902,11 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
               }}
               renderTags={(tags: Tag[]) => (
                 <>
-                  {tags.map((tag: Tag) => <CustomChip key={tag.id} tag={tag} />)}
+                  {tags.map((tag: Tag) => <span key={tag.id} onClick={() => handleRemoveLingTag(tag.id, index)}><CustomChip tag={tag} showRemove={true} /></span>)}
                 </>
               )}
-            // isOptionEqualToValue={(option: any, selection: any) =>
-            //   option.value === selection.value
-            // }
-            // onChange={(event: SyntheticEvent<Element, Event>, tagsSelected: Tag[]) => handleUpdateLinkTagInput(tagsSelected, index)}
+              isOptionEqualToValue={(option: Tag, value: Tag) => option.id === value.id}
+              onChange={(event: SyntheticEvent<Element, Event>, tagsSelected: Tag[]) => handleUpdateLinkTagInput(tagsSelected, index)}
             // fullWidth
             // disableClearable={false}
             // autoSelect={true}
