@@ -16,8 +16,12 @@ export const CustomChip = (props: CustomChipProps) => {
         >
             <span className="flex flex-row items-center space-x-2">
                 {tag.name.toLowerCase()}
-                &nbsp;
-                <span className="rounded-lg p-1 bg-gray-400">{showRemove && <XIcon size={10} />}</span>
+                {showRemove && (
+                    <>
+                        &nbsp;
+                        <span className="rounded-lg p-1 bg-gray-400">{<XIcon size={10} />}</span>
+                    </>
+                )}
             </span>
         </Chip>
     );

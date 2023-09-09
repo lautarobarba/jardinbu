@@ -9,6 +9,7 @@ import { phylumToString } from '@/interfaces/phylum.interface';
 import { kingdomToString } from '@/interfaces/kingdom.interface';
 import { ModalCrudSpecies } from './CrudSpeciesForm';
 import { Image } from '@/interfaces/image.interface';
+import { ModalSpeciesPrivateDetailView } from './SpeciesPrivateDetailView';
 
 const columnHelper = createColumnHelper<Species>();
 
@@ -118,6 +119,10 @@ export const columns: any = [
   columnHelper.display({
     id: 'actions',
     header: 'Acciones',
-    cell: (props) => <ModalCrudSpecies id={Number(props.row.original.id)} />,
+    cell: (props) =>
+      <span className='flex flex-row'>
+        <ModalSpeciesPrivateDetailView id={Number(props.row.original.id)} />
+        <ModalCrudSpecies id={Number(props.row.original.id)} />
+      </span>
   }),
 ];
