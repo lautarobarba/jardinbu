@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Express } from "express";
 import { FoliageType, OrganismType, Presence, Status } from "./species.entity";
 import { Link } from "modules/link/link.entity";
-import { CreateLinkDto } from "modules/link/link.dto";
+import { CreateLinkDto, UpdateLinkDto } from "modules/link/link.dto";
 
 export class CreateSpeciesDto {
   @ApiProperty()
@@ -49,7 +49,7 @@ export class CreateSpeciesDto {
     type: Link,
     isArray: true,
   })
-  links: (Link | CreateLinkDto)[];
+  links: (CreateLinkDto | UpdateLinkDto)[];
 }
 
 export class UpdateSpeciesDto {
@@ -99,5 +99,5 @@ export class UpdateSpeciesDto {
     type: Link,
     isArray: true,
   })
-  links: (Link | CreateLinkDto)[];
+  links: (CreateLinkDto | UpdateLinkDto)[];
 }

@@ -22,6 +22,9 @@ import { UserService } from "modules/user/user.service";
 import { ImageService } from "modules/image/image.service";
 import { Image } from "modules/image/image.entity";
 import { CreateImageDto } from "modules/image/image.dto";
+import { Link } from "modules/link/link.entity";
+import { LinkService } from "modules/link/link.service";
+import { CreateLinkDto, UpdateLinkDto } from "modules/link/link.dto";
 
 const SPECIES_EXAMPLE_IMAGE_PATH = "species/example_images";
 const SPECIES_GALLERY_IMAGE_PATH = "species/galleries_images";
@@ -33,7 +36,8 @@ export class SpeciesService {
     private readonly _speciesRepository: Repository<Species>,
     private readonly _userService: UserService,
     private readonly _genusService: GenusService,
-    private readonly _imageService: ImageService
+    private readonly _imageService: ImageService,
+    private readonly _linkService: LinkService
   ) {}
   private readonly _logger = new Logger(SpeciesService.name);
 
@@ -139,6 +143,41 @@ export class SpeciesService {
     }
 
     // TODO: Falta enlazar los tags con TagsIDS
+    // Actualizo las relaciones
+    const prevLinks: Link[] = species.links ?? [];
+    const newLinks: Link[] = [];
+    const newLinksIDS: number[] = [];
+    if (links && links.length > 0) {
+      // Armo el nuevo conjunto de tags
+      for (let i = 0; i < links.length; i++) {
+        const linkReceived: any = links[i];
+        let linkAux: Link = null;
+        if (linkReceived.id && linkReceived.id !== 0) {
+          // Es un link existente. Actualizo por si tuvo cambios
+          const updateLinkDto: UpdateLinkDto = { ...linkReceived };
+          linkAux = await this._linkService.update(updateLinkDto, userId);
+          linkAux.save();
+        } else {
+          // Es necesario crear un nuevo link
+          const createLinkDto: CreateLinkDto = { ...linkReceived };
+          linkAux = await this._linkService.create(createLinkDto, userId);
+          linkAux.save();
+        }
+        newLinks.push(linkAux);
+        newLinksIDS.push(linkAux.id);
+      }
+    }
+    // Limpio las relaciones
+    species.links = newLinks;
+
+    // Elimino tags huerfanos
+    for (let i = 0; i < prevLinks.length; i++) {
+      const oldLink: Link = prevLinks[i];
+      if (!(newLinksIDS.indexOf(oldLink.id) > -1)) {
+        console.log(`Eliminando link: ${oldLink.id}`);
+        await this._linkService.delete(oldLink.id, userId);
+      }
+    }
 
     // Controlo que el modelo no tenga errores antes de guardar
     const errors = await validate(species);
@@ -194,6 +233,7 @@ export class SpeciesService {
 
       // Si existe y no esta borrado lógico entonces hay conflictos
       if (exists) {
+        console.log(exists);
         this._logger.debug(ERROR_MESSAGE.CLAVE_PRIMARIA_EN_USO);
         throw new ConflictException(ERROR_MESSAGE.CLAVE_PRIMARIA_EN_USO);
       }
@@ -312,6 +352,41 @@ export class SpeciesService {
     }
 
     // TODO: Falta enlazar los tags con TagsIDS
+    // Actualizo las relaciones
+    const prevLinks: Link[] = species.links ?? [];
+    const newLinks: Link[] = [];
+    const newLinksIDS: number[] = [];
+    if (links && links.length > 0) {
+      // Armo el nuevo conjunto de tags
+      for (let i = 0; i < links.length; i++) {
+        const linkReceived: any = links[i];
+        let linkAux: Link = null;
+        if (linkReceived.id && linkReceived.id !== 0) {
+          // Es un link existente. Actualizo por si tuvo cambios
+          const updateLinkDto: UpdateLinkDto = { ...linkReceived };
+          linkAux = await this._linkService.update(updateLinkDto, userId);
+          linkAux.save();
+        } else {
+          // Es necesario crear un nuevo link
+          const createLinkDto: CreateLinkDto = { ...linkReceived };
+          linkAux = await this._linkService.create(createLinkDto, userId);
+          linkAux.save();
+        }
+        newLinks.push(linkAux);
+        newLinksIDS.push(linkAux.id);
+      }
+    }
+    // Limpio las relaciones
+    species.links = newLinks;
+
+    // Elimino tags huerfanos
+    for (let i = 0; i < prevLinks.length; i++) {
+      const oldLink: Link = prevLinks[i];
+      if (!(newLinksIDS.indexOf(oldLink.id) > -1)) {
+        console.log(`Eliminando link: ${oldLink.id}`);
+        await this._linkService.delete(oldLink.id, userId);
+      }
+    }
 
     // Controlo que el modelo no tenga errores antes de guardar
     const errors = await validate(species);

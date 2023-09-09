@@ -164,8 +164,7 @@ export class SpeciesController {
         }
       });
     }
-    console.log(updateSpeciesDto);
-    throw new Error("CORTE");
+    // console.log(updateSpeciesDto);
     return this._speciesService.update(updateSpeciesDto, userId);
   }
 

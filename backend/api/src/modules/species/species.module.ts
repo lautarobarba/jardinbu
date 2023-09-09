@@ -6,6 +6,7 @@ import { Species } from "./species.entity";
 import { GenusModule } from "../genus/genus.module";
 import { UserModule } from "modules/user/user.module";
 import { ImageModule } from "modules/image/image.module";
+import { LinkModule } from "modules/link/link.module";
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ImageModule } from "modules/image/image.module";
     UserModule,
     GenusModule,
     ImageModule,
+    LinkModule,
   ],
   controllers: [SpeciesController],
   providers: [SpeciesService],

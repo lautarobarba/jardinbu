@@ -38,7 +38,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { PageSubTitle } from '@/components/PageSubTitle';
 import { formatTitleCase, getUrlForImageByUUID } from '@/utils/tools';
-import { PlusIcon, PencilIcon, TrashIcon, DeleteIcon, PlusCircleIcon } from 'lucide-react';
+import { PlusIcon, PencilIcon, TrashIcon, DeleteIcon, PlusCircleIcon, XIcon } from 'lucide-react';
 import { EmblaOptionsType } from 'embla-carousel-react'
 import useEmblaCarousel from 'embla-carousel-react'
 import "./CrudSpeciesForm.css";
@@ -46,6 +46,8 @@ import { CreateLinkDto, Link, UpdateLinkDto } from '@/interfaces/link.interface'
 import { BGColor, Tag, tagToString } from '@/interfaces/tag.interface';
 import { CreateTagForm } from '../blog/sections/tags/CrudTagForm';
 import { CustomChip } from '@/components/CustomChip';
+import { Image } from '@/interfaces/image.interface';
+import { forEachChild } from 'typescript';
 
 // TODO: mover esta restriccion a otro lugar mas generico
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
@@ -549,6 +551,8 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
   const [classTax, setClassTax] = useState<string>('');
   const [phylum, setPhylum] = useState<string>('');
   const [kingdom, setKingdom] = useState<string>('');
+  // const [gallery, setGallery] = useState<(Image | File)[]>([]);
+  const gallery = new DataTransfer();
   const [links, setLinks] = useState<(CreateLinkDto | UpdateLinkDto)[]>([]);
 
   const exampleImgInputRef = useRef<HTMLInputElement>(null);
@@ -630,30 +634,30 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
       };
 
       console.log(updateSpeciesDto);
-      // updateSpeciesMutate(
-      //   { updateSpeciesDto },
-      //   {
-      //     onError: (error: any) => {
-      //       console.log('ERROR: Error al actualizar especie');
-      //       console.log(error);
-      //       enqueueSnackbar('ERROR: Error al actualizar especie', {
-      //         anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-      //         variant: 'error',
-      //       });
-      //     },
-      //     onSuccess: (species: Species) => {
-      //       console.log('Especie actualizada correctamente');
-      //       console.log(species);
-      //       queryClient.invalidateQueries(['species']);
-      //       queryClient.invalidateQueries([`species-${id}`]);
-      //       toggleVisibility(false);
-      //       enqueueSnackbar('Especie actualizada correctamente', {
-      //         anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-      //         variant: 'success',
-      //       });
-      //     },
-      //   }
-      // );
+      updateSpeciesMutate(
+        { updateSpeciesDto },
+        {
+          onError: (error: any) => {
+            console.log('ERROR: Error al actualizar especie');
+            console.log(error);
+            enqueueSnackbar('ERROR: Error al actualizar especie', {
+              anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+              variant: 'error',
+            });
+          },
+          onSuccess: (species: Species) => {
+            console.log('Especie actualizada correctamente');
+            console.log(species);
+            queryClient.invalidateQueries(['species']);
+            queryClient.invalidateQueries([`species-${id}`]);
+            toggleVisibility(false);
+            enqueueSnackbar('Especie actualizada correctamente', {
+              anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+              variant: 'success',
+            });
+          },
+        }
+      );
     },
   });
 
@@ -672,7 +676,7 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         exampleImgInputRef.current.files = dataTransfer.files;
       }
     }
-    // Recupero todas las imagenes de la galleryImg
+    // Recupero todas las imagenes de la galleryImg version 1
     if (getOneSpeciesData && getOneSpeciesData.galleryImg && getOneSpeciesData.galleryImg.length > 0) {
       const arrayFiles: File[] = [];
       for (let i = 0; i < getOneSpeciesData.galleryImg.length; i++) {
@@ -688,8 +692,45 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         const dataTransfer = new DataTransfer();
         arrayFiles.forEach((file) => dataTransfer.items.add(file));
         galleryImgInputRef.current.files = dataTransfer.files;
+
+        // const dataTransfer2 = new DataTransfer();
+        arrayFiles.forEach((file) => gallery.items.add(file));
+
+        console.log("event.target.files>>")
+        console.log(galleryImgInputRef.current.files);
+        console.log("gallery>>")
+        console.log(gallery.files);
       }
     }
+
+    // // Recupero todas las imagenes de la galleryImg version 2
+    // if (getOneSpeciesData && getOneSpeciesData.galleryImg && getOneSpeciesData.galleryImg.length > 0) {
+    //   const arrayFiles: File[] = [];
+    //   for (let i = 0; i < getOneSpeciesData.galleryImg.length; i++) {
+    //     // console.log(getOneSpeciesData.galleryImg[i]);
+    //     const response = await fetch(getUrlForImageByUUID(getOneSpeciesData.galleryImg[i].uuid));
+    //     const blob = await response.blob();
+    //     const file = new File([blob], getOneSpeciesData.galleryImg[i].originalName, { type: blob.type });
+    //     arrayFiles.push(file);
+    //   }
+    //   // setGallery([...getOneSpeciesData.galleryImg]);
+    //   // gallery.();
+    //   formik.setFieldValue('galleryImg', arrayFiles);
+
+    //   if (galleryImgInputRef.current) {
+    //     const dataTransfer = new DataTransfer();
+    //     arrayFiles.forEach((file) => dataTransfer.items.add(file));
+    //     galleryImgInputRef.current.files = dataTransfer.files;
+
+    //     // const dataTransfer2 = new DataTransfer();
+    //     arrayFiles.forEach((file) => gallery.items.add(file));
+
+    //     console.log("event.target.files>>")
+    //     console.log(galleryImgInputRef.current.files);
+    //     console.log("gallery>>")
+    //     console.log(gallery.files);
+    //   }
+    // }
   }
 
   useEffect(() => {
@@ -705,6 +746,9 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
 
       // También recupero las imágenes
       setImagesOnFirstFetch();
+      // if (getOneSpeciesData.galleryImg) setGallery([...getOneSpeciesData.galleryImg]);
+      // Recupero links
+      if (getOneSpeciesData.links) setLinks([...getOneSpeciesData.links]);
     }
   }, [getOneSpeciesIsSuccess]);
 
@@ -786,6 +830,10 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
     formik.setFieldValue('galleryImg', tempFormikGalleryValue);
   }
 
+  const handleAddImageInput = () => {
+
+  }
+
   const handleAddLinkInput = () => {
     console.log('Agregando nuevo CreateLinkDto');
     setLinks([...links, { url: "", description: "", tags: ([]) as Tag[] } as CreateLinkDto]);
@@ -818,147 +866,18 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
     setLinks(links.map((link, index) => index === indexR ? { ...link, tags: link.tags ? link.tags.filter(tag => tag.id !== tagId) : [] } : link));
   }
 
-  useEffect(() => {
-    console.log({ links });
-  }, [links]);
+  const handleDeleteLinkInput = (indexR: number) => {
+    setLinks(links.filter((link, index) => index !== indexR));
+  }
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <br />
-      <br />
-      <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-6 p-1">
-          <span><strong>Enlaces</strong></span>
-        </div>
-        <div className="col-span-6 flex justify-end">
-          <span onClick={handleAddLinkInput}><PlusCircleIcon className='m-0 b-inline' /></span>
-        </div>
-      </div>
-
-      {links.map((link, index) => (
-        <div key={index} className="grid grid-cols-12 gap-4">
-          <div className="col-span-12 md:col-span-6">
-            <Input
-              // Value
-              type="text"
-              id="linkUrl[]"
-              name="linkUrl[]"
-              label="URL"
-              placeholder="Ej: https://es.wikipedia.org/wiki/Nothofagus_pumilio..."
-              value={link.url}
-              onChange={(event: any) => handleUpdateLinkUrlInput(event, index)}
-              // Validations
-              isRequired={true}
-              autoComplete="off"
-              // Style
-              fullWidth={true}
-              variant="bordered"
-              radius="sm"
-              className="text-dark dark:text-light"
-            />
-          </div>
-          <div className="col-span-12 md:col-span-6">
-            <Input
-              // Value
-              type="text"
-              id="linkDescription[]"
-              name="linkDescription[]"
-              label="Título"
-              placeholder="Ej: Nothofagus pumilio - Wikipedia"
-              value={link.description}
-              onChange={(event: any) => handleUpdateLinkDescriptionInput(event, index)}
-              // Validations
-              isRequired={true}
-              autoComplete="off"
-              // Style
-              fullWidth={true}
-              variant="bordered"
-              radius="sm"
-              className="text-dark dark:text-light"
-            />
-          </div>
-          <div className="col-span-11">
-            <Autocomplete
-              multiple
-              id='linkTags'
-              options={(getTagsData ?? []) as Tag[]}
-              getOptionLabel={(tag: Tag) => tagToString(tag)}
-              value={link.tags as Tag[]}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  name='linkTags'
-                  label='Tags'
-                  placeholder='Tag...'
-                  required={false}
-                />
-              )}
-              renderOption={(props: HTMLAttributes<HTMLLIElement>, tag: Tag) => {
-                return (
-                  <li {...props} key={tag.id}>
-                    {tagToString(tag)}
-                  </li>
-                );
-              }}
-              renderTags={(tags: Tag[]) => (
-                <>
-                  {tags.map((tag: Tag) => <span key={tag.id} onClick={() => handleRemoveLingTag(tag.id, index)}><CustomChip tag={tag} showRemove={true} /></span>)}
-                </>
-              )}
-              isOptionEqualToValue={(option: Tag, value: Tag) => option.id === value.id}
-              onChange={(event: SyntheticEvent<Element, Event>, tagsSelected: Tag[]) => handleUpdateLinkTagInput(tagsSelected, index)}
-            // fullWidth
-            // disableClearable={false}
-            // autoSelect={true}
-            />
-          </div>
-
-          <div className="col-span-1 flex justify-center items-center">
-            <Tooltip content='Nuevo'>
-              <span
-                onClick={() => toggleOpenCreateTagModal()}
-              >
-                <PlusIcon className='text-primary' fontSize={'large'} />
-              </span>
-            </Tooltip>
-
-            <Modal
-              size="5xl"
-              radius="sm"
-              isOpen={openCreateTagModal}
-              onClose={() => setOpenCreateTagModal(false)}
-              isDismissable={false}
-              scrollBehavior="outside"
-            >
-              <ModalThemeWrapper>
-                <ModalContent>
-                  <div className='p-5 bg-light dark:bg-dark'>
-                    <CreateTagForm
-                      toggleVisibility={toggleOpenCreateTagModal}
-                    />
-                  </div>
-                </ModalContent>
-              </ModalThemeWrapper>
-            </Modal>
-          </div>
-
-          {/* <label>Tags: </label><input value={link.tags?.map(tag => tag.name)} multiple /> */}
-        </div>
-      ))}
-      <br />
-      <br />
-
       <Grid container spacing={2} justifyContent={'center'}>
         <Grid container item xs={12} justifyContent={'center'}>
           <PageSubTitle title={`Actualizar especie N° ${id}`} />
         </Grid>
 
-
-        <Grid container item xs={12} flex="row">
-          <div className='my-4'>&nbsp;</div>
-        </Grid>
-
-        <Grid item xs={11}>
+        <Grid item xs={10}>
           <Autocomplete
             id='genus'
             options={(getGeneraData ?? []) as Genus[]}
@@ -1006,28 +925,39 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
         <Grid
           container
           item
-          xs={1}
-          justifyContent={'center'}
+          xs={2}
+          justifyContent={'end'}
           alignItems={'center'}
         >
           <Tooltip content='Nuevo'>
-            <span
+            <Button
+              color='success'
+              radius="sm"
+              className="uppercase text-white px-0"
+              fullWidth
+              type='button'
               onClick={() => toggleOpenCreateGenusModal()}
-            >
-              <PlusIcon className='text-primary' fontSize={'large'} />
-            </span>
+            >Nuevo</Button>
           </Tooltip>
 
-          {/* <Dialog
+          <Modal
+            size="5xl"
+            radius="sm"
+            isOpen={openCreateGenusModal}
             onClose={() => setOpenCreateGenusModal(false)}
-            open={openCreateGenusModal}
-            maxWidth={'md'}
-            fullWidth
+            isDismissable={false}
+            scrollBehavior="outside"
           >
-            <div className='p-5'>
-              <CreateGenusForm toggleVisibility={toggleOpenCreateGenusModal} />
-            </div>
-          </Dialog> */}
+            <ModalThemeWrapper>
+              <ModalContent>
+                <div className='p-5 bg-light dark:bg-dark'>
+                  <CreateGenusForm
+                    toggleVisibility={toggleOpenCreateGenusModal}
+                  />
+                </div>
+              </ModalContent>
+            </ModalThemeWrapper>
+          </Modal>
         </Grid>
         <Grid item xs={12} md={4}>
           <TextField
@@ -1359,7 +1289,7 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
 
       <hr />
 
-      <Grid item xs={12} md={4}>
+      {/* <Grid item xs={12} md={4}>
         <label
           className="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white"
           htmlFor="galleryImg"
@@ -1376,11 +1306,15 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
           // TODO: cambiar el tipo del event al correcto
           onChange={(event: any) => {
             const auxFiles: File[] = event.target.files;
+            console.log("event.target.files>>")
+            console.log(event.target.files);
+            console.log("gallery>>")
+            console.log(gallery.files);
             formik.setFieldValue('galleryImg', auxFiles);
           }}
           multiple
         />
-      </Grid>
+      </Grid> */}
 
       {/* Example image preview
       {galleryImgPreview && galleryImgPreview.length > 0 && (
@@ -1407,7 +1341,7 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
 
       {/* <EmblaCarousel>  */}
 
-      <div className="embla">
+      {/* <div className="embla">
         <div className="embla__viewport" ref={emblaRef}>
           <div className="embla__container">
             {galleryImgPreview.map((imagePreview: any, index: number) => (
@@ -1430,9 +1364,148 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* </EmblaCarousel>  */}
+
+      <div className="grid grid-cols-12 gap-4 my-2">
+        <div className="col-span-6 p-1">
+          <span><strong className='underline'>Enlaces</strong></span>
+        </div>
+        <div className="col-span-6 flex justify-end">
+          {/* <span onClick={handleAddLinkInput}><PlusCircleIcon className='m-0 b-inline' /></span> */}
+          <Button
+            color='success'
+            radius="sm"
+            className="uppercase text-white"
+            type='button'
+            onClick={() => handleAddLinkInput()}
+          >Agregar enlace</Button>
+        </div>
+      </div>
+
+      {links.map((link, index) => (
+        <div key={index} className="grid grid-cols-12 gap-4 mt-2">
+          <div
+            className="col-span-1 flex items-center justify-center"
+
+          >
+            <Tooltip content='Quitar Link'>
+              <Button isIconOnly color="danger" aria-label="Delete Link" onClick={() => handleDeleteLinkInput(index)}>
+                <XIcon className='m-0 b-inline text-white' />
+              </Button>
+            </Tooltip>
+          </div>
+          <div className="col-span-11 md:col-span-5">
+            <Input
+              // Value
+              type="text"
+              id="linkUrl[]"
+              name="linkUrl[]"
+              label="URL"
+              placeholder="Ej: https://www.google.com.ar/..."
+              value={link.url}
+              onChange={(event: any) => handleUpdateLinkUrlInput(event, index)}
+              // Validations
+              isRequired={true}
+              autoComplete="off"
+              // Style
+              fullWidth={true}
+              variant="bordered"
+              radius="sm"
+              className="text-dark dark:text-light"
+            />
+          </div>
+          <div className="col-span-12 md:col-span-6">
+            <Input
+              // Value
+              type="text"
+              id="linkDescription[]"
+              name="linkDescription[]"
+              label="Título"
+              placeholder="Ej: Inicio de google"
+              value={link.description}
+              onChange={(event: any) => handleUpdateLinkDescriptionInput(event, index)}
+              // Validations
+              isRequired={true}
+              autoComplete="off"
+              // Style
+              fullWidth={true}
+              variant="bordered"
+              radius="sm"
+              className="text-dark dark:text-light"
+            />
+          </div>
+          <div className="col-span-11">
+            <Autocomplete
+              multiple
+              id='linkTags'
+              options={(getTagsData ?? []) as Tag[]}
+              getOptionLabel={(tag: Tag) => tagToString(tag)}
+              value={link.tags as Tag[]}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  name='linkTags'
+                  label='Tags'
+                  placeholder='Tag...'
+                  required={false}
+                />
+              )}
+              renderOption={(props: HTMLAttributes<HTMLLIElement>, tag: Tag) => {
+                return (
+                  <li {...props} key={tag.id}>
+                    {tagToString(tag)}
+                  </li>
+                );
+              }}
+              renderTags={(tags: Tag[]) => (
+                <>
+                  {tags.map((tag: Tag) => <span key={tag.id} onClick={() => handleRemoveLingTag(tag.id, index)}><CustomChip tag={tag} showRemove={true} /></span>)}
+                </>
+              )}
+              isOptionEqualToValue={(option: Tag, value: Tag) => option.id === value.id}
+              onChange={(event: SyntheticEvent<Element, Event>, tagsSelected: Tag[]) => handleUpdateLinkTagInput(tagsSelected, index)}
+            // fullWidth
+            // disableClearable={false}
+            // autoSelect={true}
+            />
+          </div>
+
+          <div className="col-span-1 flex justify-center items-center">
+            <Tooltip content='Nuevo Tag'>
+              <Button isIconOnly color="success" aria-label="Create tag" onClick={() => toggleOpenCreateTagModal()}>
+                <PlusIcon className='m-0 b-inline text-white' />
+              </Button>
+            </Tooltip>
+
+            <Modal
+              size="5xl"
+              radius="sm"
+              isOpen={openCreateTagModal}
+              onClose={() => setOpenCreateTagModal(false)}
+              isDismissable={false}
+              scrollBehavior="outside"
+            >
+              <ModalThemeWrapper>
+                <ModalContent>
+                  <div className='p-5 bg-light dark:bg-dark'>
+                    <CreateTagForm
+                      toggleVisibility={toggleOpenCreateTagModal}
+                    />
+                  </div>
+                </ModalContent>
+              </ModalThemeWrapper>
+            </Modal>
+          </div>
+
+          <div className="col-span-12">
+            <hr />
+          </div>
+        </div>
+      ))}
+      <br />
+      <br />
 
       <br />
       <Grid container spacing={2} justifyContent={'center'}>
@@ -1458,6 +1531,56 @@ export const UpdateSpeciesForm = (props: UpdateSpeciesFormProps) => {
           {updateSpeciesIsLoading ? 'Guardando...' : 'Guardar'}
         </Button>
       </Grid>
+
+
+
+      {/* <div className="grid grid-cols-12 gap-4">
+        <div className="col-span-6 p-1">
+          <span><strong>Galería (opcional)</strong></span>
+        </div>
+        <div className="col-span-6 flex justify-end"> */}
+      {/* <span onClick={handleAddImageInput}><PlusCircleIcon className='m-0 b-inline' /></span> */}
+      {/* <Tooltip content='Agregar imágen'>
+            <Button
+              color='success'
+              radius="sm"
+              className="uppercase text-white px-0"
+              fullWidth
+              type='button'
+              onClick={handleAddImageInput}
+            >Agregar imágen</Button>
+          </Tooltip>
+        </div>
+      </div> */}
+
+      {/* {gallery.map((image, index) => (
+        <div key={index} className="grid grid-cols-12 gap-4">
+          <div className="col-span-1" onClick={() => handleDeleteLinkInput(index)}>
+            ELIMINAR
+          </div>
+          <div className="col-span-11 md:col-span-5">
+            <Input
+              // Value
+              type="file"
+              id="galleryImg[]"
+              name="galleryImg[]"
+              label={`Imágen ${index + 1}`}
+              // placeholder="Ej: https://es.wikipedia.org/wiki/Nothofagus_pumilio..."
+              // value={image.fileName ?? 'nada'}
+              // value={'nada'}
+              onChange={(event: any) => handleUpdateLinkUrlInput(event, index)}
+              // Validations
+              isRequired={true}
+              autoComplete="off"
+              // Style
+              fullWidth={true}
+              variant="bordered"
+              radius="sm"
+              className="text-dark dark:text-light"
+            />
+          </div>
+        </div>
+      ))} */}
     </form>
   );
 };
