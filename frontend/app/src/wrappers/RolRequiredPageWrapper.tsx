@@ -54,6 +54,6 @@ export const RolRequiredPageWrapper = (props: RolRequiredPageWrapperProps) => {
   const { user } = useContext(AuthContext);
 
 
-  if (user && roles.includes(user.role)) return <>{children}</>;
+  if (user && roles.includes(user.role)) return (<>{children}</>);
   else return <RolRequiredPage />;
 }
