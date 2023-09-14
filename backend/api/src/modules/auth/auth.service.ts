@@ -138,51 +138,6 @@ export class AuthService {
   // 	return tokens;
   // }
 
-  // async changePassword(changePasswordDto: ChangePasswordDto) {
-  // 	this._logger.debug('changePassword()');
-  // 	const user = await this._userService.findOne(changePasswordDto.id);
-
-  // 	if (!user) {
-  // 		this._logger.debug('Error: Not Found');
-  // 		throw new NotFoundException('Error: Not Found');
-  // 	}
-
-  // 	// Hash password
-  // 	const salt = await genSalt(10);
-  // 	const hashedPassword: string = await hash(changePasswordDto.newPassword, salt);
-
-  // 	await this._userService.updatePassword(user, hashedPassword);
-
-  // 	const tokens: SessionDto = await this.getTokens(user.id, user.email);
-  // 	await this.updateRefreshToken(user.id, tokens.refreshToken);
-
-  // 	return tokens;
-  // }
-
-  // async recoverPassword(
-  // 	ulrToImportCssInEmail: string,
-  // 	ulrToImportImagesInEmail: string,
-  // 	recoverPasswordDto: RecoverPasswordDto
-  // ) {
-  // 	this._logger.debug('recoverPassword()');
-  // 	const user = await this._userService.findOneByEmail(recoverPasswordDto.email);
-
-  // 	if (!user) {
-  // 		this._logger.debug('Error: Account does not exists');
-  // 		throw new NotFoundException('Error: Account does not exists');
-  // 	}
-
-  // 	const tokens: SessionDto = await this.getTokens(user.id, user.email);
-
-  // 	// Envío correo de validación de cuenta a su email
-  // 	await this._mailerService.sendRecoverPasswordEmail(
-  // 		ulrToImportCssInEmail,
-  // 		ulrToImportImagesInEmail,
-  // 		user.email,
-  // 		tokens.accessToken
-  // 	);
-  // }
-
   async logout(user: User) {
     this._logger.debug("logout()");
     return this._userService.logout(user);
@@ -253,7 +208,6 @@ export class AuthService {
     user: User
   ) {
     this._logger.debug("sendEmailConfirmationEmail()");
-    // const tokens: SessionDto = await this.getTokens(user.id, user.email);
     const tokenPayload: TokenPayload = { userId: user.id };
     const token: string = this._jwtService.sign(tokenPayload);
 
@@ -290,6 +244,44 @@ export class AuthService {
     await this._userService.update(updateUserDto);
 
     await this._mailerService.sendEmailConfirmedEmail(
+      ulrToImportCssInEmail,
+      ulrToImportImagesInEmail,
+      user.email
+    );
+  }
+
+  async sendRecoverPasswordEmail(
+    ulrToImportCssInEmail: string,
+    ulrToImportImagesInEmail: string,
+    user: User
+  ) {
+    this._logger.debug("sendRecoverPasswordEmail()");
+    const tokenPayload: TokenPayload = { userId: user.id };
+    const token: string = this._jwtService.sign(tokenPayload);
+
+    await this._mailerService.sendRecoverPasswordEmail(
+      ulrToImportCssInEmail,
+      ulrToImportImagesInEmail,
+      user.email,
+      token
+    );
+  }
+
+  async changePassword(
+    ulrToImportCssInEmail: string,
+    ulrToImportImagesInEmail: string,
+    user: User,
+    newPassword: string
+  ) {
+    this._logger.debug("changePassword()");
+
+    // Hash password
+    const salt = await genSalt(10);
+    const hashedPassword: string = await hash(newPassword, salt);
+
+    await this._userService.updatePassword(user, hashedPassword);
+
+    await this._mailerService.sendPasswordChangedEmail(
       ulrToImportCssInEmail,
       ulrToImportImagesInEmail,
       user.email

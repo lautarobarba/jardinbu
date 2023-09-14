@@ -1,7 +1,12 @@
 import Axios from "axios";
 import Cookies from "js-cookie";
 import { Pagination, PaginatedList } from "../interfaces/pagination.interface";
-import { LoginUserDto, SessionDto } from "../interfaces/auth.interface";
+import {
+  ChangePasswordDto,
+  LoginUserDto,
+  RecoverPasswordDto,
+  SessionDto,
+} from "../interfaces/auth.interface";
 import {
   User,
   CreateUserDto,
@@ -130,6 +135,25 @@ export const sendEmailConfirmationEmail = async (): Promise<void> => {
 export const confirmEmail = async (token: string): Promise<void> => {
   return axiosClient
     .post("auth/email-confirmation/confirm", null, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => response.data);
+};
+
+export const sendRecoverPasswordEmail = async (
+  recoverPasswordDto: RecoverPasswordDto
+): Promise<void> => {
+  return axiosClient
+    .post("auth/recover-password/send", recoverPasswordDto)
+    .then((response) => response.data);
+};
+
+export const changePassword = async (
+  token: string,
+  changePasswordDto: ChangePasswordDto
+): Promise<void> => {
+  return axiosClient
+    .post("auth/change-password", changePasswordDto, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((response) => response.data);

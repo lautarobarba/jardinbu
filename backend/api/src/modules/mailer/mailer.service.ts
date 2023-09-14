@@ -5,6 +5,7 @@ import { MailerService as MailerServiceNode } from "@nestjs-modules/mailer";
 import { UserService } from "modules/user/user.service";
 import { User } from "modules/user/user.entity";
 import { ENV_VAR } from "config";
+import { ERROR_MESSAGE } from "modules/utils/error-message";
 
 @Processor("emailSender")
 @Injectable()
@@ -84,8 +85,8 @@ export class MailerService {
     const user: User = await this._userService.findOneByEmail(userEmail);
 
     if (!user) {
-      this._logger.debug("Error: Not Found");
-      throw new NotFoundException("Error: Not Found");
+      this._logger.debug(ERROR_MESSAGE.NO_ENCONTRADO);
+      throw new NotFoundException(ERROR_MESSAGE.NO_ENCONTRADO);
     }
 
     const job: Job = await this._emailSenderQueue.add(
@@ -159,8 +160,8 @@ export class MailerService {
     const user: User = await this._userService.findOneByEmail(userEmail);
 
     if (!user) {
-      this._logger.debug("Error: Not Found");
-      throw new NotFoundException("Error: Not Found");
+      this._logger.debug(ERROR_MESSAGE.NO_ENCONTRADO);
+      throw new NotFoundException(ERROR_MESSAGE.NO_ENCONTRADO);
     }
 
     const job: Job = await this._emailSenderQueue.add(
@@ -233,8 +234,8 @@ export class MailerService {
     const user: User = await this._userService.findOneByEmail(userEmail);
 
     if (!user) {
-      this._logger.debug("Error: Not Found");
-      throw new NotFoundException("Error: Not Found");
+      this._logger.debug(ERROR_MESSAGE.NO_ENCONTRADO);
+      throw new NotFoundException(ERROR_MESSAGE.NO_ENCONTRADO);
     }
 
     const job: Job = await this._emailSenderQueue.add(
@@ -257,13 +258,8 @@ export class MailerService {
   @Process("handleSendEmailConfirmedEmail")
   async handleSendEmailConfirmedEmail(job: Job) {
     this._logger.debug("handleSendEmailConfirmedEmail()");
-    const {
-      ulrToImportCssInEmail,
-      ulrToImportImagesInEmail,
-      user,
-      accessToken,
-      mailbox,
-    } = job.data;
+    const { ulrToImportCssInEmail, ulrToImportImagesInEmail, user, mailbox } =
+      job.data;
     this._logger.debug(
       `handleSendEmailConfirmedEmail: BEGIN Enviando correo a- ${mailbox}`
     );
@@ -303,8 +299,8 @@ export class MailerService {
     const user: User = await this._userService.findOneByEmail(userEmail);
 
     if (!user) {
-      this._logger.debug("Error: Not Found");
-      throw new NotFoundException("Error: Not Found");
+      this._logger.debug(ERROR_MESSAGE.NO_ENCONTRADO);
+      throw new NotFoundException(ERROR_MESSAGE.NO_ENCONTRADO);
     }
 
     const job: Job = await this._emailSenderQueue.add(
@@ -327,7 +323,7 @@ export class MailerService {
   // Ejecula la próxima tarea 'handleSendRecoverPasswordEmail' de la cola
   @Process("handleSendRecoverPasswordEmail")
   async handleSendRecoverPasswordEmail(job: Job) {
-    this._logger.debug("sendRecoverPasswordEmail()");
+    this._logger.debug("handleSendRecoverPasswordEmail()");
     const {
       ulrToImportCssInEmail,
       ulrToImportImagesInEmail,
@@ -339,8 +335,8 @@ export class MailerService {
       `handleSendRecoverPasswordEmail: BEGIN Enviando correo a- ${mailbox}`
     );
 
-    // Ruta para confirmar el correo electrónico en el frontend
-    const passwordRecoveryUrl: string = `${ENV_VAR.EMAIL_RECOVERY_URL}/${accessToken}`;
+    // Ruta para cambiar la contraseña en el frontend
+    const passwordRecoveryUrl: string = `${ENV_VAR.PASSWORD_RECOVERY_URL}/${accessToken}`;
 
     try {
       await this._mailerServiceNode.sendMail({
@@ -361,6 +357,70 @@ export class MailerService {
     } catch (error) {
       this._logger.debug(
         `handleSendRecoverPasswordEmail: ERROR Enviando correo a- ${mailbox}`
+      );
+      console.log(error);
+    }
+  }
+
+  // Envía la tarea 'handleSendPasswordChangedEmail' a la cola
+  async sendPasswordChangedEmail(
+    ulrToImportCssInEmail: string,
+    ulrToImportImagesInEmail: string,
+    userEmail: string,
+    overwriteEmail?: string
+  ) {
+    this._logger.debug("sendPasswordChangedEmail()");
+    const user: User = await this._userService.findOneByEmail(userEmail);
+
+    if (!user) {
+      this._logger.debug(ERROR_MESSAGE.NO_ENCONTRADO);
+      throw new NotFoundException(ERROR_MESSAGE.NO_ENCONTRADO);
+    }
+
+    const job: Job = await this._emailSenderQueue.add(
+      "handleSendPasswordChangedEmail",
+      {
+        ulrToImportCssInEmail: ulrToImportCssInEmail,
+        ulrToImportImagesInEmail: ulrToImportImagesInEmail,
+        user: user,
+        mailbox: overwriteEmail ?? userEmail,
+      }
+    );
+
+    // console.log(job);
+    return {
+      jobID: job.id,
+    };
+  }
+
+  // Ejecula la próxima tarea 'handleSendPasswordChangedEmail' de la cola
+  @Process("handleSendPasswordChangedEmail")
+  async handleSendPasswordChangedEmail(job: Job) {
+    this._logger.debug("handleSendPasswordChangedEmail()");
+    const { ulrToImportCssInEmail, ulrToImportImagesInEmail, user, mailbox } =
+      job.data;
+    this._logger.debug(
+      `handleSendPasswordChangedEmail: BEGIN Enviando correo a- ${mailbox}`
+    );
+
+    try {
+      await this._mailerServiceNode.sendMail({
+        to: mailbox,
+        // from: '"Support Team" <support@example.com>', // override default from
+        subject: "Contraseña actualizada - Jardín Botánico de Ushuaia",
+        template: "./password-changed", // `.hbs` extension is appended automatically
+        context: {
+          ulrToImportCssInEmail: ulrToImportCssInEmail,
+          ulrToImportImagesInEmail: ulrToImportImagesInEmail,
+          user: user,
+        },
+      });
+      this._logger.debug(
+        `handleSendPasswordChangedEmail: END Enviando correo a- ${mailbox}`
+      );
+    } catch (error) {
+      this._logger.debug(
+        `handleSendPasswordChangedEmail: ERROR Enviando correo a- ${mailbox}`
       );
       console.log(error);
     }

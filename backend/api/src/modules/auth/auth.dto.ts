@@ -13,15 +13,12 @@ export class SessionDto {
   accessToken: string;
 }
 
-export class ChangePasswordDto {
-  @ApiProperty()
-  id: number;
-
-  @ApiProperty()
-  newPassword: string;
-}
-
 export class RecoverPasswordDto {
   @ApiProperty()
   email: string;
+}
+
+export class ChangePasswordDto {
+  @ApiProperty()
+  newPassword: string;
 }

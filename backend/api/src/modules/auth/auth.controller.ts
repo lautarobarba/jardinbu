@@ -245,73 +245,6 @@ export class AuthController {
   //     return this._authService.refreshTokens(userId, refreshToken);
   //   }
 
-  //   @Post("change-password")
-  //   @UseGuards(JwtAuthenticationGuard)
-  //   @UseInterceptors(ClassSerializerInterceptor)
-  //   @ApiBearerAuth()
-  //   @ApiResponse({
-  //     status: HttpStatus.OK,
-  //     type: SessionDto,
-  //   })
-  //   @ApiResponse({
-  //     status: HttpStatus.NOT_FOUND,
-  //     description: "Error: Not Found",
-  //   })
-  //   @ApiResponse({
-  //     status: HttpStatus.UNAUTHORIZED,
-  //     description: "Error: Unauthorized/Error: Not allow",
-  //   })
-  //   async changePassword(
-  //     @Req() request: Request,
-  //     @Res({ passthrough: true }) response: Response,
-  //     @Body() changePasswordDto: ChangePasswordDto
-  //   ): Promise<SessionDto> {
-  //     this._logger.debug("POST: /api/auth/change-password");
-  //     // Sólo administradores y propietarios pueden actualizar contraseñas
-  //     const user: User = await this._userService.getUserFromRequest(request);
-
-  //     if (user.role !== Role.ADMIN && user.id != changePasswordDto.id) {
-  //       this._logger.debug("Error: Not allow");
-  //       throw new UnauthorizedException("Error: Not allow");
-  //     }
-
-  //     response.status(HttpStatus.OK);
-  //     return this._authService.changePassword(changePasswordDto);
-  //   }
-
-  //   @Post("email-recover-password")
-  //   @UseInterceptors(ClassSerializerInterceptor)
-  //   @ApiResponse({
-  //     status: HttpStatus.OK,
-  //   })
-  //   @ApiResponse({
-  //     status: HttpStatus.NOT_FOUND,
-  //     description: "Error: Not Found/Error: Account does not exists",
-  //   })
-  //   @ApiResponse({
-  //     status: HttpStatus.UNAUTHORIZED,
-  //     description: "Error: Unauthorized",
-  //   })
-  //   async recoverPassword(
-  //     @Req() request: Request,
-  //     @Res({ passthrough: true }) response: Response,
-  //     @Body() recoverPasswordDto: RecoverPasswordDto
-  //   ) {
-  //     this._logger.debug("POST: /api/auth/recover-password");
-  //     // Urls que necesito para los correos
-  //     const ulrToImportCssInEmail: string = ENV_VAR.INTERNAL_LINK;
-  //     const ulrToImportImagesInEmail: string = ENV_VAR.EXTERNAL_LINK;
-  //     console.log(ulrToImportCssInEmail);
-  //     console.log(ulrToImportImagesInEmail);
-
-  //     response.status(HttpStatus.OK);
-  //     return this._authService.recoverPassword(
-  //       ulrToImportCssInEmail,
-  //       ulrToImportImagesInEmail,
-  //       recoverPasswordDto
-  //     );
-  //   }
-
   @Post("email-confirmation/send")
   @UseGuards(JwtAuthenticationGuard)
   @UseInterceptors(ClassSerializerInterceptor)
@@ -385,6 +318,83 @@ export class AuthController {
       ulrToImportCssInEmail,
       ulrToImportImagesInEmail,
       user
+    );
+  }
+
+  @Post("recover-password/send")
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: ERROR_MESSAGE.NO_ENCONTRADO,
+  })
+  async sendRecoverPasswordEmail(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    @Body() recoverPasswordDto: RecoverPasswordDto
+  ) {
+    this._logger.debug("POST: /api/auth/recover-password/send");
+    // Urls que necesito para los correos
+    const ulrToImportCssInEmail: string = ENV_VAR.INTERNAL_LINK;
+    const ulrToImportImagesInEmail: string = ENV_VAR.EXTERNAL_LINK;
+    console.log(ulrToImportCssInEmail);
+    console.log(ulrToImportImagesInEmail);
+
+    const user: User = await this._userService.findOneByEmail(
+      recoverPasswordDto.email
+    );
+
+    if (!user) {
+      this._logger.debug(ERROR_MESSAGE.NO_ENCONTRADO);
+      throw new NotFoundException(ERROR_MESSAGE.NO_ENCONTRADO);
+    }
+
+    response.status(HttpStatus.OK);
+    return this._authService.sendRecoverPasswordEmail(
+      ulrToImportCssInEmail,
+      ulrToImportImagesInEmail,
+      user
+    );
+  }
+
+  @Post("change-password")
+  @UseGuards(JwtAuthenticationGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: SessionDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: ERROR_MESSAGE.NO_ENCONTRADO,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: ERROR_MESSAGE.FALTAN_PERMISOS,
+  })
+  async changePassword(
+    @Req() request: RequestWithUser,
+    @Res({ passthrough: true }) response: Response,
+    @Body() changePasswordDto: ChangePasswordDto
+  ) {
+    this._logger.debug("POST: /api/auth/change-password");
+    // Urls que necesito para los correos
+    const ulrToImportCssInEmail: string = ENV_VAR.INTERNAL_LINK;
+    const ulrToImportImagesInEmail: string = ENV_VAR.EXTERNAL_LINK;
+    // console.log(ulrToImportCssInEmail);
+    // console.log(ulrToImportImagesInEmail);
+
+    const user: User = await this._userService.getUserFromRequest(request);
+
+    response.status(HttpStatus.OK);
+    return this._authService.changePassword(
+      ulrToImportCssInEmail,
+      ulrToImportImagesInEmail,
+      user,
+      changePasswordDto.newPassword
     );
   }
 

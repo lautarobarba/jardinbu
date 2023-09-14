@@ -27,7 +27,7 @@ export const ENV_VAR: {
   SMTP_PASSWORD: string;
   // FRONTEND ROUTES
   EMAIL_CONFIRMATION_URL: string;
-  EMAIL_RECOVERY_URL: string;
+  PASSWORD_RECOVERY_URL: string;
   // Media
   UPLOAD_FILE_DETINATION: string;
 } = {
@@ -61,8 +61,8 @@ export const ENV_VAR: {
   // FRONTEND ROUTES
   EMAIL_CONFIRMATION_URL:
     process.env.EMAIL_CONFIRMATION_URL ?? "https://my-app.com/confirm-email",
-  EMAIL_RECOVERY_URL:
-    process.env.EMAIL_RECOVERY_URL ?? "https://my-app.com/recover-password",
+  PASSWORD_RECOVERY_URL:
+    process.env.PASSWORD_RECOVERY_URL ?? "https://my-app.com/change-password",
   // Media
   UPLOAD_FILE_DETINATION: process.env.UPLOAD_FILE_DETINATION ?? "./uploads",
 };

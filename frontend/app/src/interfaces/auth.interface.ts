@@ -6,3 +6,11 @@ export interface LoginUserDto {
 export interface SessionDto {
   accessToken: string;
 }
+
+export interface RecoverPasswordDto {
+  email: string;
+}
+
+export interface ChangePasswordDto {
+  newPassword: string;
+}

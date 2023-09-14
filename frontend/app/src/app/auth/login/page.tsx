@@ -10,7 +10,6 @@ import { PageTitle } from "@/components/PageTitle";
 import { PageSubTitle } from "@/components/PageSubTitle";
 import { Button, Input } from "@nextui-org/react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { LoadingPageWrapper } from "@/wrappers/LoadingPageWrapper";
 
 
 const ValidationSchema = Yup.object().shape({
@@ -123,7 +122,7 @@ const LoginPage = () => {
                     </Button>
                     <div>
                         <Link
-                            href="#"
+                            href="/auth/recover-password"
                             className='text-dark dark:text-light hover:text-blue-700 dark:hover:text-blue-400'
                         >
                             ¿Olvidaste tu contraseña?
