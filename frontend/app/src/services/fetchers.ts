@@ -95,24 +95,14 @@ export const loginWithToken = async (token: string): Promise<SessionDto> => {
     .then((response) => response.data);
 };
 
-// export const updateUser = async (params: {
-//   updateUserDto: UpdateUserDto;
-//   token: string;
-// }): Promise<User> => {
-//   const { updateUserDto, token } = params;
-//   console.log({
-//     MSG: "AXIOS PATCH",
-//     updateUserDto,
-//   });
-//   return axiosClient
-//     .patch("user", updateUserDto, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//         "Content-Type": "multipart/form-data",
-//       },
-//     })
-//     .then((response) => response.data);
-// };
+export const updateUser = async (params: {
+  updateUserDto: UpdateUserDto;
+}): Promise<User> => {
+  const { updateUserDto } = params;
+  return axiosClient
+    .patch("user", updateUserDto)
+    .then((response) => response.data);
+};
 
 export const logout = async (): Promise<void> => {
   const token = Cookies.get("accessToken");
@@ -394,6 +384,22 @@ export const deleteSpecimen = async (params: { id: number }): Promise<void> => {
 export const getAuthUser = async (): Promise<User> => {
   const token = Cookies.get("accessToken");
   return axiosClient.get("auth/me").then((response) => response.data);
+};
+
+export const getUsers = async (params: {
+  pagination?: Pagination;
+}): Promise<PaginatedList<User>> => {
+  const { pagination } = params;
+  return axiosClient
+    .get(`user`, {
+      params: pagination,
+    })
+    .then((response) => response.data);
+};
+
+export const getUser = async (params: { id: number }): Promise<User> => {
+  const { id } = params;
+  return axiosClient.get(`user/${id}`).then((response) => response.data);
 };
 
 // ## Kingdoms

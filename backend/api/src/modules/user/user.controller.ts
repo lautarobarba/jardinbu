@@ -16,6 +16,8 @@ import {
   StreamableFile,
   BadRequestException,
   Logger,
+  Query,
+  UploadedFiles,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -34,12 +36,82 @@ import { IsEmailConfirmedGuard } from "modules/auth/guards/is-email-confirmed.gu
 import { LocalFilesInterceptor } from "modules/utils/localFiles.interceptor";
 import { createReadStream } from "fs";
 import { join } from "path";
+import { ERROR_MESSAGE } from "modules/utils/error-message";
+import { PaginationDto } from "modules/utils/pagination.dto";
+import { Pagination } from "nestjs-typeorm-paginate";
+import { ENV_VAR } from "config";
+import { RequestWithUser } from "modules/auth/request-with-user.interface";
+import { getUserIdFromRequest } from "modules/utils/user.request";
+import { AnyFilesInterceptor } from "@nestjs/platform-express";
 
 @Controller("user")
 @ApiTags("Usuarios")
 export class UserController {
   constructor(private readonly _userService: UserService) {}
   private readonly _logger = new Logger(UserController.name);
+
+  @Patch()
+  @UseGuards(IsEmailConfirmedGuard())
+  @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(AnyFilesInterceptor({ dest: "uploads/temp" }))
+  @ApiBearerAuth()
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    description: "Atributos del usuario",
+    type: UpdateUserDto,
+  })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: User,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: ERROR_MESSAGE.FALTAN_PERMISOS,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: ERROR_MESSAGE.NO_ENCONTRADO,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: ERROR_MESSAGE.CLAVE_PRIMARIA_EN_USO,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_ACCEPTABLE,
+    description: ERROR_MESSAGE.NO_ACEPTABLE,
+  })
+  async update(
+    @Req() request: RequestWithUser,
+    @Res({ passthrough: true }) response: Response,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFiles() files: Array<Express.Multer.File>
+  ): Promise<User> {
+    this._logger.debug("PATCH: /api/user");
+    // Sólo administradores y propietarios pueden editar
+    const userId: number = getUserIdFromRequest(request);
+    const user: User = await this._userService.findOneById(userId);
+
+    if (
+      user.role !== Role.ADMIN &&
+      Number(user.id) !== Number(updateUserDto.id)
+    ) {
+      this._logger.debug(ERROR_MESSAGE.FALTAN_PERMISOS);
+      throw new UnauthorizedException(ERROR_MESSAGE.FALTAN_PERMISOS);
+    }
+
+    // Check files uploaded
+    if (files && files.length > 0) {
+      files.forEach((file) => {
+        // TODO: check if the image is the same
+        if (file.fieldname === "profilePicture") {
+          updateUserDto.profilePicture = file;
+        }
+      });
+    }
+    // console.log(updateUserDto);
+    return this._userService.update(updateUserDto, userId);
+  }
 
   @Get()
   @UseGuards(RoleGuard([Role.ADMIN]))
@@ -53,72 +125,23 @@ export class UserController {
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
-    description: "Error: Unauthorized",
+    description: ERROR_MESSAGE.FALTAN_PERMISOS,
   })
-  @ApiResponse({
-    status: HttpStatus.FORBIDDEN,
-    description: "Error: Forbidden",
-  })
-  async findAll(): Promise<User[]> {
+  async findAll(
+    @Query() paginationDto: PaginationDto
+  ): Promise<Pagination<User> | User[]> {
     this._logger.debug("GET: /api/user");
-    return this._userService.findAll();
-  }
-
-  @Patch()
-  @UseGuards(IsEmailConfirmedGuard())
-  @UseInterceptors(ClassSerializerInterceptor)
-  // @UseInterceptors(LocalFilesInterceptor({
-  // 	fieldName: 'profilePicture',
-  // 	path: '/temp',
-  // 	fileFilter: (request, file, callback) => {
-  // 		if (!file.mimetype.includes('image')) {
-  // 			return callback(new BadRequestException('Invalid image file'), false);
-  // 		}
-  // 		callback(null, true);
-  // 	},
-  // 	limits: {
-  // 		fileSize: (1024 * 1024 * 10) // 10MB
-  // 	}
-  // }))
-  @ApiConsumes("multipart/form-data")
-  @ApiBody({
-    description: "User attributes",
-    type: UpdateUserDto,
-  })
-  @ApiBearerAuth()
-  @ApiResponse({
-    status: HttpStatus.OK,
-    type: User,
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: "Error: Not Found",
-  })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: "Error: Unauthorized",
-  })
-  @ApiResponse({
-    status: HttpStatus.PAYLOAD_TOO_LARGE,
-    description: "Error: Payload Too Large",
-  })
-  async update(
-    @Req() request: Request,
-    @Res({ passthrough: true }) response: Response,
-    @Body() updateUserDto: UpdateUserDto,
-    @UploadedFile() profilePicture?: Express.Multer.File
-  ): Promise<User> {
-    this._logger.debug("PATCH: /api/user");
-    // Sólo administradores y propietarios pueden editar
-    const user: User = await this._userService.getUserFromRequest(request);
-
-    if (user.role !== Role.ADMIN && user.id != updateUserDto.id)
-      throw new UnauthorizedException("Not allow");
-
-    // Agrego la foto de perfil al DTO para enviarlo al service
-    updateUserDto.profilePicture = profilePicture;
-
-    return this._userService.update(updateUserDto);
+    if (paginationDto.page && paginationDto.limit) {
+      return this._userService.findPaginated({
+        page: paginationDto.page,
+        limit: paginationDto.limit,
+        orderBy: paginationDto.orderBy,
+        orderDirection: paginationDto.orderDirection,
+        route: `${ENV_VAR.EXTERNAL_LINK}/api/user`,
+      });
+    } else {
+      return this._userService.findAll();
+    }
   }
 
   @Get(":id")
@@ -131,14 +154,28 @@ export class UserController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: "Error: Not Found",
+    description: ERROR_MESSAGE.NO_ENCONTRADO,
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
-    description: "Error: Unauthorized",
+    description: ERROR_MESSAGE.FALTAN_PERMISOS,
   })
-  async findOne(@Param("id") id: number): Promise<User> {
+  async findOne(
+    @Req() request: RequestWithUser,
+    @Res({ passthrough: true }) response: Response,
+    @Param("id") id: number
+  ): Promise<User> {
     this._logger.debug("GET: /api/user/:id");
+    // Sólo administradores y propietarios pueden editar
+    const userId: number = getUserIdFromRequest(request);
+    const user: User = await this._userService.findOneById(userId);
+
+    if (user.role !== Role.ADMIN && Number(user.id) !== Number(id)) {
+      this._logger.debug(ERROR_MESSAGE.FALTAN_PERMISOS);
+      throw new UnauthorizedException(ERROR_MESSAGE.FALTAN_PERMISOS);
+    }
+
+    response.status(HttpStatus.OK);
     return this._userService.findOne(id);
   }
 
@@ -148,22 +185,24 @@ export class UserController {
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiBearerAuth()
   @ApiResponse({
-    status: HttpStatus.OK,
+    status: HttpStatus.UNAUTHORIZED,
+    description: ERROR_MESSAGE.FALTAN_PERMISOS,
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: "Error: Not Found",
+    description: ERROR_MESSAGE.NO_ENCONTRADO,
   })
   @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: "Error: Unauthorized",
+    status: HttpStatus.FORBIDDEN,
+    description: ERROR_MESSAGE.OBJETO_REFERENCIADO,
   })
   async delete(
-    @Req() request: Request,
+    @Req() request: RequestWithUser,
     @Res({ passthrough: true }) response: Response,
     @Param("id") id: number
   ): Promise<void> {
     this._logger.debug("DELETE: /api/user/:id");
-    return this._userService.delete(id);
+    const userId: number = getUserIdFromRequest(request);
+    return this._userService.delete(id, userId);
   }
 }

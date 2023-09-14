@@ -34,7 +34,6 @@ export interface CreateUserDto {
 
 export interface UpdateUserDto {
   id: number;
-  email?: string;
   isEmailConfirmed?: boolean;
   firstname?: string;
   lastname?: string;

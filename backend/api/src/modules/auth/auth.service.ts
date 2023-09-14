@@ -234,14 +234,13 @@ export class AuthService {
     const updateUserDto: UpdateUserDto = new UpdateUserDto();
     const { id, email, firstname, lastname, status, role } = user;
     updateUserDto.id = id;
-    updateUserDto.email = email;
     updateUserDto.firstname = firstname;
     updateUserDto.lastname = lastname;
     updateUserDto.status = status;
     updateUserDto.role = role;
     updateUserDto.isEmailConfirmed = true;
 
-    await this._userService.update(updateUserDto);
+    await this._userService.update(updateUserDto, user.id);
 
     await this._mailerService.sendEmailConfirmedEmail(
       ulrToImportCssInEmail,

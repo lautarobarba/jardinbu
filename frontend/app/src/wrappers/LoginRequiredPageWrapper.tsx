@@ -7,10 +7,16 @@ import { Button } from "@nextui-org/react";
 import Link from "next/link";
 
 const AccountDisabledPage = () => {
+  const { logout } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    logout();
+  }
+
   return (
     <section id="account-disabled" className="bg-white">
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
-        <div className="mx-auto max-w-screen-sm text-center">
+        <div className="mx-auto max-w-screen-sm text-center flex flex-col">
           <div className="text-center">
             <img
               loading='lazy'
@@ -34,10 +40,17 @@ const AccountDisabledPage = () => {
           <h2 className="text-error italic text-xl">
             Su cuenta se encuentra deshabilitada.
             <br />
-            Por favor comuniquese con un administrador.
+            Por favor comuníquese con un administrador.
           </h2>
           <br />
-          <Link href="/garden" className="w-full">
+
+          <div className="w-full">
+            <Button color="primary" radius="sm" className="uppercase" onClick={handleLogout}>
+              Salir
+            </Button>
+          </div>
+
+          <Link href="/garden" className="w-full mt-2">
             <Button color="primary" radius="sm" className="uppercase">
               Volver a la biblioteca
             </Button>

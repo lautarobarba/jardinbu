@@ -48,14 +48,18 @@ import {
   deleteTag,
   getTags,
   getTag,
+  getUsers,
+  getUser,
+  updateUser,
 } from "./fetchers";
 import { Pagination } from "../interfaces/pagination.interface";
 
 // Mutations hooks ------------------------------------------------------------
+
 // ## Users
-// export const useUpdateUser = () => {
-//   return useMutation(updateUser);
-// };
+export const useUpdateUser = () => {
+  return useMutation(updateUser);
+};
 
 // ## Kingdoms
 export const useCreateKingdom = () => {
@@ -175,9 +179,24 @@ export const useDeleteSpecimen = () => {
 };
 
 // Queries hooks --------------------------------------------------------------
+
 // ## Users
 export const useGetAuthUser = (config?: any) => {
   return useQuery(["auth-me"], () => getAuthUser(), config);
+};
+
+export const useGetUsers = (
+  params: {
+    pagination?: Pagination;
+  },
+  config?: any
+) => {
+  const { pagination } = params;
+  return useQuery(["users", pagination], () => getUsers(params), config);
+};
+
+export const useGetUser = (params: { id: number }, config?: any) => {
+  return useQuery([`user-${params.id}`], () => getUser(params), config);
 };
 
 // ## Kingdoms
