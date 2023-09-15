@@ -14,6 +14,12 @@ import { Species } from "../species/species.entity";
 import { Family } from "../family/family.entity";
 import { Specimen } from "../specimen/specimen.entity";
 
+// export enum ModelClass {
+//   SPECIMEN = "SPECIMEN",
+//   SPECIES = "SPECIES",
+//   POST = "POST",
+// }
+
 @Entity("qr_codes")
 export class QRCode extends BaseEntity {
   @ApiProperty()
