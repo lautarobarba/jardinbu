@@ -3,6 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { formatDate, formatTitleCase } from '@/utils/tools';
 import { QRCode } from '@/interfaces/qr-code.interface';
 import { ModalCrudQRCode } from './CrudQRCodeForm';
+import { ModalQRCodePrivateDetailView } from './QRCodePrivateDetailView';
 
 const columnHelper = createColumnHelper<QRCode>();
 
@@ -46,6 +47,11 @@ export const columns = [
     columnHelper.display({
         id: 'actions',
         header: 'Acciones',
-        cell: (props) => <ModalCrudQRCode id={Number(props.row.original.id)} />,
+        cell: (props) => (
+            <span className='flex flex-row'>
+                <ModalQRCodePrivateDetailView id={Number(props.row.original.id)} />
+                <ModalCrudQRCode id={Number(props.row.original.id)} />
+            </span>
+        ),
     }),
 ];
