@@ -17,6 +17,7 @@ import { Family, familyToString } from "@/interfaces/family.interface";
 import { OrderTax, orderTaxToString } from "@/interfaces/order-tax.interface";
 import { ClassTax, classTaxToString } from "@/interfaces/class-tax.interface";
 import { Phylum, phylumToString } from "@/interfaces/phylum.interface";
+import { SmallCard } from "./SmallCard";
 
 interface Values {
     wildcard: string;
@@ -586,14 +587,14 @@ const SpeciesPage = () => {
                 )}
 
                 {getSpeciesIsSuccess && (
-                    <section id='species' className='species mt-10'>
+                    <section id='species' className='species mt-5'>
                         <hr />
                         {(getSpeciesData.items.length > 0)
                             ? (
                                 <>
                                     {
                                         getSpeciesData.items.map((species: Species) => (
-                                            <p key={species.id}>{speciesToString(species)}</p>
+                                            <SmallCard key={species.id} species={species} />
                                         ))
                                     }
                                 </>
