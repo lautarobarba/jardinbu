@@ -47,11 +47,18 @@ export const InstSection2 = () => {
                         El Proyecto
                     </h2>
 
-                    <p className="mb-2 font-light text-light md:text-lg ">
-                        La Biblioteca del Bosque Bordada es un proyecto de característica científica y cultural, donde se unieron los
-                        saberes biológicos y el arte para confiormar ...... Fue subsidiado por la Fundación Williams y apollado por
-                        todos loq ue formaron parte ......
-                        Apuntamos a poder llevar este proyecto ..... OBJETIVOS, INSPIRACIÓN, OPORTUNIDAD....
+                    <p className="mb-2 font-light text-light md:text-lg">
+                        La Biblioteca del Bosque del Jardín Botánico de Ushuaia (JBU) - Un proyecto que iniciamos en octubre de 2022 con un subsidio de la Fundación Williams.
+                    </p>
+                    <p className="mb-2 font-light text-light md:text-lg">
+                        Nos propusimos crear una biblioteca virtual a la que se pueda acceder a través de códigos QR ubicados en la cartelería del sendero de interpretación del JBU. Se realizó la investigación de las especies listadas en el informe florístico del JBU y se catalogó el material encontrado para
+                        formar la biblioteca. La página que aloja la biblioteca virtual fue el resultado del trabajo de un estudiante de la carrera de Sistemas de la UNTDF.
+                    </p>
+                    <p className="mb-2 font-light text-light md:text-lg">
+                        Con la idea de contribuir a la difusión de las especies a través del arte, creamos la Biblioteca Bordada, una realización conjunta de dieciséis bordadoras de nuestra comunidad.
+                    </p>
+                    <p className="mb-2 font-light text-light md:text-lg">
+                        Además, invitamos a jóvenes a una capacitación en flora nativa y exótica del JBU para que hablen de este proyecto, desde su vivencia, en esta muestra itinerante.
                     </p>
                 </div>
             </div>
