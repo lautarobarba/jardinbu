@@ -58,29 +58,29 @@ export default function ExampleClientComponent() {
 
 
 
-            <div className="col-span-6 space-y-5">
+            <div className="col-span-12 md:col-span-6 space-y-5">
                 <div className="col-span-12">
-                    <p className="text-2xl font-bold text-dark dark:text-light text-center">Nombre científico</p>
-                    <p className="ml-5 text-4xl tracking-tight font-extrabold text-center">{formatTitleCase(getOneSpeciesData?.scientificName ?? '')}</p>
+                    <p className="text-xl font-bold text-gray-600 text-center">Nombre científico</p>
+                    <p className="text-4xl tracking-tight font-extrabold text-center">{formatTitleCase(getOneSpeciesData?.scientificName ?? '')}</p>
                     <p className="text-gray-500 sm:text-xl dark:text-gray-400 ml-3">{formatTitleCase(getOneSpeciesData?.description ?? '')}</p>
                 </div>
 
 
                 <div className="col-span-12">
-                    <p className="text-xl font-bold text-dark dark:text-light">Nombre común</p>
+                    <p className="text-xl font-bold text-gray-600">Nombre común</p>
                     <p className="ml-5 text-2xl tracking-tight font-extrabold">{formatTitleCase(getOneSpeciesData?.commonName ?? '')}</p>
                 </div>
 
                 {getOneSpeciesData?.englishName && (
                     <div className="col-span-12">
-                        <p className="text-xl font-bold text-dark dark:text-light">Nombre en inglés</p>
+                        <p className="text-xl font-bold text-gray-600">Nombre en inglés</p>
                         <p className="ml-5 text-2xl tracking-tight font-extrabold">{formatTitleCase(getOneSpeciesData?.englishName ?? '')}</p>
                     </div>
                 )}
             </div>
 
             <div className="col-span-12 md:col-span-6">
-                <p className="text-2xl font-bold text-dark dark:text-light">Taxonomía</p>
+                <p className="text-2xl font-bold text-gray-600 text-center underline">Taxonomía</p>
 
                 <div
                     className="rounded-lg py-2"

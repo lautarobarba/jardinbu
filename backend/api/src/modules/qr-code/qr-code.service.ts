@@ -139,6 +139,14 @@ export class QRCodeService {
     });
   }
 
+  async findOneByUUID(uuid: string): Promise<QRCode> {
+    this._logger.debug("findOneByUUID()");
+
+    return this._qRCodeRepository.findOne({
+      where: { uuid },
+    });
+  }
+
   async search(value: string): Promise<QRCode[]> {
     this._logger.debug("search()");
 

@@ -57,6 +57,7 @@ import {
   updateQRCode,
   deleteQRCode,
   getSpeciesFullSearch,
+  getQRCodeByUUID,
 } from "./fetchers";
 import {
   Pagination,
@@ -407,6 +408,14 @@ export const useGetQRCodes = (
 
 export const useGetQRCode = (params: { id: number }, config?: any) => {
   return useQuery([`qr-code-${params.id}`], () => getQRCode(params), config);
+};
+
+export const useGetQRCodeByUUID = (params: { uuid: string }, config?: any) => {
+  return useQuery(
+    [`qr-code-${params.uuid}`],
+    () => getQRCodeByUUID(params),
+    config
+  );
 };
 
 // ## Administration

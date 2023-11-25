@@ -17,7 +17,9 @@ import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import QRCode from 'qrcode';
 
-
+// APP Url
+const baseUrl: string =
+    process.env.NEXT_PUBLIC_APP_ROUTE ?? "http://ERROR/";
 interface QRCodePrivateDetailViewProps {
     toggleVisibility: Function;
     id: number;
@@ -48,7 +50,9 @@ export const QRCodePrivateDetailView = (props: QRCodePrivateDetailViewProps) => 
         if (getQRCodeData?.uuid) {
             // Hay que formar el enlace del link 
             //  con la url de la pagina y la uuid del qr
-            generateQrCode(getQRCodeData.uuid);
+            const enlaceParaQR: string = `${baseUrl}/redirect/${getQRCodeData.uuid}`;
+            console.log(enlaceParaQR);
+            generateQrCode(enlaceParaQR);
         }
     }, [getQRCodeData]);
 

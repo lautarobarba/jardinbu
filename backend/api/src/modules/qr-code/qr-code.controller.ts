@@ -148,9 +148,28 @@ export class QRCodeController {
     @Res({ passthrough: true }) response: Response,
     @Param("id") id: number
   ): Promise<QRCode> {
-    this._logger.debug("GET: /api/genus/:id");
+    this._logger.debug("GET: /api/qr-code/:id");
     response.status(HttpStatus.OK);
     return this._qRCodeService.findOne(id);
+  }
+
+  @Get("uuid/:uuid")
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: QRCode,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: ERROR_MESSAGE.NO_ENCONTRADO,
+  })
+  async findOneByUUID(
+    @Res({ passthrough: true }) response: Response,
+    @Param("uuid") uuid: string
+  ): Promise<QRCode> {
+    this._logger.debug("GET: /api/qr-code/uuid/:uuid");
+    response.status(HttpStatus.OK);
+    return this._qRCodeService.findOneByUUID(uuid);
   }
 
   @Delete(":id")
@@ -174,7 +193,7 @@ export class QRCodeController {
     @Res({ passthrough: true }) response: Response,
     @Param("id") id: number
   ): Promise<void> {
-    this._logger.debug("DELETE: /api/genus/:id");
+    this._logger.debug("DELETE: /api/qr-code/:id");
     const userId: number = getUserIdFromRequest(request);
     return this._qRCodeService.delete(id, userId);
   }

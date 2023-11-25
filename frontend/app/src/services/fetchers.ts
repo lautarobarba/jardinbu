@@ -624,6 +624,15 @@ export const getQRCode = async (params: { id: number }): Promise<QRCode> => {
   return axiosClient.get(`qr-code/${id}`).then((response) => response.data);
 };
 
+export const getQRCodeByUUID = async (params: {
+  uuid: string;
+}): Promise<QRCode> => {
+  const { uuid } = params;
+  return axiosClient
+    .get(`qr-code/uuid/${uuid}`)
+    .then((response) => response.data);
+};
+
 // ## Administration
 export const getGlobalSearch = async (params: {
   value: string;
