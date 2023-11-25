@@ -18,6 +18,8 @@ import { OrderTax, orderTaxToString } from "@/interfaces/order-tax.interface";
 import { ClassTax, classTaxToString } from "@/interfaces/class-tax.interface";
 import { Phylum, phylumToString } from "@/interfaces/phylum.interface";
 import { SmallCard } from "./SmallCard";
+import { Pagination } from '@nextui-org/react';
+
 
 interface Values {
     wildcard: string;
@@ -163,6 +165,15 @@ const SpeciesPage = () => {
                 foliageType: '',
                 presence: '',
             });
+    }
+
+    const handlePageChange = (page: number) => {
+        setPagination({ pageIndex: page - 1, pageSize });
+    }
+
+    const handlePaginationSizeChange = (event: any) => {
+        const newPageSize: number = Number(event.target.value);
+        setPagination({ pageIndex, pageSize: newPageSize });
     }
 
     return (
@@ -597,6 +608,51 @@ const SpeciesPage = () => {
                                             <SmallCard key={species.id} species={species} />
                                         ))
                                     }
+                                    <div className='flex flex-col md:flex-row justify-center items-center md:justify-between align-center m-2 space-y-2'>
+                                        <div>
+                                            <p className="text-dark dark:text-light text-center md:text-left">
+                                                Registros&nbsp;<strong>{getSpeciesData.meta.totalItems}</strong>
+                                            </p>
+                                            <p className="text-dark dark:text-light text-center md:text-left">
+                                                Página&nbsp;
+                                                <strong>
+                                                    {getSpeciesData.meta.currentPage} de {getSpeciesData.meta.totalPages}
+                                                </strong>
+                                            </p>
+                                        </div>
+
+                                        <div>
+                                            <Pagination
+                                                isCompact
+                                                showControls
+                                                total={getSpeciesData.meta.totalPages ?? 1}
+                                                page={getSpeciesData.meta.currentPage}
+                                                onChange={handlePageChange}
+                                                classNames={{
+                                                    wrapper: "shadow-md",
+                                                    prev: "bg-white dark:bg-gray-800 text-gray-900 dark:text-white",
+                                                    next: "bg-white dark:bg-gray-800 text-gray-900 dark:text-white",
+                                                    item: "bg-white dark:bg-gray-800 text-gray-900 dark:text-white",
+                                                    cursor: "bg-navbar-bg text-white"
+                                                }}
+                                            />
+                                        </div>
+
+                                        <div className='min-w-unit-6'>
+                                            <select
+                                                id="pageSize"
+                                                className="bg-white dark:bg-gray-800 shadow-md text-gray-900 dark:text-white text-md rounded-lg block w-full p-1 h-9"
+                                                onChange={handlePaginationSizeChange}
+                                                value={pageSize}
+                                            >
+                                                <option value="5">Mostrar&nbsp;&nbsp;&nbsp;5</option>
+                                                <option value="10">Mostrar&nbsp;&nbsp;10</option>
+                                                <option value="25">Mostrar&nbsp;&nbsp;25</option>
+                                                <option value="50">Mostrar&nbsp;&nbsp;50</option>
+                                                <option value="100">Mostrar&nbsp;100</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </>
                             ) : (
                                 <p>No se encontraron resultados..</p>
