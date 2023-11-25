@@ -254,7 +254,7 @@ export const TeamSection2 = () => {
                             {/* MIEMBRO14: Liliana Sagulo */}
                             <ProfileCard
                                 name="Liliana Sagulo"
-                                imageSrc="/assets/images/equipo/usuario.webp"
+                                imageSrc="/assets/images/equipo/liliana_sagulo.webp"
                                 rol=""
                                 description="Pequeña descripcion de no más de 2 renglones. Puede ser hasta aca."
                                 facebookHref="#"

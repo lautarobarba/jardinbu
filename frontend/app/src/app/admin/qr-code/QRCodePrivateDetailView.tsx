@@ -134,7 +134,7 @@ export const QRCodePrivateDetailView = (props: QRCodePrivateDetailViewProps) => 
                 >
                     <PageSubTitle title="Preview" />
                     <iframe
-                        src="http://localhost"
+                        src={getQRCodeData?.link}
                         className="w-5/6 min-h-[600px] border-2 border-green-700"
                     />
                 </Grid>
