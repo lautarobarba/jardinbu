@@ -53,6 +53,11 @@ import {
   UpdateOrderTaxDto,
 } from "../interfaces/order-tax.interface";
 import { CreateTagDto, Tag, UpdateTagDto } from "@/interfaces/tag.interface";
+import {
+  CreateQRCodeDto,
+  QRCode,
+  UpdateQRCodeDto,
+} from "@/interfaces/qr-code.interface";
 
 // Api Url
 const apiBaseUrl: string =
@@ -378,6 +383,30 @@ export const deleteSpecimen = async (params: { id: number }): Promise<void> => {
   return axiosClient.delete(`specimen/${id}`).then((response) => response.data);
 };
 
+// ## QRCodes
+export const createQRCode = async (params: {
+  createQRCodeDto: CreateQRCodeDto;
+}): Promise<QRCode> => {
+  const { createQRCodeDto } = params;
+  return axiosClient
+    .post("qr-code", createQRCodeDto)
+    .then((response) => response.data);
+};
+
+export const updateQRCode = async (params: {
+  updateQRCodeDto: UpdateQRCodeDto;
+}): Promise<QRCode> => {
+  const { updateQRCodeDto } = params;
+  return axiosClient
+    .patch("qr-code", updateQRCodeDto)
+    .then((response) => response.data);
+};
+
+export const deleteQRCode = async (params: { id: number }): Promise<void> => {
+  const { id } = params;
+  return axiosClient.delete(`qr-code/${id}`).then((response) => response.data);
+};
+
 // # Queries ------------------------------------------------------------------
 
 // ## Users
@@ -561,6 +590,23 @@ export const getSpecimen = async (params: {
 }): Promise<Specimen> => {
   const { id } = params;
   return axiosClient.get(`specimen/${id}`).then((response) => response.data);
+};
+
+// ## QRCodes
+export const getQRCodes = async (params: {
+  pagination?: Pagination;
+}): Promise<PaginatedList<QRCode>> => {
+  const { pagination } = params;
+  return axiosClient
+    .get(`qr-code`, {
+      params: pagination,
+    })
+    .then((response) => response.data);
+};
+
+export const getQRCode = async (params: { id: number }): Promise<QRCode> => {
+  const { id } = params;
+  return axiosClient.get(`qr-code/${id}`).then((response) => response.data);
 };
 
 // ## Administration

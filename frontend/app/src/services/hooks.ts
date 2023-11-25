@@ -51,6 +51,11 @@ import {
   getUsers,
   getUser,
   updateUser,
+  getQRCodes,
+  getQRCode,
+  createQRCode,
+  updateQRCode,
+  deleteQRCode,
 } from "./fetchers";
 import { Pagination } from "../interfaces/pagination.interface";
 
@@ -176,6 +181,19 @@ export const useUpdateSpecimen = () => {
 
 export const useDeleteSpecimen = () => {
   return useMutation(deleteSpecimen);
+};
+
+// ## QRCodes
+export const useCreateQRCode = () => {
+  return useMutation(createQRCode);
+};
+
+export const useUpdateQRCode = () => {
+  return useMutation(updateQRCode);
+};
+
+export const useDeleteQRCode = () => {
+  return useMutation(deleteQRCode);
 };
 
 // Queries hooks --------------------------------------------------------------
@@ -356,6 +374,21 @@ export const useGetSpecimens = (
 
 export const useGetSpecimen = (params: { id: number }, config?: any) => {
   return useQuery([`specimen-${params.id}`], () => getSpecimen(params), config);
+};
+
+// ## QRCodes
+export const useGetQRCodes = (
+  params: {
+    pagination?: Pagination;
+  },
+  config?: any
+) => {
+  const { pagination } = params;
+  return useQuery(["qr-codes", pagination], () => getQRCodes(params), config);
+};
+
+export const useGetQRCode = (params: { id: number }, config?: any) => {
+  return useQuery([`qr-code-${params.id}`], () => getQRCode(params), config);
 };
 
 // ## Administration

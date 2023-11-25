@@ -1,15 +1,16 @@
 "use client";
-import { CustomTable } from "@/components/CustomTable";
-import { PageSubTitle } from "@/components/PageSubTitle";
 import { PageTitle } from "@/components/PageTitle";
+import { PageSubTitle } from "@/components/PageSubTitle";
 import { Role, User } from "@/interfaces/user.interface";
 import { useGetUsers } from "@/services/hooks";
+import { ModalThemeWrapper } from "@/wrappers/ModalThemeWrapper";
 import { RolRequiredPageWrapper } from "@/wrappers/RolRequiredPageWrapper";
-import { CircularProgress, Input } from "@nextui-org/react";
+import { Button, CircularProgress, Input, Modal, ModalContent } from "@nextui-org/react";
 import { PaginationState, SortingState, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { SearchIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { CustomTable } from "@/components/CustomTable";
 import { columns } from "./columns";
+import { SearchIcon } from "lucide-react";
 
 const AdminUsersPage = () => {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
@@ -84,9 +85,10 @@ const AdminUsersPage = () => {
 
   return (
     <RolRequiredPageWrapper roles={[Role.ADMIN]}>
-      <section id="users" className="flex w-full flex-col">
-        <PageTitle title={"Usuarios"} />
+      <PageTitle title='Usuarios' />
 
+      <div className='p-3'>
+        <hr />
         <div className="grid grid-cols-12 gap-2 mt-2">
           <div className="col-span-12 md:col-span-4 order-1 flex justify-center md:justify-start items-center">
             <PageSubTitle title='Listado de usuarios' className='mb-0' />
@@ -116,6 +118,8 @@ const AdminUsersPage = () => {
           </div>
         </div>
 
+        <br />
+
         {getUsersIsError && <p className='text-danger'>Error...</p>}
 
         {getUsersIsLoading && (
@@ -129,7 +133,7 @@ const AdminUsersPage = () => {
             <CustomTable table={table} totalItems={getUsersData.meta.totalItems ?? 0} />
           </section>
         )}
-      </section>
+      </div>
     </RolRequiredPageWrapper>
   );
 }
