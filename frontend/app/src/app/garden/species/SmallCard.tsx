@@ -1,5 +1,6 @@
 import { Species } from "@/interfaces/species.interface"
 import { formatTitleCase, getUrlForImageByUUID } from "@/utils/tools";
+import Link from "next/link";
 
 interface SmallCardPros {
     species: Species
@@ -23,9 +24,11 @@ export const SmallCard = (props: SmallCardPros) => {
                 />
             </div>
             <div className="p-5">
-                <h3 className="text-xl font-bold tracking-tight text-light">
-                    {formatTitleCase(species.scientificName ?? '')}
-                </h3>
+                <Link href={`/garden/species/${species.id}`}>
+                    <h3 className="text-xl font-bold tracking-tight text-light">
+                        {formatTitleCase(species.scientificName ?? '')}
+                    </h3>
+                </Link>
                 <span className="text-light">
                     {formatTitleCase(species.commonName ?? '')}
                     {species.commonName && species.englishName && ("-")}
