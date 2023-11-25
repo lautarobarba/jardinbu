@@ -1,0 +1,4 @@
+ancho: 500px
+alto: 500px
+
+Cualquiera cuadrada

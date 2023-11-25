@@ -48,16 +48,25 @@ export const LandingNavbar2 = () => {
                 Proyecto
               </Link>
             </li>
-            {/* <li className="flex items-center w-full">
+            <li className="flex items-center w-full">
+              <Link
+                href="/#stages"
+                className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
+                onClick={() => setExpandNavbar(false)}
+              >
+                Etapas
+              </Link>
+            </li>
+            <li className="flex items-center w-full">
               <Link
                 href="/#team"
                 className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
                 onClick={() => setExpandNavbar(false)}
               >
-                {lang == "es" && "Equipo"}
-                {lang == "en" && "Team"}
+                Equipo
               </Link>
             </li>
+            {/* 
             <li className="flex items-center w-full">
               <Link
                 href="/#blog"

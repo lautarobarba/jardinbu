@@ -1,14 +1,11 @@
 import { LandingNavbar } from "@/components/navbar/LandingNavbar";
 import { ConfigMenu } from "@/components/config-button/ConfigMenu";
 import { HomeSection } from "@/app/sections/HomeSection";
-import { InstSection } from "@/app/sections/InstSection";
-import { TeamSection } from "@/app/sections/TeamSection";
-import { BlogSection } from "@/app/sections/BlogSection";
-import { MapSection } from "@/app/sections/MapSection";
 import { FooterSection } from "@/app/sections/FooterSection";
 import { HomeSection2 } from "./sections/HomeSection2";
 import { LandingNavbar2 } from "@/components/navbar/LandingNavbar2";
 import { InstSection2 } from "./sections/InstSection2";
+import { TeamSection2 } from "./sections/TeamSection2";
 
 const HomePage = () => {
   return (
@@ -27,10 +24,7 @@ const HomePage = () => {
       </div>
 
       <InstSection2 />
-
-      <TeamSection />
-      {/* <BlogSection /> */}
-      {/* <MapSection /> */}
+      <TeamSection2 />
       <FooterSection />
     </main>
   );

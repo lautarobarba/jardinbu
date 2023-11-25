@@ -56,7 +56,10 @@ export const InstSection2 = () => {
                 </div>
             </div>
 
-            <div className="items-center py-8 px-4 md:px-0 mx-auto max-w-screen-xl md:grid md:grid-cols-1 sm:py-16">
+            <div
+                id="stages"
+                className="items-center py-8 px-4 md:px-0 mx-auto max-w-screen-xl md:grid md:grid-cols-1 sm:py-16"
+            >
                 <h2 className="text-left mb-3 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
                     Etapas de desarrollo
                 </h2>
@@ -85,7 +88,6 @@ export const InstSection2 = () => {
                     img1="/assets/images/proyecto/proy_1.webp"
                     img2="/assets/images/proyecto/proy_1.webp"
                 />
-
             </div>
 
         </section>
