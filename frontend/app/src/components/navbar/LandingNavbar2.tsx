@@ -4,6 +4,7 @@ import Link from "next/link";
 import { MenuIcon } from "lucide-react";
 import { GardenButton } from "./elements/GardenButton";
 import { BrandJBU2 } from "./elements/BrandJBU2";
+import { SpeciesButton } from "./elements/SpeciesButton";
 
 export const LandingNavbar2 = () => {
   const [expandNavbar, setExpandNavbar] = useState<boolean>(false);
@@ -66,30 +67,9 @@ export const LandingNavbar2 = () => {
                 Equipo
               </Link>
             </li>
-            {/* 
             <li className="flex items-center w-full">
-              <Link
-                href="/#blog"
-                className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
-                onClick={() => setExpandNavbar(false)}
-              >
-                {lang == "es" && "Blog"}
-                {lang == "en" && "Blog"}
-              </Link>
+              <SpeciesButton />
             </li>
-            <li className="flex items-center w-full">
-              <Link
-                href="/#map"
-                className="block py-2 pl-3 pr-4 text-white hover:text-accent md:p-0 w-full text-center"
-                onClick={() => setExpandNavbar(false)}
-              >
-                {lang == "es" && "Mapa"}
-                {lang == "en" && "Map"}
-              </Link>
-            </li>
-            <li className="flex items-center w-full">
-              <GardenButton />
-            </li> */}
           </ul>
         </div>
       </div>

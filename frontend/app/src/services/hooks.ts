@@ -56,8 +56,12 @@ import {
   createQRCode,
   updateQRCode,
   deleteQRCode,
+  getSpeciesFullSearch,
 } from "./fetchers";
-import { Pagination } from "../interfaces/pagination.interface";
+import {
+  Pagination,
+  PaginationSpecies,
+} from "../interfaces/pagination.interface";
 
 // Mutations hooks ------------------------------------------------------------
 
@@ -347,6 +351,20 @@ export const useGetSpecies = (
 ) => {
   const { pagination } = params;
   return useQuery(["species", pagination], () => getSpecies(params), config);
+};
+
+export const useGetSpeciesFullSearch = (
+  params: {
+    pagination?: PaginationSpecies;
+  },
+  config?: any
+) => {
+  const { pagination } = params;
+  return useQuery(
+    ["species", pagination],
+    () => getSpeciesFullSearch(params),
+    config
+  );
 };
 
 export const useGetOneSpecies = (params: { id: number }, config?: any) => {

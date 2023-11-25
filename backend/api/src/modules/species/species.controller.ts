@@ -35,7 +35,10 @@ import { SpeciesService } from "./species.service";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
 import { RequestWithUser } from "modules/auth/request-with-user.interface";
 import { getUserIdFromRequest } from "modules/utils/user.request";
-import { PaginationDto } from "modules/utils/pagination.dto";
+import {
+  PaginationDto,
+  PaginationSpeciesDto,
+} from "modules/utils/pagination.dto";
 import { Pagination } from "nestjs-typeorm-paginate";
 import { LocalFilesInterceptor } from "modules/utils/localFiles.interceptor";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
@@ -195,6 +198,27 @@ export class SpeciesController {
         return this._speciesService.findAll();
       }
     }
+  }
+
+  @Get("search")
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: Species,
+    isArray: true,
+  })
+  async findAllFullSearch(
+    @Query() paginationDto: PaginationSpeciesDto
+  ): Promise<Pagination<Species> | Species[]> {
+    this._logger.debug("GET: /api/species");
+    return this._speciesService.findPaginatedFullSearch({
+      page: paginationDto.page,
+      limit: paginationDto.limit,
+      orderBy: paginationDto.orderBy,
+      orderDirection: paginationDto.orderDirection,
+      search: paginationDto.search,
+      route: `${ENV_VAR.EXTERNAL_LINK}/api/species`,
+    });
   }
 
   @Get(":id")

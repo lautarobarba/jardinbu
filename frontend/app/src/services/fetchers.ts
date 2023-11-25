@@ -1,6 +1,10 @@
 import Axios from "axios";
 import Cookies from "js-cookie";
-import { Pagination, PaginatedList } from "../interfaces/pagination.interface";
+import {
+  Pagination,
+  PaginatedList,
+  PaginationSpecies,
+} from "../interfaces/pagination.interface";
 import {
   ChangePasswordDto,
   LoginUserDto,
@@ -561,6 +565,17 @@ export const getSpecies = async (params: {
   const { pagination } = params;
   return axiosClient
     .get(`species`, {
+      params: pagination,
+    })
+    .then((response) => response.data);
+};
+
+export const getSpeciesFullSearch = async (params: {
+  pagination?: PaginationSpecies;
+}): Promise<PaginatedList<Species>> => {
+  const { pagination } = params;
+  return axiosClient
+    .get(`species/search`, {
       params: pagination,
     })
     .then((response) => response.data);

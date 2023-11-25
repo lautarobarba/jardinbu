@@ -9,8 +9,18 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ILike, Not, Repository } from "typeorm";
 import * as moment from "moment";
 import { validate } from "class-validator";
-import { CreateSpeciesDto, UpdateSpeciesDto } from "./species.dto";
-import { Species } from "./species.entity";
+import {
+  CreateSpeciesDto,
+  SearchSpeciesDto,
+  UpdateSpeciesDto,
+} from "./species.dto";
+import {
+  FoliageType,
+  OrganismType,
+  Presence,
+  Species,
+  Status,
+} from "./species.entity";
 import { GenusService } from "../genus/genus.service";
 import { ERROR_MESSAGE } from "modules/utils/error-message";
 import {
@@ -422,6 +432,47 @@ export class SpeciesService {
         order: { [options.orderBy]: options.orderDirection },
       });
     }
+  }
+
+  async findPaginatedFullSearch(
+    options: IPaginationOptions & {
+      orderBy?: string;
+      orderDirection?: string;
+      search: SearchSpeciesDto;
+    }
+  ): Promise<Pagination<Species>> {
+    this._logger.debug("findPaginated()");
+    const { search } = options;
+    console.log(search);
+
+    return paginate<Species>(this._speciesRepository, options, {
+      where: {
+        deleted: false,
+        genus: {
+          id: search?.genusId,
+          family: {
+            id: search?.familyId,
+            orderTax: {
+              id: search?.orderTaxId,
+              classTax: {
+                id: search?.classTaxId,
+                phylum: {
+                  id: search?.phylumId,
+                  kingdom: {
+                    id: search?.kingdomId,
+                  },
+                },
+              },
+            },
+          },
+        },
+        organismType: search?.organismType as OrganismType,
+        status: search?.status as Status,
+        foliageType: search?.foliageType as FoliageType,
+        presence: search?.presence as Presence,
+      },
+      order: { [options.orderBy]: options.orderDirection },
+    });
   }
 
   async findAll(): Promise<Species[]> {

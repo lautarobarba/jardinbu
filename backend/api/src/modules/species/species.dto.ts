@@ -101,3 +101,35 @@ export class UpdateSpeciesDto {
   })
   links: (CreateLinkDto | UpdateLinkDto)[];
 }
+
+export class SearchSpeciesDto {
+  @ApiPropertyOptional()
+  kingdomId: number;
+
+  @ApiPropertyOptional()
+  phylumId: number;
+
+  @ApiPropertyOptional()
+  classTaxId: number;
+
+  @ApiPropertyOptional()
+  orderTaxId: number;
+
+  @ApiPropertyOptional()
+  familyId: number;
+
+  @ApiPropertyOptional()
+  genusId: number;
+
+  @ApiPropertyOptional()
+  organismType: string;
+
+  @ApiPropertyOptional()
+  status: string;
+
+  @ApiPropertyOptional()
+  foliageType: string;
+
+  @ApiPropertyOptional()
+  presence: string;
+}
