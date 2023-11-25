@@ -5,15 +5,6 @@ import { redirect, useParams } from "next/navigation";
 import { useEffect } from "react";
 import { json } from "stream/consumers";
 
-// Api Url
-const apiBaseUrl: string =
-    process.env.NEXT_PUBLIC_APP_ROUTE ?? "http://ERROR/api";
-
-const getQRCodeByUUID = async (uuid: number): Promise<QRCode | null> => {
-    const res = await fetch(`${apiBaseUrl}/api/qr-code/uuid/${uuid}`);
-    if (!res.ok) return null;
-    return res.json();
-};
 
 export default function ExampleClientComponent() {
     const params = useParams();
