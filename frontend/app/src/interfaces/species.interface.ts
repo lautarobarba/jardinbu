@@ -84,10 +84,7 @@ export const speciesToString = (species: Species) => {
 };
 
 export interface SearchSpeciesDto {
-  // scientificName?: string;
-  // commonName?: string;
-  // englishName?: string;
-  // description?: string;
+  wildcard?: string;
 
   kingdomId?: number;
   phylumId?: number;

@@ -19,10 +19,8 @@ import { ClassTax, classTaxToString } from "@/interfaces/class-tax.interface";
 import { Phylum, phylumToString } from "@/interfaces/phylum.interface";
 
 interface Values {
-    // scientificName: string;
-    // commonName: string;
-    // englishName: string;
-    // description: string;
+    wildcard: string;
+
     kingdom: any;
     phylum: any;
     classTax: any;
@@ -101,10 +99,8 @@ const SpeciesPage = () => {
 
     const formik = useFormik({
         initialValues: {
-            // scientificName: '',
-            // commonName: '',
-            // englishName: '',
-            // description: '',
+            wildcard: '',
+
             kingdom: {},
             phylum: {},
             classTax: {},
@@ -120,6 +116,10 @@ const SpeciesPage = () => {
         // validationSchema: ValidationSchema,
         onSubmit: async (values: Values, { setErrors }: FormikHelpers<Values>) => {
             const searchSpeciesDto: SearchSpeciesDto = {};
+
+            if (values.wildcard && values.wildcard !== '')
+                searchSpeciesDto.wildcard = values.wildcard;
+
             if (values.kingdom && values.kingdom.id) searchSpeciesDto.kingdomId = values.kingdom.id;
             if (values.phylum && values.phylum.id) searchSpeciesDto.phylumId = values.phylum.id;
             if (values.classTax && values.classTax.id) searchSpeciesDto.classTaxId = values.classTax.id;
@@ -159,21 +159,18 @@ const SpeciesPage = () => {
                 <form onSubmit={formik.handleSubmit}>
                     <Grid container spacing={2} justifyContent={'center'}>
 
-                        {/* <Input
-                        // Value
-                        type="search"
-                        value={searchKey}
-                        onChange={handleSearch}
-                        placeholder="Palabra clave..."
-                        // Style
-                        classNames={{
-                            base: "max-w-full h-8",
-                            mainWrapper: "h-full",
-                            input: "text-small",
-                            inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-                        }}
-                        size="sm"
-                    /> */}
+                        <Grid item xs={12}>
+                            <TextField
+                                id='wildcard'
+                                name='wildcard'
+                                label='Texto libre'
+                                placeholder='Texto libre...'
+                                value={formik.values.wildcard}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                autoComplete='wildcard'
+                            />
+                        </Grid>
 
                         <Grid item xs={12} md={6}>
                             <Autocomplete

@@ -445,34 +445,60 @@ export class SpeciesService {
     const { search } = options;
     console.log(search);
 
-    return paginate<Species>(this._speciesRepository, options, {
-      where: {
-        deleted: false,
-        genus: {
-          id: search?.genusId,
-          family: {
-            id: search?.familyId,
-            orderTax: {
-              id: search?.orderTaxId,
-              classTax: {
-                id: search?.classTaxId,
-                phylum: {
-                  id: search?.phylumId,
-                  kingdom: {
-                    id: search?.kingdomId,
-                  },
+    const commonSearchCriteria: any = {
+      deleted: false,
+      genus: {
+        id: search?.genusId,
+        family: {
+          id: search?.familyId,
+          orderTax: {
+            id: search?.orderTaxId,
+            classTax: {
+              id: search?.classTaxId,
+              phylum: {
+                id: search?.phylumId,
+                kingdom: {
+                  id: search?.kingdomId,
                 },
               },
             },
           },
         },
-        organismType: search?.organismType as OrganismType,
-        status: search?.status as Status,
-        foliageType: search?.foliageType as FoliageType,
-        presence: search?.presence as Presence,
       },
-      order: { [options.orderBy]: options.orderDirection },
-    });
+      organismType: search?.organismType as OrganismType,
+      status: search?.status as Status,
+      foliageType: search?.foliageType as FoliageType,
+      presence: search?.presence as Presence,
+    };
+
+    if (search?.wildcard && search?.wildcard !== "") {
+      return paginate<Species>(this._speciesRepository, options, {
+        where: [
+          {
+            ...commonSearchCriteria,
+            scientificName: ILike(`%${search.wildcard}%`),
+          },
+          {
+            ...commonSearchCriteria,
+            commonName: ILike(`%${search.wildcard}%`),
+          },
+          {
+            ...commonSearchCriteria,
+            englishName: ILike(`%${search.wildcard}%`),
+          },
+          {
+            ...commonSearchCriteria,
+            description: ILike(`%${search.wildcard}%`),
+          },
+        ],
+        order: { [options.orderBy]: options.orderDirection },
+      });
+    } else {
+      return paginate<Species>(this._speciesRepository, options, {
+        where: commonSearchCriteria,
+        order: { [options.orderBy]: options.orderDirection },
+      });
+    }
   }
 
   async findAll(): Promise<Species[]> {

@@ -104,6 +104,9 @@ export class UpdateSpeciesDto {
 
 export class SearchSpeciesDto {
   @ApiPropertyOptional()
+  wildcard: string;
+
+  @ApiPropertyOptional()
   kingdomId: number;
 
   @ApiPropertyOptional()
