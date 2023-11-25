@@ -1,20 +1,20 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 export class CreateQRCodeDto {
-	@ApiProperty()
-	title: string;
+  @ApiProperty()
+  title: string;
 
-	@ApiPropertyOptional()
-	specimenId?: number;
+  @ApiProperty()
+  link: string;
 }
 
 export class UpdateQRCodeDto {
-	@ApiProperty()
-	id: number;
+  @ApiProperty()
+  id: number;
 
-	@ApiPropertyOptional()
-	title?: string;
+  @ApiProperty()
+  title: string;
 
-	@ApiPropertyOptional()
-	specimenId?: number;
+  @ApiProperty()
+  link: string;
 }

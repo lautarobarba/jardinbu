@@ -10,21 +10,22 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Species } from "../species/species.entity";
-import { Family } from "../family/family.entity";
-import { Specimen } from "../specimen/specimen.entity";
-
-// export enum ModelClass {
-//   SPECIMEN = "SPECIMEN",
-//   SPECIES = "SPECIES",
-//   POST = "POST",
-// }
 
 @Entity("qr_codes")
 export class QRCode extends BaseEntity {
   @ApiProperty()
   @PrimaryGeneratedColumn("increment")
   id: number;
+
+  @ApiProperty()
+  @Column({
+    name: "uuid",
+    type: "varchar",
+    nullable: false,
+    unique: true,
+    length: 255,
+  })
+  uuid: string;
 
   @ApiProperty()
   @Column({
@@ -38,22 +39,13 @@ export class QRCode extends BaseEntity {
 
   @ApiProperty()
   @Column({
-    name: "model_class",
+    name: "link",
     type: "varchar",
-    nullable: true,
-    unique: false,
+    nullable: false,
+    unique: true,
     length: 255,
   })
-  modelClass: string;
-
-  @ApiProperty()
-  @Column({
-    name: "model_id",
-    type: "int",
-    nullable: true,
-    unique: false,
-  })
-  modelId: number;
+  link: string;
 
   @ApiProperty()
   @CreateDateColumn({ name: "created_at" })
