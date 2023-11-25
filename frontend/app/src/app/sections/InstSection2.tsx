@@ -74,26 +74,58 @@ export const InstSection2 = () => {
 
                 <TarjetaEtapa
                     bgColor="#E6E7E8"
-                    title="Relevamiento de especies nativas"
-                    par="Primero se relevaron especies de flora del bosque que se encuentra en el Jardin Botánico y se seleccionaron 80 para representar."
+                    title="Selección de las especies para bordar"
+                    par="A partir del Relevamiento Florístico realizado en el Jardín Botánico de Ushuaia, se seleccionaron 48 especies para representar en la Biblioteca Bordada."
                     img1="/assets/images/proyecto/proy_1.webp"
-                    img2="/assets/images/proyecto/proy_1.webp"
+                    img2="/assets/images/proyecto/proy_2.webp"
                 />
 
                 <TarjetaEtapa
                     bgColor="inherit"
-                    title="Conversión de fotos a dibujos para el lienzo y selección de colores"
-                    par="Se sacaron fotos o se consiguieron dibujos de las especies, se imprimieron y calcaron para pasarlos a las telas a bordar."
-                    img1="/assets/images/proyecto/proy_1.webp"
-                    img2="/assets/images/proyecto/proy_1.webp"
+                    title="Preparación para el bordado"
+                    par="Se realizó la composición de los diseños y se los transfirió a la tela. Se hizo la selección de colores para representar cada ilustración y se armaron los kits de bordado."
+                    img1="/assets/images/proyecto/proy_3.webp"
+                    img2="/assets/images/proyecto/proy_4.webp"
                 />
 
                 <TarjetaEtapa
                     bgColor="#E6E7E8"
-                    title="Reuniones mensuales de equipo de bordadoras"
-                    par="Se sacaron fotos o se consiguieron dibujos de las especies, se imprimieron y calcaron para pasarlos a las telas a bordar."
-                    img1="/assets/images/proyecto/proy_1.webp"
-                    img2="/assets/images/proyecto/proy_1.webp"
+                    title="Reuniones mensuales del grupo de bordadoras"
+                    par="Se conformó un grupo de 16 bordadoras que se reunieron a trabajar en la Casa de Té del JBU dos veces al mes."
+                    img1="/assets/images/proyecto/proy_5.webp"
+                    img2="/assets/images/proyecto/proy_6.webp"
+                />
+
+                <TarjetaEtapa
+                    bgColor="#inherit"
+                    title="Armado de exhibidores"
+                    par="Los bordados fueron montados en exhibidores hechos en madera de lenga, sobre caballetes. Esto permite que la muestra sea itinerante."
+                    img1="/assets/images/proyecto/proy_7.webp"
+                    img2="/assets/images/proyecto/proy_8.webp"
+                />
+
+                <TarjetaEtapa
+                    bgColor="#E6E7E8"
+                    title="Búsqueda de información y creación de la página web"
+                    par="Se realizó una búsqueda de información sobre cada una de las especies, creando una biblioteca virtual. Se creó una página para alojar la biblioteca virtual a la que se podrá acceder tanto a través de Internet como de códigos QR que estarán en la cartelería del sendero de interpretación del JBU."
+                    img1="/assets/images/proyecto/proy_9.webp"
+                    img2="/assets/images/proyecto/proy_10.webp"
+                />
+
+                <TarjetaEtapa
+                    bgColor="#inherit"
+                    title="Capacitación de Jóvenes"
+                    par="Un grupo de jóvenes de nuestra comunidad, convocad@s a través de las redes sociales, participó de la Capacitación en flora nativa, al cabo de la cual elaboraron una presentación que acompaña a la Biblioteca Bordada en su muestra itinerante."
+                    img1="/assets/images/proyecto/proy_11.webp"
+                    img2="/assets/images/proyecto/proy_12.webp"
+                />
+
+                <TarjetaEtapa
+                    bgColor="#E6E7E8"
+                    title="Presentación de la Biblioteca Itinerante"
+                    par="La Biblioteca Bordada fue presentada por el grupo de jóvenes en la Biblioteca Popular Sarmiento de Ushuaia, el 4 de noviembre de 2023, ante una nutrida concurrencia."
+                    img1="/assets/images/proyecto/proy_13.webp"
+                    img2="/assets/images/proyecto/proy_14.webp"
                 />
             </div>
 
