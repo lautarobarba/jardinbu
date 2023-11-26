@@ -23,7 +23,7 @@ export const NotFound = () => {
                         {lang == "es" && `Será redireccionado automáticamente en ${'X'} segundos...`}
                         {lang == "en" && `You will be automatically redirected in ${'X'} seconds...`}
                     </p>
-                    <Link href="/garden">
+                    <Link href="/">
                         <Button color="primary" radius="sm" className="uppercase">
                             {lang == "es" && "Volver al inicio"}
                             {lang == "en" && "Back to home"}

@@ -1,5 +1,6 @@
 import { Species } from "@/interfaces/species.interface"
 import { formatTitleCase, getUrlForImageByUUID } from "@/utils/tools";
+import { Button } from "@nextui-org/react";
 import Link from "next/link";
 
 interface SmallCardPros {
@@ -15,7 +16,7 @@ export const SmallCard = (props: SmallCardPros) => {
             <div className="md:w-[30%]">
                 <img
                     loading='lazy'
-                    className="rounded-lg sm:rounded-none sm:rounded-l-lg mx-auto md:max-h-[150px]"
+                    className="rounded-lg sm:rounded-none sm:rounded-l-lg mx-auto max-h-[350px] md:max-h-[150px]"
                     src={species.exampleImg?.uuid
                         ? getUrlForImageByUUID(species.exampleImg?.uuid ?? '')
                         : '/assets/images/tree_not_found.png'
@@ -23,7 +24,7 @@ export const SmallCard = (props: SmallCardPros) => {
                     alt={species.scientificName}
                 />
             </div>
-            <div className="p-5">
+            <div className="p-5 w-full">
                 <Link href={`/garden/species/${species.id}`}>
                     <h3 className="text-xl font-bold tracking-tight text-light">
                         {formatTitleCase(species.scientificName ?? '')}
@@ -35,23 +36,11 @@ export const SmallCard = (props: SmallCardPros) => {
                     {formatTitleCase(species.englishName ?? '')}
                 </span>
                 <p className="text-left mt-3 mb-4 font-light text-light">{formatTitleCase(species.description ?? '')}</p>
-                {/* <ul className="flex space-x-4 sm:mt-0">
-                    <li>
-                        <Link href={facebookHref} target="_blank" className="text-dark dark:text-light hover:text-primary dark:hover:text-white">
-                            <FacebookIcon />
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href={instagramHref} target="_blank" className="text-dark dark:text-light hover:text-primary dark:hover:text-white">
-                            <InstagramIcon />
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href={twitterHref} target="_blank" className="text-dark dark:text-light hover:text-primary dark:hover:text-white">
-                            <TwitterIcon />
-                        </Link>
-                    </li>
-                </ul> */}
+            </div>
+            <div className="md:w-[30%] text-center md:text-right py-3 px-3">
+                <Link href={`/garden/species/${species.id}`}>
+                    <Button>VER</Button>
+                </Link>
             </div>
         </div>
     );
