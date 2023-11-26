@@ -52,7 +52,7 @@ export default function ExampleClientComponent() {
                     // src={getUrlForImageByUUID(getOneSpeciesData?.exampleImg?.uuid ?? '')}
                     alt="Logo JBU"
                     title="Logo JBU"
-                    className="max-w-full h-auto"
+                    className="w-auto max-h-[500px] m-auto"
                 />
             </div>
 
