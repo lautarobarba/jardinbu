@@ -19,7 +19,7 @@ export const BrandJBU2 = (props: BrandJBUProps) => {
         />
       </span> */}
       {/* TODO DIVIDER VERTICAL BLANCO */}
-      <Divider orientation="vertical" style={{ backgroundColor: 'black' }} />
+      {/* <Divider orientation="vertical" style={{ backgroundColor: 'black' }} /> */}
       <span className="text-xl md:text-2xl font-semibold whitespace-nowrap text-white">
         Biblioteca del bosque
       </span>

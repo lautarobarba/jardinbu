@@ -15,7 +15,7 @@ export const LandingNavbar2 = () => {
 
   return (
     <nav className="bg-navbar-bg fixed w-full z-20 top-0 left-0">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-1">
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <BrandJBU2 href="/" />
         <div className="flex md:hidden md:order-2">
           <button
